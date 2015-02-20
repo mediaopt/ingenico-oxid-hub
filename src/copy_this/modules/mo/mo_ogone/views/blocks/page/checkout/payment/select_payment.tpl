@@ -1,0 +1,7 @@
+[{if $sPaymentID == 'ogone_credit_card'}]
+  [{include file="mo_ogone__payment_creditcard.tpl"}]
+[{elseif $sPaymentID == 'ogone_open_invoice_de'}]
+  [{include file="mo_ogone__payment_invoice.tpl"}]
+[{else}]
+  [{$smarty.block.parent}]
+[{/if}]
