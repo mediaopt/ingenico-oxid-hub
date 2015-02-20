@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Metadata version
+ */
+$sMetadataVersion = '0.9';
+
+/**
+ * Module information
+ */
+$aModule = array(
+    'id'          => 'mo_$modulename',
+    'title'       => '$modulename',
+    'description' => array(
+        'de' => ''
+    ),
+    'thumbnail'   => '',
+    'version'     => '',
+    'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
+    'url'         => '',
+    'email'       => '',
+    'extend'      => array(
+        //components
+        //controllers (admin)
+        //controllers (frontend)
+        	//'order' => 'mo/mo_$modulename/controllers/mo_$modulename__order',
+        //models
+        	//'oxorder' => 'mo/mo_$modulename/models/mo_$modulename__oxorder',
+        //core
+    ),
+    'files'       => array(
+    ),
+    'blocks'      => array(
+        //array(
+        //    'template' => 'page/checkout/payment.tpl',
+        //    'block'=>'checkout_payment_errors',
+        //    'file'=>'/views/blocks/checkout_payment_errors.tpl'),
+    ),
+    'templates'   => array(
+        //'mo_$modulename__admin__order.tpl' => 'mo/mo_$modulename/views/admin/tpl/mo_$modulename__admin__order.tpl',
+    ),
+    'settings'    => array(
+        //array('group' => 'mo_$modulename__config', 'name'  => 'mo_$modulename__isLiveMode',
+        //    'type'  => 'bool'),
+    ),
+);

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     This build file is copyright of Qafoo GmbH. All rights reserved.
+-->
+<project name="OXID" default="test" basedir="../">
+
+    <!--
+        Include local project properties.
+    -->
+  <property file="${basedir}/build.properties" />
+
+  <property name="builddir" location="${basedir}/build/" />
+  <property name="toolsdir" location="${basedir}/setup/bin/" />
+  <property name="scriptsdir" location="${basedir}/setup/" />
+  <property name="logdir" location="${builddir}/log/" />
+  <property name="oxiddir" location="${test.installation}" />
+
+  <target name="clean">
+    <delete includeemptydirs="true">
+      <fileset dir="build" includes="**/*" excludes=".gitignore,.svn" />
+    </delete>
+    <mkdir dir="${builddir}" />
+    <mkdir dir="${logdir}" />
+  </target>
+<!--
+
+phpab not installed (needs php 5.3) => added \ to format & output parameter (two dashes not allowed in xml comments)
+
+    <target name="prepare-autoload">
+        <exec executable="phpab" failonerror="true" dir="${basedir}">
+            <arg value="-\-format" />
+            <arg value=" " />
+            <arg value="-\-output" />
+            <arg value="${basedir}/src/copy_this/modules/${project.name}/bootstrap.php" />
+            <arg value="${basedir}/src/copy_this/modules/${project.name}/" />
+        </exec>
+    </target>
+now add a dummy target:
+-->
+  <target name="prepare-autoload" />
+    
+    
+  <target name="prepare" depends="clean, prepare-autoload" />
+    
+  <target name="-install-copy">
+    <copy todir="${installTarget}">
+      <fileset dir="${basedir}/src/copy_this/" />
+    </copy>
+  </target>
+
+  <target name="-install-schemas">
+    <sql
+      driver="com.mysql.jdbc.Driver"
+      url="jdbc:mysql://${database.host}/${database.database}"
+      userid="${database.user}"
+      password="${database.password}"
+      classpath="/usr/share/java/mysql.jar"
+      onerror="continue">
+      <path>
+        <fileset dir="${basedir}/src/">
+          <include name="Install.sql"/>
+        </fileset>
+      </path>
+    </sql>
+  </target>
+
+  <target name="-append-autoloader" unless="autoloadReferenced">
+    <echo file="${installTarget}/modules/functions.php" append="true">
+      // Automatically added by build script. Do not remove / change:
+      include dirname( __FILE__ ) . "/${project.name}/bootstrap.php";
+
+    </echo>
+  </target>
+
+  <target name="-install-autoloader">
+    <condition property="autoloadReferenced">
+      <isfileselected file="${installTarget}/modules/functions.php">
+        <contains text="${project.name}" />
+      </isfileselected>
+    </condition>
+
+    <antcall target="-append-autoloader" />
+  </target>
+
+  <target name="-register-module">
+    <exec executable="${toolsdir}/addModule" failonerror="true">
+      <arg value="${installTarget}" />
+      <arg value="${basedir}/src/mapping.txt" />
+    </exec>
+  </target>
+    
+  <target name="-activate-module">
+    <exec executable="${toolsdir}/activateModule" failonerror="true">
+      <arg value="${oxiddir}" />
+      <arg value="${project.name}" />
+    </exec>
+  </target>
+    
+  <target name="-deactivate-invoicepdf">
+    <exec executable="${toolsdir}/deactivateModule" failonerror="true">
+      <arg value="${oxiddir}" />
+      <arg value="invoicepdf" />
+    </exec>
+  </target>
+    
+  <target name="-update-views">
+    <exec executable="${toolsdir}/updateViews" failonerror="true">
+      <arg value="${oxiddir}" />
+    </exec>
+  </target>
+
+  <target name="-has-target">
+    <condition property="noInstallTarget">
+      <equals arg1="${installTarget}" arg2="$${installTarget}" />
+    </condition>
+
+    <fail message="No install target specified. Specify by appending &quot;-DinstallTarget=/Path/to/oxid&quot; to the ant call." if="noInstallTarget" />
+  </target>
+
+  <target
+    name="install"
+    depends="
+            -has-target,
+            prepare-autoload,
+            -install-copy,
+            -install-schemas,
+            -activate-module,
+            -update-views"
+     />
+
+  <!--<target name="test" depends="test-unit, test-static, phpdoc" />-->
+  <target name="test" depends="install, -cleanuptmp, -run-tests" />
+  
+  <target name="test-coverage" depends="install, -run-tests-coverage" />
+  
+  <target name="test-metrics" depends="install, -run-tests-metrics" />
+    
+  <target name="-cleanuptmp">
+    <exec executable="sudo" failonerror="false">
+      <arg value="rm /tmp/${database.database}.*" />
+    </exec>
+  </target>
+    
+  <target name="-run-tests">
+    <exec executable="/bin/bash" failonerror="true">
+      <arg value="${test.moduletestdir}runtests.sh" />
+    </exec>
+  </target>
+    
+  <target name="-run-tests-coverage">
+    <exec executable="/bin/bash" failonerror="true">
+      <arg value="${test.moduletestdir}/runcoverage.sh" />
+    </exec>
+  </target>
+    
+  <target name="-run-tests-metrics">
+    <exec executable="/bin/bash" failonerror="true">
+      <arg value="${test.moduletestdir}/runmetrics.sh" />
+    </exec>
+  </target>
+  
+  
+  <target name="test-static" depends="prepare, test-static-jdepend, test-static-cpd, test-static-checkstyle, test-static-pmd, test-static-oxpmd">
+  </target>
+
+  <target name="-install-tests">
+    <copy todir="${test.dir}">
+      <fileset dir="${basedir}/tests/" />
+    </copy>
+  </target>
+
+  <target name="-reset-tests-db">
+    <exec executable="mysql" failonerror="true">
+      <arg value="-u" />
+      <arg value="${database.user}" />
+      <arg value="--password=${database.password}" />
+      <arg value="-e" />
+      <arg value="drop database ${database.database};" />
+    </exec>
+        
+    <exec executable="mysql" failonerror="true">
+      <arg value="-u" />
+      <arg value="${database.user}" />
+      <arg value="--password=${database.password}" />
+      <arg value="-e" />
+      <arg value="create database ${database.database} character set latin1 collate latin1_general_ci;" />
+    </exec>
+        
+    <exec executable="mysql" failonerror="true" input="${test.installation}/setup/sql/database.sql">
+      <arg value="-u" />
+      <arg value="${database.user}" />
+      <arg value="--password=${database.password}" />
+      <arg value="-D" />
+      <arg value="${database.database}" />
+      <arg value="-h" />
+      <arg value="${database.host}" />
+    </exec>
+
+    <exec executable="mysql" failonerror="true" input="${test.dir}/testsql/testdata_ce.sql">
+      <arg value="-u" />
+      <arg value="${database.user}" />
+      <arg value="--password=${database.password}" />
+      <arg value="-D" />
+      <arg value="${database.database}" />
+      <arg value="-h" />
+      <arg value="${database.host}" />
+    </exec>
+  </target>
+
+  <target name="test-install">
+    <property name="installTarget" location="${test.installation}" />
+    <antcall target="-reset-tests-db" />
+    <antcall target="install" />
+    <antcall target="-install-tests" />
+    <antcall target="-install-test-sql" />
+<!--    <antcall target="-deactivate-invoicepdf" />-->
+  </target>
+    
+  <target name="test-unit" depends="prepare, test-install">
+    <exec executable="phpunit" failonerror="true" dir="${test.dir}">
+      <arg value="-d" />
+      <arg value="memory_limit=1024M" />
+      <arg value="--verbose" />
+      <arg value="--log-metrics" />
+      <arg value="report.xml" />
+      <arg value="--bootstrap" />
+      <arg value="bootstrap.php" />
+      <arg value="--configuration" />
+      <arg value="unit/modules/${project.name}/phpunit.xml" />
+      <arg value="--log-junit" />
+      <arg value="${logdir}/junit.xml" />
+      <arg value="--coverage-clover" />
+      <arg value="${logdir}/clover.xml" />
+      <arg value="--coverage-html" />
+      <arg value="${builddir}/coverage" />
+      <arg value="${phpunit.testsuite.file}" />
+      <arg value="${phpunit.testsuite.class}" />
+
+      <env key="oxPATH" value="${test.installation}" />
+      <env key="oxADMIN_PASSWORD" value="${test.password}" />
+    </exec>
+  </target>
+
+  <target name="test-static-cpd">
+    <exec executable="phpcpd" failonerror="false" dir="${test.installation}/modules/${project.name}/">
+      <arg value="--log-pmd" />
+      <arg value="${logdir}/cpd.xml" />
+      <arg value="." />
+    </exec>
+  </target>
+
+  <target name="test-static-jdepend">
+    <exec executable="pdepend" failonerror="false" dir="${test.installation}/modules/${project.name}/">
+      <arg value="--jdepend-xml=${logdir}/jdepend.xml" />
+      <arg value="." />
+    </exec>
+  </target>
+    
+  <target name="test-static-checkstyle">
+    <exec executable="phpcs" failonerror="false" dir="${test.installation}/modules/${project.name}/">
+      <arg value="--standard=${coding.standard}" />
+      <arg value="--report=checkstyle" />
+      <arg value="--report-file=${logdir}/checkstyle-result.xml" />
+      <arg value="." />
+    </exec>
+  </target>
+    
+  <target name="test-static-pmd">
+    <exec executable="phpmd" failonerror="false" dir="${test.installation}/modules/${project.name}/">
+      <arg value="." />
+      <arg value="xml" />
+      <arg value="codesize,design,naming,unusedcode" />
+      <arg line="--reportfile" />
+      <arg line="${logdir}/pmd.xml" />
+    </exec>
+  </target>
+        
+  <target name="test-static-oxpmd">
+    <exec executable="oxphpmd" failonerror="false" dir="${test.installation}/modules/${project.name}/">
+      <arg value="." />
+      <arg value="xml" />
+      <arg value="oxid" />
+      <arg line="--coverage" />
+      <arg value="${logdir}/clover.xml" />
+      <arg line="--reportfile" />
+      <arg line="${logdir}/oxpmd.xml" />
+    </exec>
+    <exec executable="${toolsdir}/calcModuleCosts" failonerror="true">
+      <arg line="${logdir}/oxpmd.xml" />
+    </exec>
+  </target>
+    
+  <target name="docs">
+    <exec executable="rst2html" failonerror="true" dir="${basedir}/">
+      <arg value="--no-generator" />
+      <arg value="${basedir}/readme.txt" />
+      <arg value="${basedir}/src/docs/documentation.html" />
+    </exec>
+  </target>
+    
+  <target name="phpdoc">
+    <delete dir="${basedir}/docs" />
+    <exec executable="phpdoc" dir="${basedir}">
+      <arg value="-d" />
+      <arg value="${basedir}/src/" />
+      <arg value="-t" />
+      <arg value="docs" />
+      <arg value="--title" />
+      <arg value="${project.name}" />
+      <arg value="--sourcecode" />
+      <arg value="-pphpdoc" />
+    </exec>
+  </target>
+    
+</project>

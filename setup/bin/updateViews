@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+// Checking for CLI parameters
+if ( !isset( $argv[1] ) )
+{
+    echo "Spcefication of Oxid eShop instllation directory required.\n";
+    exit( 1 );
+}
+
+// Handling CLI parameters
+function getShopbasePath()
+{
+    global $argv;
+    return $argv[1] . '/';
+}
+
+// Setting the module extensions
+require_once getShopbasePath() . '/bootstrap.php'; //4.7
+//require_once getShopbasePath() . '/core/oxfunctions.php'; // 4.6
+
+@oxDb::getInstance()->updateViews();
+

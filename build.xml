@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mo_ogone_3.0" default="test" basedir=".">
+
+    <!--
+        Include local project properties.
+    -->
+    <property file="build.properties" />
+
+    <!--
+        Import common build targets
+    -->
+    <import file="${basedir}/setup/build-commons.xml" />
+    
+    
+    <target name="test-unit-without-db-restore" depends="install, -install-tests">
+        <exec executable="phpunit" failonerror="true" dir="${test.dir}">
+            <arg value="-d" />
+            <arg value="memory_limit=1024M" />
+            <arg value="--colors" />
+            <arg value="--verbose" />
+            <arg value="--bootstrap" />
+            <arg value="bootstrap.php" />
+            <arg value="--configuration" />
+            <arg value="unit/modules/${project.name}/phpunit.xml" />
+            <arg value="--log-junit" />
+            <arg value="${logdir}/junit.xml" />
+            <arg value="--coverage-clover" />
+            <arg value="${logdir}/clover.xml" />
+            <arg value="--coverage-html" />
+            <arg value="${builddir}/coverage" />
+            
+            <arg value="--exclude-group" />
+            <arg value="${excludeGroup}" />
+            
+            <arg value="${phpunit.testsuite.file}" />
+            <arg value="${phpunit.testsuite.class}" />
+
+            <env key="oxPATH" value="${test.installation}" />
+            <env key="oxADMIN_PASSWORD" value="${test.password}" />
+        </exec>
+    </target>
+    
+    <target name="-install-test-sql">
+      <exec executable="mysql" failonerror="false" input="${test.dir}/unit/mo_viaebay__test.sql">
+        <arg value="-u" />
+        <arg value="${database.user}" />
+        <arg value="--password=${database.password}" />
+        <arg value="-D" />
+        <arg value="${database.database}" />
+        <arg value="-h" />
+        <arg value="${database.host}" />
+      </exec>  
+    </target>
+    
+    <target name="mo_install_version" depends="OXID.install">
+      <copy todir="${installTarget}" overwrite="true">
+        <fileset dir="${basedir}/src/copy_this_${version}/" />
+      </copy>
+      <copy todir="${installTarget}" overwrite="true">
+        <fileset dir="${basedir}/src/changed_full_${version}/" />
+      </copy>
+    </target>
+    
+</project>

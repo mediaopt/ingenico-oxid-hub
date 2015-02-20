@@ -1,0 +1,13 @@
+{
+    "config": {
+        "vendor-dir": "src/copy_this/modules/mo/mo_ogone_3.0/vendor"
+    },
+    
+    "require": {
+        "monolog/monolog": "1.12.*"
+    },
+    
+    "autoload": {
+        "psr-4": {"Mediaopt\\": "src/copy_this/modules/mo/mo_ogone_3.0/vendor/Mediaopt/"}
+    }
+}

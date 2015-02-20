@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+// Checking for CLI parameters
+if ( !isset( $argv[1] ) )
+{
+    echo "Spcefication of Oxid eShop instllation directory required.\n";
+    exit( 1 );
+}
+
+if ( !isset( $argv[2] ) )
+{
+    echo "Specify name of module to be activated.\n";
+    exit( 2 );
+}
+
+// Handling CLI parameters
+$module = $argv[2];
+function getShopbasePath()
+{
+    global $argv;
+    return $argv[1] . '/';
+}
+
+// Setting the module extensions
+require_once getShopbasePath() . '/bootstrap.php'; //4.7
+//require_once getShopbasePath() . '/core/oxfunctions.php'; // 4.6
+
+$oModule = oxNew( 'oxModule' );
+$oModule->load( $module );
+$oModule->deactivate();
+$oModule->activate();
+
