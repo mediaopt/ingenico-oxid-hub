@@ -1,15 +1,16 @@
 <?php
 
+use Mediaopt\Ogone\Sdk\Main;
+
 /**
  * $Id: mo_ogone__feedback_handler.php 53 2014-11-28 13:54:26Z martin $ 
  */
 class mo_ogone__feedback_handler
 {
 
-  public function __construct($logger, $authenticator, $oxUtilsObject)
+  public function __construct($logger, $oxUtilsObject)
   {
     $this->logger = $logger;
-    $this->authenticator = $authenticator;
     $this->oxUtilsObject = $oxUtilsObject;
   }
 
@@ -22,7 +23,7 @@ class mo_ogone__feedback_handler
   {
     $this->logger->logExecution($_REQUEST);
 
-    if (!$this->authenticator->authenticateRequest())
+    if (!Main::getInstance()->getService("Authenticator")->authenticateRequest())
     {
       // no authentication, kick back to payment methods
       return oxOrder::ORDER_STATE_PAYMENTERROR;
@@ -141,7 +142,7 @@ class mo_ogone__feedback_handler
   {
     $this->logger->logExecution($requestParams);
 
-    if (!$this->authenticator->authenticateRequest())
+    if (!Main::getInstance()->getService("Authenticator")->authenticateRequest())
     {
       return;
     }

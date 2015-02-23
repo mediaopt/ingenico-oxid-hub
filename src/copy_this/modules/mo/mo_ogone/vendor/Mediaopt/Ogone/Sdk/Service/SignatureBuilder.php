@@ -7,12 +7,6 @@ namespace Mediaopt\Ogone\Sdk\Service;
  */
 class SignatureBuilder extends AbstractService
 {
-    /* public function __construct($shaOutParameters, $hashingAlgorithm)
-      {
-      $this->shaOutParameters = $shaOutParameters;
-      $this->hashingAlgorithm = $hashingAlgorithm;
-      } */
-
     /**
      * @return array with filtered params and uppercased keys
      */

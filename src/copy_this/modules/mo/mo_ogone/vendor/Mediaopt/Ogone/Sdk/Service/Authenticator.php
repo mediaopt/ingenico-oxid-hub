@@ -17,29 +17,23 @@ use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 class Authenticator extends AbstractService
 {
 
-    /*public function __construct($requestParams, $signatureBuilder, $oxConfig, $logger)
-    {
-        $this->requestParams = $requestParams;
-        $this->signatureBuilder = $signatureBuilder;
-        $this->oxConfig = $oxConfig;
-        $this->logger = $logger;
-    }*/
-
     // TODO: HK: Check signature with umlauts and different encodings
     public function authenticateRequest()
     {
         /* @var $paramsModel RequestParameters */
-        $paramsModel = $this->getAdapter()->getFactory("RequestParameters")->build();
+        $paramsModel = $this->getAdapter()->getFactory("RequestParameters")->build(true);
         $params = $paramsModel->getParams();
         if (!$params['SHASIGN']) {
             $this->getAdapter()->getLogger()->error("SHA-Sign Parameter not present - please check Ogone-Backend settings (technical-information" .
                     " => transaction-feedback => I want to receive transaction feedback[...])", $params);
             return false;
         }
-        
+
         $this->signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
+        $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
+        $shaOutKey = $shaSettings->getSHAOutKey();
         $signature = $this->signatureBuilder->build(
-                $this->signatureBuilder->filterResponseParams($params), $this->getAdapter()->getOxConfig()->getConfigParam('ogone_sSecureKeyOut'));
+                $this->signatureBuilder->filterResponseParams($params), $shaOutKey);
 
         $signature = $this->signatureBuilder->hash($signature);
 
@@ -47,6 +41,7 @@ class Authenticator extends AbstractService
             return true;
         }
 
+        // mbe: @TODO Direkten Zugriff auf $_SERVER entfernen
         $this->getAdapter()->getLogger()->error("SECURE KEY INCORRECT - Received from IP: " . $_SERVER["REMOTE_ADDR"], $params);
         return false;
     }
