@@ -3,6 +3,9 @@
 /**
  * $Id: mo_ogone__main.php 7 2012-12-12 10:44:58Z martin $ 
  */
+
+use Mediaopt\Ogone\Sdk\Main;
+
 class mo_ogone__main
 {
 
@@ -58,12 +61,7 @@ class mo_ogone__main
   {
     if (!isset($this->authenticator))
     {
-      $this->authenticator = new mo_ogone__authenticator(
-                      $_REQUEST,
-                      $this->getSignatureBuilder(),
-                      $this->getOxConfig(),
-                      $this->getLogger()
-      );
+      $this->authenticator = Main::getInstance()->getService("Authenticator");
     }
     return $this->authenticator;
   }
@@ -130,7 +128,7 @@ class mo_ogone__main
     return $this->requestParamBuilder;
   }
 
-  protected function getSignatureBuilder()
+  public function getSignatureBuilder()
   {
     if (!isset($this->signatureBuilder))
     {
