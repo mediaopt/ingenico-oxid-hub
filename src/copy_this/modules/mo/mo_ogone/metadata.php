@@ -46,13 +46,11 @@ $aModule = array(
         'mo_ogone__order_number_reservation' => 'mo/mo_ogone/models/mo_ogone__order_number_reservation.php',
         'mo_ogone__payment_log'              => 'mo/mo_ogone/models/mo_ogone__payment_log.php',
         //core
-        'mo_ogone__authenticator'            => 'mo/mo_ogone/classes/mo_ogone__authenticator.php',
         'mo_ogone__config'                   => 'mo/mo_ogone/classes/mo_ogone__config.php',
         'mo_ogone__feedback_handler'         => 'mo/mo_ogone/classes/mo_ogone__feedback_handler.php',
         'mo_ogone__logger'                   => 'mo/mo_ogone/classes/mo_ogone__logger.php',
         'mo_ogone__main'                     => 'mo/mo_ogone/classes/mo_ogone__main.php',
         'mo_ogone__request_param_builder'    => 'mo/mo_ogone/classes/mo_ogone__request_param_builder.php',
-        'mo_ogone__signature_builder'        => 'mo/mo_ogone/classes/mo_ogone__signature_builder.php',
         'mo_ogone__status'                   => 'mo/mo_ogone/classes/mo_ogone__status.php',
         'mo_ogone__util'                     => 'mo/mo_ogone/classes/mo_ogone__util.php',        
     ),

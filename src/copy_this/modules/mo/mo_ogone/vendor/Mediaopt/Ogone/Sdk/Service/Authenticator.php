@@ -6,6 +6,9 @@
 
 namespace Mediaopt\Ogone\Sdk\Service;
 
+use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Model\RequestParameters;
+
 /**
  * Authenticates so called SHAOut-Requests
  *  SHAOut => Response from Ogone
@@ -25,7 +28,7 @@ class Authenticator extends AbstractService
     // TODO: HK: Check signature with umlauts and different encodings
     public function authenticateRequest()
     {
-        /* @var $paramsModel Mediaopt\Ogone\Sdk\Model\RequestParameters */
+        /* @var $paramsModel RequestParameters */
         $paramsModel = $this->getAdapter()->getFactory("RequestParameters")->build();
         $params = $paramsModel->getParams();
         if (!$params['SHASIGN']) {
@@ -34,7 +37,7 @@ class Authenticator extends AbstractService
             return false;
         }
         
-        $this->signatureBuilder = \mo_ogone__main::getInstance()->getSignatureBuilder();
+        $this->signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
         $signature = $this->signatureBuilder->build(
                 $this->signatureBuilder->filterResponseParams($params), $this->getAdapter()->getOxConfig()->getConfigParam('ogone_sSecureKeyOut'));
 

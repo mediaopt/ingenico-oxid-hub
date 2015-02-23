@@ -11,7 +11,7 @@ class RequestParameters extends AbstractModel
      *
      * @var array
      */
-    public $params;
+    private $params;
     
     function getParams()
     {

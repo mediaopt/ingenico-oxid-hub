@@ -132,10 +132,7 @@ class mo_ogone__main
   {
     if (!isset($this->signatureBuilder))
     {
-      $this->signatureBuilder = new mo_ogone__signature_builder(
-                      $this->getOgoneConfig()->shaOutParameters,
-                      $this->getOxConfig()->getConfigParam('ogone_sHashingAlgorithm')
-      );
+      $this->signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
     }
     return $this->signatureBuilder;
   }
