@@ -50,7 +50,6 @@ $aModule = array(
         'mo_ogone__feedback_handler'         => 'mo/mo_ogone/classes/mo_ogone__feedback_handler.php',
         'mo_ogone__logger'                   => 'mo/mo_ogone/classes/mo_ogone__logger.php',
         'mo_ogone__main'                     => 'mo/mo_ogone/classes/mo_ogone__main.php',
-        'mo_ogone__status'                   => 'mo/mo_ogone/classes/mo_ogone__status.php',
         'mo_ogone__util'                     => 'mo/mo_ogone/classes/mo_ogone__util.php',        
     ),
     'blocks'      => array(

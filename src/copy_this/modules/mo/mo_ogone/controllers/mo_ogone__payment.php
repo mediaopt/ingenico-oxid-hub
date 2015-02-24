@@ -179,10 +179,12 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
 
         if ($error) {
-            if ($error == mo_ogone__status::SHA_IN_MISSMATCH) {
-                mo_ogone__main::getInstance()->getLogger()->error('SHA-IN Missmatch');
+            /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
+            $status = Main::getInstance()->getService("Status")->usingStatusCode($error);
+            if ($status->isShaInMismatch()) {
+                mo_ogone__main::getInstance()->getLogger()->error('SHA-IN Mismatch');
             }
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay(mo_ogone__status::getTranslatedStatusMessage($error));
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($status->getTranslatedStatusMessage());
             return true;
         }
         return false;

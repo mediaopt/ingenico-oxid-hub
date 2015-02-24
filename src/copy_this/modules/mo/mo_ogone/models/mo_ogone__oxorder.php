@@ -25,105 +25,104 @@
 class mo_ogone__oxorder extends mo_ogone__oxorder_parent
 {
 
-  const MO_OGONE__TRANSACTION_ID_PENDING = 'MO_OGONE_PENDING';
-  const MO_OGONE__TRANSACTION_ID_DONE    = 'MO_OGONE_DONE';
+    const MO_OGONE__TRANSACTION_ID_PENDING = 'MO_OGONE_PENDING';
+    const MO_OGONE__TRANSACTION_ID_DONE = 'MO_OGONE_DONE';
 
-  public function mo_ogone__initBeforePayment()
-  {
-    $this->oxorder__oxtransstatus = new oxField('ERROR');
-    $this->save();
-  }
-
-  public function mo_ogone__isOgoneOrder()
-  {
-    return stristr($this->oxorder__oxpaymenttype->value, 'ogone') !== false;
-  }
-
-  public function mo_ogone__isPaymentDone()
-  {
-    return mo_ogone__status::isOxidThankyouStatus($this->oxorder__mo_ogone__status->value);
-  }
-
-  public function mo_ogone__loadByNumber($orderNr)
-  {
-    $sSelect = $this->buildSelectString(array($this->getViewName() . '.oxordernr' => $orderNr));
-    return $this->_isLoaded = $this->assignRecord($sSelect);
-  }
-
-  /**
-   * Updates oxtransstatus and mo_ogone__status property on order object and save the order object
-   * if the order is cancelled by client the order will canceled (storno)
-   */
-  public function mo_ogone__updateOrderStatus($ogoneStatus)
-  {
-    $oxidStatus = mo_ogone__status::isOxidOkStatus($ogoneStatus) ? 'OK' : 'ERROR';
-    $this->oxorder__oxtransstatus = new oxField($oxidStatus);
-    $this->oxorder__mo_ogone__status = new oxField($ogoneStatus);
-
-    $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
-    if (mo_ogone__status::isOxidThankyouStatus($ogoneStatus) && $activeView == 'order')
+    public function mo_ogone__initBeforePayment()
     {
-      $this->mo_ogone__sendEmails();      
+        $this->oxorder__oxtransstatus = new oxField('ERROR');
+        $this->save();
     }
 
-
-    if (mo_ogone__status::isStornoStatus($ogoneStatus))
+    public function mo_ogone__isOgoneOrder()
     {
-      $this->cancelOrder();
+        return stristr($this->oxorder__oxpaymenttype->value, 'ogone') !== false;
     }
 
-    $this->save();
-  }
-
-  /**
-   * @overload
-   */
-  protected function _setRecordNumber($sMaxField, $aWhere = null, $iMaxTryCnt = 5)
-  {
-    $orderNumberReservation = oxNew('mo_ogone__order_number_reservation');
-    do
+    public function mo_ogone__isPaymentDone()
     {
-      // as long as a reservation exists for the current order number 
-      // create a new order number
-      parent::_setRecordNumber($sMaxField, $aWhere, $iMaxTryCnt);
-
-      $reservationExists =
-              $orderNumberReservation->load(mo_ogone__order_number_reservation::getReservationKey($this->oxorder__oxordernr->value));
-    }
-    while ($reservationExists);
-  }
-
-  /**
-   * Send order to shop owner and user
-   *
-   * @param oxUser        $oUser    order user
-   * @param oxBasket      $oBasket  current order basket
-   * @param oxUserPayment $oPayment order payment
-   *
-   * @return bool
-   */
-  protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null)
-  {
-    if ($this->mo_ogone__isOgoneOrder() && !$this->mo_ogone__isPaymentDone())
-    {
-      return self::ORDER_STATE_MAILINGERROR;
+        /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
+        $status = \Mediaopt\Ogone\Sdk\Main::getInstance()->getService("Status")
+                ->usingStatusCode($this->oxorder__mo_ogone__status->value);
+        return $status->isThankyouStatus();
     }
 
-    return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
-  }
-
-  public function mo_ogone__sendEmails()
-  {
-    $this->_oBasket = oxRegistry::getSession()->getBasket();
-    $this->_oUser = oxRegistry::getSession()->getUser();
-    $this->_oPayment = $this->getPaymentType();
-
-    $emailSent = $this->_sendOrderByEmail($this->_oUser, $this->_oBasket, $this->_oPayment);
-
-    if ($emailSent)
+    public function mo_ogone__loadByNumber($orderNr)
     {
-      oxRegistry::getSession()->deleteVariable('mo_ogone__mailError');
+        $sSelect = $this->buildSelectString(array($this->getViewName() . '.oxordernr' => $orderNr));
+        return $this->_isLoaded = $this->assignRecord($sSelect);
     }
-  }
+
+    /**
+     * Updates oxtransstatus and mo_ogone__status property on order object and save the order object
+     * if the order is cancelled by client the order will canceled (storno)
+     */
+    public function mo_ogone__updateOrderStatus($ogoneStatus)
+    {
+        /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
+        $status = \Mediaopt\Ogone\Sdk\Main::getInstance()->getService("Status")
+                ->usingStatusCode($ogoneStatus);
+        $oxidStatus = $status->isOkStatus() ? 'OK' : 'ERROR';
+        $this->oxorder__oxtransstatus = new oxField($oxidStatus);
+        $this->oxorder__mo_ogone__status = new oxField($status->getStatusCode());
+
+        $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
+        if ($status->isThankyouStatus() && $activeView == 'order') {
+            $this->mo_ogone__sendEmails();
+        }
+
+
+        if ($status->isStornoStatus()) {
+            $this->cancelOrder();
+        }
+
+        $this->save();
+    }
+
+    /**
+     * @overload
+     */
+    protected function _setRecordNumber($sMaxField, $aWhere = null, $iMaxTryCnt = 5)
+    {
+        $orderNumberReservation = oxNew('mo_ogone__order_number_reservation');
+        do {
+            // as long as a reservation exists for the current order number 
+            // create a new order number
+            parent::_setRecordNumber($sMaxField, $aWhere, $iMaxTryCnt);
+
+            $reservationExists = $orderNumberReservation->load(mo_ogone__order_number_reservation::getReservationKey($this->oxorder__oxordernr->value));
+        } while ($reservationExists);
+    }
+
+    /**
+     * Send order to shop owner and user
+     *
+     * @param oxUser        $oUser    order user
+     * @param oxBasket      $oBasket  current order basket
+     * @param oxUserPayment $oPayment order payment
+     *
+     * @return bool
+     */
+    protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null)
+    {
+        if ($this->mo_ogone__isOgoneOrder() && !$this->mo_ogone__isPaymentDone()) {
+            return self::ORDER_STATE_MAILINGERROR;
+        }
+
+        return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
+    }
+
+    public function mo_ogone__sendEmails()
+    {
+        $this->_oBasket = oxRegistry::getSession()->getBasket();
+        $this->_oUser = oxRegistry::getSession()->getUser();
+        $this->_oPayment = $this->getPaymentType();
+
+        $emailSent = $this->_sendOrderByEmail($this->_oUser, $this->_oBasket, $this->_oPayment);
+
+        if ($emailSent) {
+            oxRegistry::getSession()->deleteVariable('mo_ogone__mailError');
+        }
+    }
 
 }
