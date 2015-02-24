@@ -51,36 +51,12 @@ class mo_ogone__main
         return $this->feedbackHandler;
     }
 
-    public function getOxConfig()
-    {
-        if (!isset($this->oxConfig)) {
-            $this->oxConfig = oxRegistry::getConfig();
-        }
-        return $this->oxConfig;
-    }
-
-    public function getOxSession()
-    {
-        if (!isset($this->oxSession)) {
-            $this->oxSession = oxRegistry::getSession();
-        }
-        return $this->oxSession;
-    }
-
     public function getOxUtilsObject()
     {
         if (!isset($this->oxUtilsObject)) {
             $this->oxUtilsObject = oxUtilsObject::getInstance();
         }
         return $this->oxUtilsObject;
-    }
-
-    public function getOxLang()
-    {
-        if (!isset($this->oxLang)) {
-            $this->oxLang = oxRegistry::getLang();
-        }
-        return $this->oxLang;
     }
 
     public function getOgoneConfig()
@@ -90,24 +66,6 @@ class mo_ogone__main
             $this->ogoneConfig = new mo_ogone__config($configFile, $this->getLogger());
         }
         return $this->ogoneConfig;
-    }
-
-    public function getRequestParamBuilder()
-    {
-        if (!isset($this->requestParamBuilder)) {
-            $this->requestParamBuilder = new mo_ogone__request_param_builder(
-                    $this->getOxSession(), $this->getOxConfig(), $this->getOgoneConfig(), $this->getOxLang(), $this->getSignatureBuilder(), $this->getLogger()
-            );
-        }
-        return $this->requestParamBuilder;
-    }
-
-    public function getSignatureBuilder()
-    {
-        if (!isset($this->signatureBuilder)) {
-            $this->signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
-        }
-        return $this->signatureBuilder;
     }
 
 }

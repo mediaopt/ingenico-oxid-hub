@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
  */
 class Main
 {
+
     /**
      * SDK-container
      * @var Sdk\Main;
@@ -24,13 +25,22 @@ class Main
      * @var \oxConfig
      */
     protected $oxConfig = null;
-    
+
+    /**
+     * @var \oxLang
+     */
+    protected $oxLang = null;
+
+    /**
+     * @var \oxSession
+     */
+    protected $oxSession = null;
+
     /**
      *
      * @var LoggerInterface
      */
     protected $logger;
-    
 
     /**
      * constructor
@@ -62,6 +72,32 @@ class Main
         return $this->oxConfig = \oxRegistry::get('oxConfig');
     }
 
+    function getOxLang()
+    {
+        if ($this->oxLang !== null) {
+            return $this->oxLang;
+        }
+        return $this->oxLang = \oxRegistry::getLang();
+    }
+
+    function getOxSession()
+    {
+        if ($this->oxSession !== null) {
+            return $this->oxSession;
+        }
+        return $this->oxSession = \oxRegistry::getSession();
+    }
+
+    function setOxSession(\oxSession $oxSession)
+    {
+        $this->oxSession = $oxSession;
+    }
+
+    function setOxLang(\oxLang $oxLang)
+    {
+        $this->oxLang = $oxLang;
+    }
+
     /**
      * set sdkmain
      * @param sdkMain $sdkMain
@@ -89,9 +125,9 @@ class Main
     public function getFactory($type)
     {
         $name = __NAMESPACE__ . '\Factory\\' . $type;
-        return new $name($this->getSdkMain(), $this->getOxConfig());
+        return new $name($this->getSdkMain(), $this->getOxConfig(), $this->getOxLang(), $this->getOxSession());
     }
-    
+
     /**
      * get logger
      * @return LoggerInterface
@@ -100,7 +136,7 @@ class Main
     {
         if ($this->logger !== null) {
             //update processors
-            return $this->logger; 
+            return $this->logger;
         }
         $logger = new Logger('mo_ogone');
         $logFile = $this->getLogFilePath();
@@ -108,7 +144,7 @@ class Main
         $logger->pushHandler($streamHandler);
         return $this->logger = $logger;
     }
-    
+
     /**
      * set logger
      * @param LoggerInterface $logger
@@ -117,7 +153,7 @@ class Main
     {
         $this->logger = $logger;
     }
-    
+
     /**
      * build log file path
      * @return type
@@ -126,5 +162,5 @@ class Main
     {
         return $this->getOxConfig()->getLogsDir() . 'mo_ogone-' . date('Y-m', time()) . '.log';
     }
-    
+
 }

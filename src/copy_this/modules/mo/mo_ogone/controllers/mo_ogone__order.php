@@ -1,5 +1,7 @@
 <?php
 
+use Mediaopt\Ogone\Sdk\Main;
+
 /**
  * This file is part of Ogone Payment Solutions payment interface
  *
@@ -151,7 +153,7 @@ class mo_ogone__order extends mo_ogone__order_parent
     curl_setopt_array($ch, array(
         CURLOPT_URL            => oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_orderdir'),
         CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => http_build_query(mo_ogone__main::getInstance()->getRequestParamBuilder()->buildOnePageOrderdirectParams($order)),
+        CURLOPT_POSTFIELDS     => http_build_query(Main::getInstance()->getService("RequestParamBuilder")->buildOnePageOrderdirectParams($order)),
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_TIMEOUT        => mo_ogone__main::getInstance()->getOgoneConfig()->curl_timeout,
     ));

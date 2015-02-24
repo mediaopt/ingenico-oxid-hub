@@ -9,29 +9,44 @@ use Mediaopt\Ogone\Sdk\Main as sdkMain;
  */
 abstract class AbstractFactory
 {
+
     /**
      *
      * @var \oxConfig
      */
     protected $oxConfig;
+
+    /**
+     *
+     * @var \oxLang
+     */
+    protected $oxLang;
     
+    /**
+     *
+     * @var \oxSession
+     */
+    protected $oxSession;
+
     /**
      *
      * @var sdkMain
      */
     protected $sdkMain;
-    
+
     /**
      * constructor
      * @param sdkMain $sdkMain
      * @param \oxConfig $oxConfig
      */
-    public function __construct(sdkMain $sdkMain, \oxConfig $oxConfig)
+    public function __construct(sdkMain $sdkMain, \oxConfig $oxConfig, \oxLang $oxLang, \oxSession $oxSession)
     {
         $this->sdkMain = $sdkMain;
         $this->oxConfig = $oxConfig;
+        $this->oxLang = $oxLang;
+        $this->oxSession = $oxSession;
     }
-    
+
     /**
      * get oxconfig
      * @return \oxConfig
@@ -48,6 +63,25 @@ abstract class AbstractFactory
     public function getSdkMain()
     {
         return $this->sdkMain;
+    }
+
+    function getOxLang()
+    {
+        return $this->oxLang;
+    }
+    function getOxSession()
+    {
+        return $this->oxSession;
+    }
+
+    function setOxSession(\oxSession $oxSession)
+    {
+        $this->oxSession = $oxSession;
+    }
+
+        function setOxLang(\oxLang $oxLang)
+    {
+        $this->oxLang = $oxLang;
     }
 
     /**
@@ -76,7 +110,7 @@ abstract class AbstractFactory
     {
         return $this->getOxConfig()->getUser();
     }
-    
+
     /**
      * get adapter main
      * @return \Mediaopt\Ogone\Adapter\Oxid_5\Main

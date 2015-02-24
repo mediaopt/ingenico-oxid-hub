@@ -1,5 +1,7 @@
 <?php
 
+use Mediaopt\Ogone\Sdk\Main;
+
 /**
  * $Id: mo_ogone__payment_form.php 55 2014-12-01 10:28:24Z martin $ 
  */
@@ -29,7 +31,7 @@ class mo_ogone__payment_form extends oxUBase
     }
 
     $this->_aViewData['mo_ogone__form_action'] = $this->getConfig()->getConfigParam('mo_ogone__gateway_url_redirect');
-    $this->_aViewData['mo_ogone__hidden_fields'] = mo_ogone__main::getInstance()->getRequestParamBuilder()->build($order);
+    $this->_aViewData['mo_ogone__hidden_fields'] = Main::getInstance()->getService("RequestParamBuilder")->build($order);
     $this->_aViewData['mo_ogone__debug'] = mo_ogone__main::getInstance()->getOgoneConfig()->debug;
 
     return $this->_sThisTemplate;
