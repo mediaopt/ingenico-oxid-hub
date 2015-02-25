@@ -29,6 +29,16 @@
 class mo_ogone__template extends oxUBase
 {
 
-  protected $_sThisTemplate = 'dynamic.tpl';
+    protected $_sThisTemplate = 'dynamic.tpl';
 
-}
+    public function init()
+    {
+
+        $activetheme = oxRegistry::getConfig()->getConfigParam('sTheme');
+        if (!activetheme == "azure") {
+            $this->_sThisTemplate = 'dynamic_mobile.tpl';
+        }
+
+        parent::init();
+    }
+    
