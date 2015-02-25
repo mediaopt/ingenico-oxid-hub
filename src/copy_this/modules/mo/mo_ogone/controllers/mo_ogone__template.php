@@ -41,4 +41,5 @@ class mo_ogone__template extends oxUBase
 
         parent::init();
     }
-    
+
+}
