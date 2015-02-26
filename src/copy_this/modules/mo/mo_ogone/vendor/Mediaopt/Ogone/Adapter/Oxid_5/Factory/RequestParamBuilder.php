@@ -3,6 +3,7 @@
 namespace Mediaopt\Ogone\Adapter\Oxid_5\Factory;
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 
 /**
  * $Id: RequestParamBuilder.php 55 2015-02-24 10:47:24Z mbe $ 
@@ -21,7 +22,8 @@ class RequestParamBuilder extends AbstractFactory
     {
         $redirectUrl = $this->checkUrlLength(
                 $this->getOxConfig()->getSslShopUrl() .
-                'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
+                // mbe: @TODO remove "&XDEBUG_SESSION_START=netbeans-xdebug"
+                'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect&XDEBUG_SESSION_START=netbeans-xdebug', 200);
 
         // prepare the payment request parameter
         $requestParams = array(
@@ -96,7 +98,7 @@ class RequestParamBuilder extends AbstractFactory
         // mbe: @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($requestParams);
         
-        /* @var Mediaopt\Ogone\Sdk\Model\RequestParameters $model */
+        /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
         $model->setParams($requestParams);
         
@@ -153,7 +155,7 @@ class RequestParamBuilder extends AbstractFactory
         // mbe: @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($gatewayParams);
         
-        /* @var Mediaopt\Ogone\Sdk\Model\RequestParameters $model */
+        /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
         $model->setParams($gatewayParams);
         
@@ -208,7 +210,7 @@ class RequestParamBuilder extends AbstractFactory
         // mbe @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($params);
 
-        /* @var Mediaopt\Ogone\Sdk\Model\RequestParameters $model */
+        /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
         $model->setParams($params);
 

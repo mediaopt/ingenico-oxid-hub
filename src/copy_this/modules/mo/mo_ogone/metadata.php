@@ -68,8 +68,10 @@ $aModule = array(
         'mo_ogone__payment_invoice.tpl'                => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_invoice.tpl',
         'mo_ogone__payment_one_page.tpl'               => 'mo/mo_ogone/views/azure/tpl/page/checkout/mo_ogone__payment_one_page.tpl',
         'dynamic.tpl'                                  => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic.tpl',
+        'dynamic_mobile.tpl'                           => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic_mobile.tpl',
         'order_error.tpl'                              => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/order_error.tpl',
         'payment_form.tpl'                             => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
+
     ),
     'settings'    => array(
         array('group' => 'mo_ogone__config', 'name'  => 'mo_ogone__isLiveMode',

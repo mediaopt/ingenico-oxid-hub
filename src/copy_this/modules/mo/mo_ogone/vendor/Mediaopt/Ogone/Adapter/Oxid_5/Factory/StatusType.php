@@ -15,7 +15,7 @@ class StatusType extends AbstractFactory
      */
     public function build($code)
     {
-        /* @var \Mediaopt\Ogone\Sdk\Model\StatusType $model */
+        /* @var $model \Mediaopt\Ogone\Sdk\Model\StatusType */
         $model = $this->getSdkMain()->getModel("StatusType");
         switch ($code) {
             case \Mediaopt\Ogone\Sdk\Model\StatusType::ORDER_STORED:            // 4

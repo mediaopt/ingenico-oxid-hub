@@ -1,6 +1,8 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Model\StatusType;
+use Mediaopt\Ogone\Sdk\Service\Status;
 
 /**
  * $Id: mo_ogone__feedback_handler.php 53 2014-11-28 13:54:26Z martin $ 
@@ -29,7 +31,7 @@ class mo_ogone__feedback_handler
         }
 
         // handles redirections from the payment server back to the store
-        /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
+        /* @var $status Status */
         $status = Main::getInstance()->getService("Status")
                 ->usingStatusCode((int) oxRegistry::getConfig()->getRequestParameter('STATUS'));
         $statusDebugInfo = 'Ogone-Status: ' .
@@ -85,12 +87,12 @@ class mo_ogone__feedback_handler
             $data[(string) $key] = (string) $value;
         }
 
-        /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
+        /* @var $status Status */
         $status = Main::getInstance()->getService("Status");
 
         //check for error-code
         if (!isset($data['STATUS'])) {
-            $status->setStatusCode(Mediaopt\Ogone\Sdk\Model\StatusType::INCOMPLETE_OR_INVALID);
+            $status->setStatusCode(StatusType::INCOMPLETE_OR_INVALID);
             $this->logger->error('DirectLink-Response contains no STATUS-Property!');
         } else {
             $status->setStatusCode($data['STATUS']);

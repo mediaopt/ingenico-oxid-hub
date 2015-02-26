@@ -55,7 +55,7 @@ class Status extends AbstractService
      */
     public function isThankyouStatus()
     {
-        /* @var \Mediaopt\Ogone\Sdk\Model\StatusType $model */
+        /* @var $model StatusType */
         $model = $this->getAdapter()->getFactory("StatusType")->build($this->code);
         return $model->getIsThankyouStatus();
     }
@@ -66,7 +66,7 @@ class Status extends AbstractService
      */
     public function isOkStatus()
     {
-        /* @var \Mediaopt\Ogone\Sdk\Model\StatusType $model */
+        /* @var $model StatusType */
         $model = $this->getAdapter()->getFactory("StatusType")->build($this->code);
         return $model->getIsOkStatus();
     }
@@ -77,7 +77,7 @@ class Status extends AbstractService
      */
     public function getTranslatedStatusMessage()
     {
-        /* @var \Mediaopt\Ogone\Sdk\Model\StatusType $model */
+        /* @var $model StatusType */
         $model = $this->getAdapter()->getFactory("StatusType")->build($this->code);
         return $model->getTranslatedStatusMessage();
     }

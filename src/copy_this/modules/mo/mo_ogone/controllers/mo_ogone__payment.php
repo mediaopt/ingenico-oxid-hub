@@ -1,6 +1,7 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Service\Status;
 
 /**
  * $Id: mo_ogone__payment.php 44 2014-02-06 13:20:24Z martin $ 
@@ -179,7 +180,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
 
         if ($error) {
-            /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
+            /* @var $status Status */
             $status = Main::getInstance()->getService("Status")->usingStatusCode($error);
             if ($status->isShaInMismatch()) {
                 mo_ogone__main::getInstance()->getLogger()->error('SHA-IN Mismatch');
