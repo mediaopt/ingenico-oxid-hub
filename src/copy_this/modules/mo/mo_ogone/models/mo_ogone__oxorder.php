@@ -1,5 +1,8 @@
 <?php
 
+use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Service\Status;
+
 /**
  * This file is part of Ogone Payment Solutions payment interface
  *
@@ -28,10 +31,40 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
     const MO_OGONE__TRANSACTION_ID_PENDING = 'MO_OGONE_PENDING';
     const MO_OGONE__TRANSACTION_ID_DONE = 'MO_OGONE_DONE';
 
-    public function mo_ogone__initBeforePayment()
+    public function mo_ogone__initBeforePayment($oUser, $oBasket)
     {
+        // validating various order/basket parameters before finalizing
+        if ($iOrderState = $this->validateOrder($oBasket, $oUser)) {
+            if (!$iOrderState === oxOrder::ORDER_STATE_INVALIDDElADDRESSCHANGED) {
+                return $iOrderState;
+            }
+        }
+        
+        $this->setId(oxRegistry::getSession()->getVariable('sess_challenge'));
+        // copies user info
+        $this->_setUser($oUser);
+
+        // copies basket info
+        $this->_loadFromBasket($oBasket);
+
+        // payment information
+        $oUserPayment = $this->_setPayment($oBasket->getPaymentId());
+
+        // set folder information, if order is new
+        // #M575 in recalculating order case folder must be the same as it was
+        if (!$blRecalculatingOrder) {
+            $this->_setFolder();
+        }
+
+        if (!$this->oxorder__oxordernr->value) {
+            $this->_setNumber();
+        } else {
+            oxNew('oxCounter')->update($this->_getCounterIdent(), $this->oxorder__oxordernr->value);
+        }
+        
+        // marking as not finished
+        $this->_setOrderStatus('NOT_FINISHED');
         $this->oxorder__oxtransstatus = new oxField('ERROR');
-        $this->save();
     }
 
     public function mo_ogone__isOgoneOrder()
@@ -41,8 +74,8 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
 
     public function mo_ogone__isPaymentDone()
     {
-        /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
-        $status = \Mediaopt\Ogone\Sdk\Main::getInstance()->getService("Status")
+        /* @var $status Status */
+        $status = Main::getInstance()->getService("Status")
                 ->usingStatusCode($this->oxorder__mo_ogone__status->value);
         return $status->isThankyouStatus();
     }
@@ -59,24 +92,24 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
      */
     public function mo_ogone__updateOrderStatus($ogoneStatus)
     {
-        /* @var Mediaopt\Ogone\Sdk\Service\Status $status */
-        $status = \Mediaopt\Ogone\Sdk\Main::getInstance()->getService("Status")
+        /* @var $status Status */
+        $status = Main::getInstance()->getService("Status")
                 ->usingStatusCode($ogoneStatus);
-        $oxidStatus = $status->isOkStatus() ? 'OK' : 'ERROR';
-        $this->oxorder__oxtransstatus = new oxField($oxidStatus);
-        $this->oxorder__mo_ogone__status = new oxField($status->getStatusCode());
+        if ($status->isOkStatus() || $this->_checkOrderExist($this->getId())){
+            $oxidStatus = $status->isOkStatus() ? 'OK' : 'ERROR';
+            $this->oxorder__oxtransstatus = new oxField($oxidStatus);
+            $this->oxorder__mo_ogone__status = new oxField($status->getStatusCode());
 
-        $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
-        if ($status->isThankyouStatus() && $activeView == 'order') {
-            $this->mo_ogone__sendEmails();
+            $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
+            if ($status->isThankyouStatus() && $activeView == 'order') {
+                $this->mo_ogone__sendEmails();
+            }
+            if ($status->isStornoStatus()) {
+                $this->cancelOrder();
+            }
+
+            $this->save();
         }
-
-
-        if ($status->isStornoStatus()) {
-            $this->cancelOrder();
-        }
-
-        $this->save();
     }
 
     /**
@@ -90,7 +123,8 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
             // create a new order number
             parent::_setRecordNumber($sMaxField, $aWhere, $iMaxTryCnt);
 
-            $reservationExists = $orderNumberReservation->load(mo_ogone__order_number_reservation::getReservationKey($this->oxorder__oxordernr->value));
+            $reservationExists = $orderNumberReservation
+                    ->load(mo_ogone__order_number_reservation::getReservationKey($this->oxorder__oxordernr->value));
         } while ($reservationExists);
     }
 
@@ -108,7 +142,6 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         if ($this->mo_ogone__isOgoneOrder() && !$this->mo_ogone__isPaymentDone()) {
             return self::ORDER_STATE_MAILINGERROR;
         }
-
         return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
     }
 
@@ -117,7 +150,6 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         $this->_oBasket = oxRegistry::getSession()->getBasket();
         $this->_oUser = oxRegistry::getSession()->getUser();
         $this->_oPayment = $this->getPaymentType();
-
         $emailSent = $this->_sendOrderByEmail($this->_oUser, $this->_oBasket, $this->_oPayment);
 
         if ($emailSent) {

@@ -6,7 +6,7 @@
 class mo_ogone__util
 {
 
-  static public function storeTransactionFeedbackInDb($oxDb, $requestParams, $order)
+  static public function storeTransactionFeedbackInDb($oxDb, $requestParams)
   {
     $sanitizedParams = array();
     //lowercase keys
@@ -46,8 +46,6 @@ class mo_ogone__util
     );
 
     $assignVariables = array(
-        'billfname' => $order->oxorder__oxbillfname->value,
-        'billlname' => $order->oxorder__oxbilllname->value,
         'date'      => date('Y-m-d H:i:s', time()),
     );
 
@@ -59,7 +57,7 @@ class mo_ogone__util
       }
       $assignVariables[$paramName] = $sanitizedParams[$paramName];
     }
-
+    $assignVariables['billfname'] = $sanitizedParams['cn'];
     $log = oxNew('mo_ogone__payment_log');
     $log->assign($assignVariables);
     $log->save();

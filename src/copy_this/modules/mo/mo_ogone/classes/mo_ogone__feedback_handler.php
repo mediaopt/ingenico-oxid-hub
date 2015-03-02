@@ -21,7 +21,7 @@ class mo_ogone__feedback_handler
      *  - redirect feedback and
      *  - 3DSecure Feedback
      */
-    public function processOrderFeedback($order)
+    public function processOrderFeedback()
     {
         $this->logger->logExecution($_REQUEST);
 
@@ -37,8 +37,7 @@ class mo_ogone__feedback_handler
         $statusDebugInfo = 'Ogone-Status: ' .
                 $status->getStatusTextForCode() . ' (' . $status->getStatusCode() . ')';
 
-        $order->mo_ogone__updateOrderStatus($status->getStatusCode());
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, $order);
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST);
 
         if ($status->isThankyouStatus()) {
             $this->logger->info('Ogone Transaction Success - ' . $statusDebugInfo);
@@ -68,14 +67,14 @@ class mo_ogone__feedback_handler
     }
 
     // contains no sha-return because of server-to-server communication
-    public function processDirectLinkFeedback($response, $order)
+    public function processDirectLinkFeedback($response)
     {
         $this->logger->logExecution($response);
 
         //no response: curl timeout etc... we assume an uncertain status, redirect to error view
         if (!$response) {
             $this->logger->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
-            $redirectUrl = oxRegistry::getConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__order_error&order_id=' . $order->oxorder__oxordernr->value;
+            $redirectUrl = oxRegistry::getConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__order_error';
             return oxRegistry::getUtils()->redirect($redirectUrl);
             exit;
         }
@@ -99,10 +98,8 @@ class mo_ogone__feedback_handler
             $this->logger->info('GOT Ogone-Status in Direct-Link-Response: ' . $status->getStatusCode());
         }
 
-        $order->mo_ogone__updateOrderStatus($status->getStatusCode());
-
         //logging
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $order);
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data);
 
         //3D-Secure 
         if ($xml->HTML_ANSWER) {
@@ -155,7 +152,7 @@ class mo_ogone__feedback_handler
 
         $order->mo_ogone__updateOrderStatus($requestParams['STATUS']);
 
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $requestParams, $order);
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $requestParams);
     }
 
     protected function checkRequiredParams($params, $requiredParams)
