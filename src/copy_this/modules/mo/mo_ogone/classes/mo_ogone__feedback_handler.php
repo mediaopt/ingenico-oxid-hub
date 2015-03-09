@@ -37,8 +37,6 @@ class mo_ogone__feedback_handler
         $statusDebugInfo = 'Ogone-Status: ' .
                 $status->getStatusTextForCode() . ' (' . $status->getStatusCode() . ')';
 
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST);
-
         if ($status->isThankyouStatus()) {
             $this->logger->info('Ogone Transaction Success - ' . $statusDebugInfo);
 
@@ -67,23 +65,15 @@ class mo_ogone__feedback_handler
     }
 
     // contains no sha-return because of server-to-server communication
-    public function processDirectLinkFeedback($response)
+    public function processDirectLinkFeedback($data)
     {
-        $this->logger->logExecution($response);
+        $this->logger->logExecution($data);
 
         //no response: curl timeout etc... we assume an uncertain status, redirect to error view
-        if (!$response) {
+        if (count($data) === 0) {
             $this->logger->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
             $redirectUrl = oxRegistry::getConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__order_error';
             return oxRegistry::getUtils()->redirect($redirectUrl);
-            exit;
-        }
-
-        $data = array();
-        $xml = simplexml_load_string($response);
-        //convert to array
-        foreach ($xml->attributes() as $key => $value) {
-            $data[(string) $key] = (string) $value;
         }
 
         /* @var $status Status */
@@ -97,9 +87,6 @@ class mo_ogone__feedback_handler
             $status->setStatusCode($data['STATUS']);
             $this->logger->info('GOT Ogone-Status in Direct-Link-Response: ' . $status->getStatusCode());
         }
-
-        //logging
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data);
 
         //3D-Secure 
         if ($xml->HTML_ANSWER) {

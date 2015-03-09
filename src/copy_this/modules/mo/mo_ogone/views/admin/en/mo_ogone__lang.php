@@ -37,6 +37,7 @@ $aLang = array(
 // Admin -> Ogone -> Statusmeldungen
     'OGONE_DATE'                                   => 'Date',
     'OGONE_ORDERID'                                => 'Order ID',
+    'OGONE_TRANSID'                                => 'Trans.ID',
     'OGONE_CUSTOMER_NAME'                          => 'Customer',
     'OGONE_CN'                                     => 'Card holder',
     'OGONE_AMOUNT'                                 => 'Amount',

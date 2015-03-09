@@ -103,6 +103,7 @@
         <tr>
           <td class="listheader">[{ oxmultilang ident="OGONE_DATE" }]</td>
           <td class="listheader">[{ oxmultilang ident="OGONE_ORDERID" }]</td>
+          <td class="listheader">[{ oxmultilang ident="OGONE_TRANSID" }]</td>
           <td class="listheader">[{ oxmultilang ident="OGONE_CUSTOMER_NAME" }]</td>
           <td class="listheader">[{ oxmultilang ident="OGONE_AMOUNT" }]</td>
           <!--<td class="listheader">[{ oxmultilang ident="OGONE_PM" }]</td>-->
@@ -123,6 +124,7 @@
           <tr>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__date->value|date_format:"%d.%m.%y&nbsp;%H:%M:%S"}]</td>
             <td class="[{ $listclass}]" nowrap=""><div class="listitemfloating">[{$oItem->mo_ogone__payment_logs__orderid->value}]</div></td>
+            <td class="[{ $listclass}]" nowrap=""><div class="listitemfloating">[{$oItem->mo_ogone__payment_logs__transid->value}]</div></td>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__customer_name->value}]</a>&nbsp;</td>
             <td class="[{ $listclass}]" nowrap="" style="text-align:right">[{$oItem->mo_ogone__payment_logs__amount->value|string_format:"%.2f"}] [{$oItem->mo_ogone__payment_logs__currency->value}]</td>
             <!--<td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__pm->value}]&nbsp;</td>-->

@@ -26,8 +26,7 @@ class OrderDirectGateway extends AbstractService
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => http_build_query(Main::getInstance()->getService("RequestParamBuilder")->buildOnePageOrderdirectParams($order)),
             CURLOPT_RETURNTRANSFER => 1,
-            // mbe: @TODO direkten Zugriff auf OgoneConfig entfernen
-            CURLOPT_TIMEOUT => \mo_ogone__main::getInstance()->getOgoneConfig()->curl_timeout,
+            CURLOPT_TIMEOUT => 30,
         ));
 
         $result = curl_exec($ch);

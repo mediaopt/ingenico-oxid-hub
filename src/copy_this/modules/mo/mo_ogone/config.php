@@ -233,9 +233,6 @@ $this->oxidLangCodeToOgoneLanguageCountryCode = array(
 //WICHTIG: Der hier angegebene Wert muss kleiner als der Zeitüberschreitungswert in Ihrem System sein!
 $this->rtimeout = 15;
 
-//timeout for curl operation
-$this->curl_timeout = 10;
-
 $this->maximumLogfileSizeInBytes = 1024 * 1024;
 
 //$this->logLevels = array('CALL', 'INFO', 'ERROR');
@@ -247,6 +244,7 @@ $this->logTableCreateSql =
     `id` int NOT NULL auto_increment,
 
     `orderID` varchar(30) NOT NULL default '',
+    `transID` varchar(64) UNIQUE NOT NULL default '',
     `amount` double NOT NULL default '0',
     `currency` varchar(3) NOT NULL default '',
     `language` varchar(5) NOT NULL default '',

@@ -75,13 +75,22 @@ class mo_ogone__order extends mo_ogone__order_parent
 
             // server to server communication
             $response = Main::getInstance()->getService("OrderDirectGateway")->call($order);
+            $data = array();
+            $xml = simplexml_load_string($response);
+            //convert to array
+            foreach ($xml->attributes() as $key => $value) {
+                $data[(string) $key] = (string) $value;
+        }
             $orderState = mo_ogone__main::getInstance()->getFeedbackHandler()
-                    ->processDirectLinkFeedback($response);
+                    ->processDirectLinkFeedback($data);
             $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
+            $orderId = "";
             if ($orderState === oxOrder::ORDER_STATE_OK) {
                 $order->finalizeOrder($this->getBasket(), $this->getUser());
+                $orderId = $order->oxorder__oxordernr->value;
                 //parent::execute();
             }
+            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $orderId);
             return parent::_getNextStep($orderState);
         }
     }
@@ -100,11 +109,15 @@ class mo_ogone__order extends mo_ogone__order_parent
 
         $orderState = mo_ogone__main::getInstance()->getFeedbackHandler()->processOrderFeedback();
         $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
-
+        $orderId = "";
         if ($orderState === oxOrder::ORDER_STATE_OK) {
+            /* @var $order oxOrder */
             $order = oxNew('oxorder');
             $order->finalizeOrder($this->getBasket(), $this->getUser());
+            $orderId = $order->oxorder__oxordernr->value;
         }
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, $orderId);
+
         return parent::_getNextStep($orderState);
     }
 

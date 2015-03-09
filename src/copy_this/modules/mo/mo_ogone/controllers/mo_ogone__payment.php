@@ -13,22 +13,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     protected $mo_ogone__aliasGatewayParamsSet = null;
 
     /**
-     * do not recycle orders
-     */
-    public function init()
-    {
-        $order = oxNew('oxorder');
-        $orderId = oxRegistry::getSession()->getVariable('sess_challenge');
-
-        if ($order->load($orderId)) {
-            $order->cancelOrder();
-            oxRegistry::getSession()->setVariable('sess_challenge', oxUtilsObject::getInstance()->generateUID());
-        }
-
-        parent::init();
-    }
-
-    /**
      * @overload oxid fnc (called from payment page, returns: 'order' on success)
      * If: 
      *  - client has JS disabled and
@@ -42,16 +26,17 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     public function validatePayment()
     {
         mo_ogone__main::getInstance()->getLogger()->logExecution($_REQUEST);
-
-        $paymentId = oxRegistry::getConfig()->getRequestParameter('paymentid');
+        /* @var $oxpayment oxpayment */
+        $oxpayment = oxNew("oxpayment");
+        $oxpayment->load(oxRegistry::getConfig()->getRequestParameter('paymentid'));
         $parentResult = parent::validatePayment();
 
         //standard procedure with other payments
-        if (!$this->mo_ogone__isOgonePayment($paymentId)) {
+        if ($oxpayment->mo_ogone__isOgonePayment()) {
             return $parentResult;
         }
 
-        $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($paymentId, 'paymenttype');
+        $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
 
         //standard procedure with redirect payments
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
@@ -72,13 +57,13 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             // check if js is disabled
             if (!isset($_REQUEST['PARAMVAR']) || $_REQUEST['PARAMVAR'] != 'JS_ENABLED') {
                 //fetch necessary auth params and build sha-signature
-                $this->mo_ogone__loadRequestParams($paymentId);
+                $this->mo_ogone__loadRequestParams($oxpayment->getId());
                 // javascript is not enabled so we need to display step 3.5
                 $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
                 return;
             }
 
-            // js is enabled, this meens that this request is triggered via ogone alias gateway redirect url
+            // error will be displayed (set in mo_ogone__handleAliasGatewayErrorResponse)
             return 'payment';
         } else {
             mo_ogone__main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
@@ -125,25 +110,16 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     }
 
     /**
-     * check if given paymentid is ogone-payment
-     * @param type $paymentId
-     * @return type 
-     */
-    protected function mo_ogone__isOgonePayment($paymentId)
-    {
-        $paymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->getOgonePayments();
-        return array_key_exists($paymentId, $paymentConfig);
-    }
-
-    /**
      * return payment-form action URL
      */
     public function mo_ogone__getPaymentGatewayUrl()
     {
-        $paymentId = $this->getCheckedPaymentId();
+        /* @var $oxpayment oxpayment */
+        $oxpayment = oxNew("oxpayment");
+        $oxpayment->load($this->getCheckedPaymentId());
 
-        if ($this->mo_ogone__isOgonePayment($paymentId)) {
-            $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($paymentId, 'paymenttype');
+        if ($oxpayment->mo_ogone__isOgonePayment()) {
+            $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
             switch ($paymentType) {
                 case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
                     return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_alias');
@@ -155,14 +131,15 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
     public function mo_ogone__getCurrentPaymentConfig($paymentId = null)
     {
-        if ($this->mo_ogone__currentPaymentConfig === null) {
-            if (!$paymentId) {
-                $paymentId = $this->getCheckedPaymentId();
-            }
-            $this->mo_ogone__currentPaymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->
-                    getOgonePaymentByOxidPaymentId($paymentId);
+        if (!$this->mo_ogone__currentPaymentConfig === null) {
+            return $this->mo_ogone__currentPaymentConfig;
         }
-        return $this->mo_ogone__currentPaymentConfig;
+        if (!$paymentId) {
+            $paymentId = $this->getCheckedPaymentId();
+        }
+        return $this->mo_ogone__currentPaymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->
+                getOgonePaymentByOxidPaymentId($paymentId);
+        
     }
 
     public function mo_ogone__handleAliasGatewayErrorResponse()
