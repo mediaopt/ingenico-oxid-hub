@@ -32,7 +32,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         $parentResult = parent::validatePayment();
 
         //standard procedure with other payments
-        if ($oxpayment->mo_ogone__isOgonePayment()) {
+        if (!$oxpayment->mo_ogone__isOgonePayment()) {
             return $parentResult;
         }
 
@@ -75,7 +75,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__loadRequestParams($paymentId)
     {
-        $this->mo_ogone__aliasGatewayParamsSet = Main::getInstance()->getService("RequestParamBuilder")->buildAliasGatewayParams($paymentId);
+        $this->mo_ogone__aliasGatewayParamsSet = Main::getInstance()->getService("AliasGateway")->buildParams($paymentId);
     }
 
     /**

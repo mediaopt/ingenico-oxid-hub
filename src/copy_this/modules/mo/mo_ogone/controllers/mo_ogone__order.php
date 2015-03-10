@@ -63,7 +63,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             $order = oxNew("oxOrder");
             $order->mo_ogone__initBeforePayment($this->getUser(), oxRegistry::getSession()->getBasket());
             $redirecturl = $this->getConfig()->getConfigParam('mo_ogone__gateway_url_redirect');
-            $params = Main::getInstance()->getService("RequestParamBuilder")->build($order);
+            $params = Main::getInstance()->getService("OrderRedirectGateway")->buildParams($order);
             oxRegistry::getUtils()->redirect($redirecturl."?".http_build_query($params));
         }
 

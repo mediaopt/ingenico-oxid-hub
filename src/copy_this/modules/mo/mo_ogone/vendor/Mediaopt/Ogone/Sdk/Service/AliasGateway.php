@@ -8,7 +8,7 @@ use Mediaopt\Ogone\Sdk\Model\Url;
 /**
  * $Id: $
  */
-class OrderDirectGateway extends AbstractService
+class AliasGateway extends AbstractService
 {
 
     public function call($order)
@@ -45,10 +45,10 @@ class OrderDirectGateway extends AbstractService
         return $result;
     }
 
-    public function buildParams($order)
+    public function buildParams($paymentId)
     {
         /* @var $model RequestParameters */
-        $model = $this->getAdapter()->getFactory("OrderDirectParamBuilder")->build($order);
+        $model = $this->getAdapter()->getFactory("AliasParamBuilder")->build($paymentId);
         return $model->getParams();
     }
     
