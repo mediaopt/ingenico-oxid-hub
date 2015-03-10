@@ -54,9 +54,6 @@ class mo_ogone__order extends mo_ogone__order_parent
         $paymentId = $this->getPayment()->getId();
         $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($paymentId, 'paymenttype');
 
-
-
-
         //redirect
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
             /* @var $order oxOrder */
@@ -83,14 +80,17 @@ class mo_ogone__order extends mo_ogone__order_parent
         }
             $orderState = mo_ogone__main::getInstance()->getFeedbackHandler()
                     ->processDirectLinkFeedback($data);
-            $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
-            $orderId = "";
-            if ($orderState === oxOrder::ORDER_STATE_OK) {
-                $order->finalizeOrder($this->getBasket(), $this->getUser());
-                $orderId = $order->oxorder__oxordernr->value;
-                //parent::execute();
+            if ($orderState === oxOrder::ORDER_STATE_OK) {              
+                $orderState = parent::execute();
+                $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
+                $orderId = $this->getBasket()->getOrderId();
+                /* @var $oxOrder oxOrder */
+                $oxOrder = oxNew("oxOrder");
+                $oxOrder->load($orderId);
+                mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $oxOrder->oxorder__oxordernr->value);
+                return $orderState;
             }
-            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $orderId);
+            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, "");
             return parent::_getNextStep($orderState);
         }
     }
@@ -113,16 +113,16 @@ class mo_ogone__order extends mo_ogone__order_parent
         } else {
             $oxOrderState = $orderState->getTranslatedStatusMessage();
         }
-        $oxOrderState = $this->mo_ogone__getOrderStateWithMailError($oxOrderState);
-        $orderId = "";
-        if ($oxOrderState === oxOrder::ORDER_STATE_OK || $oxOrderState === oxOrder::ORDER_STATE_MAILINGERROR) {
-            /* @var $order oxOrder */
-            $order = oxNew('oxorder');
-            $order->finalizeOrder($this->getBasket(), $this->getUser());
-            $orderId = $order->oxorder__oxordernr->value;
+        if ($oxOrderState === oxOrder::ORDER_STATE_OK) {
+            $oxOrderState = $this->mo_ogone__getOrderStateWithMailError($oxOrderState);
+            $orderState = parent::execute();
+            /* @var $oxOrder oxOrder */
+            $oxOrder = oxNew("oxOrder");
+            $oxOrder->load($this->getBasket()->getOrderId());
+            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, $oxOrder->oxorder__oxordernr->value);
+            return $orderState;
         }
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, $orderId);
-
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, "");
         return parent::_getNextStep($oxOrderState);
     }
 
