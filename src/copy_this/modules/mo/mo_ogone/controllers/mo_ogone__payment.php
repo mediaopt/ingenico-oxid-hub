@@ -21,7 +21,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      * Then: 
      *  - show checkout step 3.5 
      *
-     * Redirect fnc for ogone alias gateway: ACCEPTURL, EXCEPTIONURL
      */
     public function validatePayment()
     {
@@ -42,34 +41,40 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
             return $parentResult;
         }
-
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
-            // check for error
-            $error = $this->mo_ogone__handleAliasGatewayErrorResponse();
-
-            // check if we got the alias
-            if (!$error && isset($_REQUEST['Alias']) && !empty($_REQUEST['Alias'])) {
-                // store alias
-                oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $_REQUEST['Alias']);
-                return 'order';
-            }
-
-            // check if js is disabled
-            if (!isset($_REQUEST['PARAMVAR']) || $_REQUEST['PARAMVAR'] != 'JS_ENABLED') {
-                //fetch necessary auth params and build sha-signature
-                $this->mo_ogone__loadRequestParams($oxpayment->getId());
-                // javascript is not enabled so we need to display step 3.5
-                $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
-                return;
-            }
-
-            // error will be displayed (set in mo_ogone__handleAliasGatewayErrorResponse)
-            return 'payment';
+        elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
+            return $this->mo_ogone__handleAliasGatewayResponse();
         } else {
             mo_ogone__main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
         }
     }
 
+    /**
+     * Redirect fnc for ogone alias gateway: ACCEPTURL, EXCEPTIONURL
+     */
+    public function mo_ogone__handleAliasGatewayResponse(){
+        // check for error
+        $error = $this->mo_ogone__handleAliasGatewayErrorResponse();
+
+        // check if we got the alias
+        if (!$error && isset($_REQUEST['Alias']) && !empty($_REQUEST['Alias'])) {
+            // store alias
+            oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $_REQUEST['Alias']);
+            return 'order';
+        }
+
+        // check if js is disabled
+        if (!isset($_REQUEST['PARAMVAR']) || $_REQUEST['PARAMVAR'] != 'JS_ENABLED') {
+            //fetch necessary auth params and build sha-signature
+            $this->mo_ogone__loadRequestParams($oxpayment->getId());
+            // javascript is not enabled so we need to display step 3.5
+            $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
+            return;
+        }
+
+        // error will be displayed (set in mo_ogone__handleAliasGatewayErrorResponse)
+        return 'payment';
+    }
+    
     /**
      * template method
      */

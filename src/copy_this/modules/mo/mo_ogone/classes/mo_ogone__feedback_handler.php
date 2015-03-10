@@ -16,54 +16,6 @@ class mo_ogone__feedback_handler
         $this->oxUtilsObject = $oxUtilsObject;
     }
 
-    /**
-     * Process 
-     *  - redirect feedback and
-     *  - 3DSecure Feedback
-     */
-    public function processOrderFeedback()
-    {
-        $this->logger->logExecution($_REQUEST);
-
-        if (!Main::getInstance()->getService("Authenticator")->authenticateRequest()) {
-            // no authentication, kick back to payment methods
-            return oxOrder::ORDER_STATE_PAYMENTERROR;
-        }
-
-        // handles redirections from the payment server back to the store
-        /* @var $status Status */
-        $status = Main::getInstance()->getService("Status")
-                ->usingStatusCode((int) oxRegistry::getConfig()->getRequestParameter('STATUS'));
-        $statusDebugInfo = 'Ogone-Status: ' .
-                $status->getStatusTextForCode() . ' (' . $status->getStatusCode() . ')';
-
-        if ($status->isThankyouStatus()) {
-            $this->logger->info('Ogone Transaction Success - ' . $statusDebugInfo);
-
-            return oxOrder::ORDER_STATE_OK;
-        }
-
-        $errorMessage = $status->getTranslatedStatusMessage();
-        if ($_REQUEST['NCERROR']) {
-            $errrorStatus = Main::getInstance()->getService("Status")->usingStatusCode($_REQUEST['NCERROR']);
-            $errorMessage = $errrorStatus->getTranslatedStatusMessage();
-        }
-
-        $this->logger->info('Ogone Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
-
-        if ($status->isCancelledByClient()) {
-            $this->logger->info("Cancelled by client, force create new order");
-
-            // force create new order, this is at least necessary if the user cancels the payment on the ogone
-            // page, than we need to create a new order, with a new order id.
-            // reset session order id, so a new order is created, old order keeps in database
-            // (ogone does not accept an order with an order-id which was formally canceled)
-            oxRegistry::getSession()->setVariable('sess_challenge', $this->oxUtilsObject->generateUID()); // <-- forces new order creation
-        }
-
-        return $errorMessage;
-    }
-
     // contains no sha-return because of server-to-server communication
     public function processDirectLinkFeedback($data)
     {

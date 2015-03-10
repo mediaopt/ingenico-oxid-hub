@@ -13,7 +13,7 @@ class RequestParameters extends AbstractFactory
      * @param bool $raw Specifies whether the data should be raw or excaped
      * @return \Mediaopt\Ogone\Sdk\Model\RequestParameters
      */
-    public function build($raw)
+    public function build($raw = false)
     {
         /* @var $model \Mediaopt\Ogone\Sdk\Model\RequestParameters */
         $model = $this->getSdkMain()->getModel('RequestParameters');

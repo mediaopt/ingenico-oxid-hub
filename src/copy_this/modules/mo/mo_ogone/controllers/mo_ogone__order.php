@@ -106,11 +106,16 @@ class mo_ogone__order extends mo_ogone__order_parent
         // use of basket between order and thankyou views causes errors, when buying last item in stock
         oxRegistry::getConfig()->setConfigParam('mo_ogone__prevent_recalculate', true);
         oxRegistry::getSession()->getBasket()->afterUpdate();
-
-        $orderState = mo_ogone__main::getInstance()->getFeedbackHandler()->processOrderFeedback();
-        $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
+        /* @var $orderState Mediaopt\Ogone\Sdk\Service\Status */
+        $orderState = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
+        if ($orderState->isThankyouStatus()) {
+            $oxOrderState = oxOrder::ORDER_STATE_OK;
+        } else {
+            $oxOrderState = $orderState->getTranslatedStatusMessage();
+        }
+        $oxOrderState = $this->mo_ogone__getOrderStateWithMailError($oxOrderState);
         $orderId = "";
-        if ($orderState === oxOrder::ORDER_STATE_OK) {
+        if ($oxOrderState === oxOrder::ORDER_STATE_OK || $oxOrderState === oxOrder::ORDER_STATE_MAILINGERROR) {
             /* @var $order oxOrder */
             $order = oxNew('oxorder');
             $order->finalizeOrder($this->getBasket(), $this->getUser());
@@ -118,7 +123,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         }
         mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, $orderId);
 
-        return parent::_getNextStep($orderState);
+        return parent::_getNextStep($oxOrderState);
     }
 
     /**
