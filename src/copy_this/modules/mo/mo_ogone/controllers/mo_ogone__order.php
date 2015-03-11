@@ -1,6 +1,8 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Model\StatusType;
+use Mediaopt\Ogone\Sdk\Service\Status;
 
 /**
  * This file is part of Ogone Payment Solutions payment interface
@@ -63,15 +65,24 @@ class mo_ogone__order extends mo_ogone__order_parent
         if ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
             // server to server communication
             $response = Main::getInstance()->getService("OrderDirectGateway")->call();
-            $data = array();
             $xml = simplexml_load_string($response);
-            //convert to array
-            foreach ($xml->attributes() as $key => $value) {
-                $data[(string) $key] = (string) $value;
-        }
-            $orderState = mo_ogone__main::getInstance()->getFeedbackHandler()
-                    ->processDirectLinkFeedback($data);
-            if ($orderState === oxOrder::ORDER_STATE_OK) {              
+
+            //3D-Secure 
+            if ($xml->HTML_ANSWER) {
+                $this->logger->info('Ogone 3D-Secure redirection');
+                echo '<html><body>';
+                echo base64_decode((string) $xml->HTML_ANSWER);
+                echo '</body></html>';
+                exit;
+            }
+            /* @var $orderState Status */
+            $orderState = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
+            
+            if ($orderState == StatusType::INCOMPLETE_OR_INVALID) {
+                return parent::_getNextStep($orderState->getTranslatedStatusMessage());
+            }
+            $data =  Main::getInstance()->getService("OrderDirectGateway")->parseXml($xml);
+            if ($orderState->isThankyouStatus()) {
                 $orderState = parent::execute();
                 $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
                 $orderId = $this->getBasket()->getOrderId();
@@ -82,7 +93,7 @@ class mo_ogone__order extends mo_ogone__order_parent
                 return $orderState;
             }
             mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, "");
-            return parent::_getNextStep($orderState);
+            return parent::_getNextStep($orderState->getTranslatedStatusMessage());
         }
     }
 
@@ -97,7 +108,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         // use of basket between order and thankyou views causes errors, when buying last item in stock
         oxRegistry::getConfig()->setConfigParam('mo_ogone__prevent_recalculate', true);
         oxRegistry::getSession()->getBasket()->afterUpdate();
-        /* @var $orderState Mediaopt\Ogone\Sdk\Service\Status */
+        /* @var $orderState Status */
         $orderState = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
         if ($orderState->isThankyouStatus()) {
             $oxOrderState = oxOrder::ORDER_STATE_OK;
