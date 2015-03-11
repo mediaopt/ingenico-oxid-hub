@@ -78,7 +78,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             /* @var $orderState Status */
             $orderState = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
             
-            if ($orderState == StatusType::INCOMPLETE_OR_INVALID) {
+            if ($orderState->getStatusCode() == StatusType::INCOMPLETE_OR_INVALID) {
                 return parent::_getNextStep($orderState->getTranslatedStatusMessage());
             }
             $data =  Main::getInstance()->getService("OrderDirectGateway")->parseXml($xml);
