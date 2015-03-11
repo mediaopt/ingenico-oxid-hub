@@ -1,7 +1,7 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
-use Mediaopt\Ogone\Sdk\Service\Status;
+use Mediaopt\Ogone\Sdk\Model\StatusType;
 
 /**
  * $Id: mo_ogone__payment.php 44 2014-02-06 13:20:24Z martin $ 
@@ -53,12 +53,14 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__handleAliasGatewayResponse(){
         // check for error
-        $error = $this->mo_ogone__handleAliasGatewayErrorResponse();
+        /* @var $errorstate StatusType */
+        $errorstate = Main::getInstance()->getService("AliasGateway")->handleResponse();
 
         // check if we got the alias
-        if (!$error && isset($_REQUEST['Alias']) && !empty($_REQUEST['Alias'])) {
+        $alias = oxRegistry::getConfig()->getRequestParameter('Alias');
+        if (empty($errorstate) && isset($alias) && !empty($alias)) {
             // store alias
-            oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $_REQUEST['Alias']);
+            oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $alias);
             return 'order';
         }
 
@@ -71,7 +73,11 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             return;
         }
 
-        // error will be displayed (set in mo_ogone__handleAliasGatewayErrorResponse)
+        // error will be displayed        
+        if (!empty($errorstate)) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($errorstate->getTranslatedStatusMessage());
+        }
+        
         return 'payment';
     }
     
@@ -145,32 +151,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         return $this->mo_ogone__currentPaymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->
                 getOgonePaymentByOxidPaymentId($paymentId);
         
-    }
-
-    public function mo_ogone__handleAliasGatewayErrorResponse()
-    {
-        $error = '';
-
-        if (!empty($_REQUEST['NCErrorCardNo']) && $_REQUEST['NCErrorCardNo'] != '0') {
-            $error = $_REQUEST['NCErrorCardNo'];
-        } elseif (!empty($_REQUEST['NCErrorCVC']) && $_REQUEST['NCErrorCVC'] != '0') {
-            $error = $_REQUEST['NCErrorCVC'];
-        } elseif (!empty($_REQUEST['NCErrorED']) && $_REQUEST['NCErrorED'] != '0') {
-            $error = $_REQUEST['NCErrorED'];
-        } elseif (!empty($_REQUEST['NCError']) && $_REQUEST['NCError'] != '0') {
-            $error = $_REQUEST['NCError'];
-        }
-
-        if ($error) {
-            /* @var $status Status */
-            $status = Main::getInstance()->getService("Status")->usingStatusCode($error);
-            if ($status->isShaInMismatch()) {
-                mo_ogone__main::getInstance()->getLogger()->error('SHA-IN Mismatch');
-            }
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($status->getTranslatedStatusMessage());
-            return true;
-        }
-        return false;
     }
 
     /**
