@@ -65,7 +65,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         // check if js is disabled
         if (!isset($_REQUEST['PARAMVAR']) || $_REQUEST['PARAMVAR'] != 'JS_ENABLED') {
             //fetch necessary auth params and build sha-signature
-            $this->mo_ogone__loadRequestParams($oxpayment->getId());
+            $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
             $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
             return;

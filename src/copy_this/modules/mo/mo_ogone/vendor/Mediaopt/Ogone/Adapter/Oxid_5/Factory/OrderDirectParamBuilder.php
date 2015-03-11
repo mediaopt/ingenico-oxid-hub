@@ -17,7 +17,7 @@ class OrderDirectParamBuilder extends RequestParamBuilder
     protected $billpay_itemNumber = 0;
     protected $paypal_itemNumber = 0;
 
-    public function build($order)
+    public function build()
     {
         $user = $this->getOxUser();
         $params = array();

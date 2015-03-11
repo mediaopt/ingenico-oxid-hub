@@ -12,15 +12,13 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
 {
 
     // mbe: @TODO direkten Zugriff auf oxDB entfernen
-    
+
     protected $oxidSessionParamsForRemoteCalls = null;
     protected $billpay_itemNumber = 0;
 
     // used for redirect payments
     public function build($order)
     {
-        $user = $this->getOxUser();
-        
         $redirectUrl = $this->checkUrlLength(
                 $this->getOxConfig()->getSslShopUrl() .
                 // mbe: @TODO remove "&XDEBUG_SESSION_START=netbeans-xdebug"
@@ -36,12 +34,12 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
             'operation' => $this->getCreditCardOperation(),
             // oxidLangCodeToOgoneLanguageCountryCode
             'language' => $this->getLanguageCountryCode(),
-            'cn' => substr($user->oxuser__oxfname->value . ' ' . $user->oxuser__oxlname->value, 0, 35),
-            'email' => substr($user->oxuser__oxusername->value, 0, 50),
-            'ownerzip' => substr($user->oxuser__oxzip->value, 0, 10),
-            'owneraddress' => substr($user->oxuser__oxstreet->value . " " . $user->oxuser__oxstreetnr->value, 0, 35),
-            'ownercty' => \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $user->oxuser__oxcountryid->value . "'"),
-            'ownertown' => substr($user->oxuser__oxcity->value, 0, 25),
+            'cn' => substr($this->getBillProperty("fname") . ' ' . $this->getBillProperty("lname"), 0, 35),
+            'email' => substr($this->getBillProperty("email"), 0, 50),
+            'ownerzip' => substr($this->getBillProperty("zip"), 0, 10),
+            'owneraddress' => substr($this->getBillProperty("street") . " " . $this->getBillProperty("streetnr"), 0, 35),
+            'ownercty' => \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $this->getBillProperty("countryid") . "'"),
+            'ownertown' => substr($this->getBillProperty("city"), 0, 25),
             // redirect urls
             'accepturl' => $redirectUrl,
             'declineurl' => $redirectUrl,
@@ -84,12 +82,12 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
 
         // billpay extra params
         if ($this->getOxSession()->getBasket()->getPaymentId() == 'ogone_open_invoice_de') {
-            $requestParams = $this->addBillPayParams($requestParams, $order);
+            $requestParams = $this->addBillPayParams($order, $requestParams);
         }
 
         // paypal extra params
         if ($this->getOxSession()->getBasket()->getPaymentId() == 'ogone_paypal') {
-            $requestParams = $this->addPaypalParams($requestParams, $order);
+            $requestParams = $this->addPaypalParams($requestParams);
         }
         $requestParams['paramplus'] = http_build_query($this->getOxidSessionParamsForRemoteCalls());
 
@@ -98,11 +96,11 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         $requestParams['SHASign'] = $this->getShaSignForParams($requestParams);
         // mbe: @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($requestParams);
-        
+
         /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
         $model->setParams($requestParams);
-        
+
         return $model;
     }
 
@@ -128,9 +126,8 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
       [NODOC-Found] ITEMVATX numeric item VAT code (replace X with a number to send multiple items: ITEMVAT1, ITEMVAT2, ...)
      */
 
-    protected function addBillPayParams($params, $order)
+    protected function addBillPayParams($order, $params)
     {
-        $user = $this->getOxUser();
         $basket = $this->getOxSession()->getBasket();
         $dynvalues = $this->getOxSession()->getVariable('dynvalue');
 
@@ -145,13 +142,13 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         $params['ordershiptax'] = number_format($deliveryPrice->getVatValue() * 100, 4); // N shipment tax amount multiplied by 100
         $params['ordershiptaxcode'] = $deliveryPrice->getVat(); // N shipment tax code
 
-        $params['civility'] = $this->getOxLang()->translateString($user->oxuser__oxsal->value);
+        $params['civility'] = $this->getOxLang()->translateString($this->getBillProperty("sal"));
 
 
 
         //bill parameters
-        $params['ecom_billto_postal_name_first'] = substr($user->oxuser__oxfname->value, 0, 50);
-        $params['ecom_billto_postal_name_last'] = substr($user->oxuser__oxlname->value, 0, 50);
+        $params['ecom_billto_postal_name_first'] = substr($this->getBillProperty("fname"), 0, 50);
+        $params['ecom_billto_postal_name_last'] = substr($this->getBillProperty("lname"), 0, 50);
 
         //dateformat dd/mm/YYYY
         $date = explode('-', $dynvalues['mo_ogone']['invoice']['birthdate']);
@@ -169,21 +166,21 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         return $params;
     }
 
-    protected function addPaypalParams($params, $order)
+    protected function addPaypalParams($params)
     {
         // If the full name needs to be send to PayPal "firstname + lastname" needs to be sent in one of the fields (ECOM_SHIPTO_POSTAL_NAME_LAST or
         // ECOM_SHIPTO_POSTAL_NAME_FIRST). 
         // If both ECOM_SHIPTO_POSTAL_NAME_ parameters are sent then only the _LAST will be taken into account.
-        $paypalFullName = substr($this->getShippingProperty($order, 'fname'), 0, 50) . ' ' . substr($this->getShippingProperty($order, 'lname'), 0, 50);
+        $paypalFullName = substr($this->getShippingProperty('fname'), 0, 50) . ' ' . substr($this->getShippingProperty('lname'), 0, 50);
 
-        $params['ecom_shipto_postal_name_prefix'] = $this->getOxLang()->translateString($this->getShippingProperty($order, 'sal'));
+        $params['ecom_shipto_postal_name_prefix'] = $this->getOxLang()->translateString($this->getShippingProperty('sal'));
         $params['ecom_shipto_postal_name_first'] = $paypalFullName;
         $params['ecom_shipto_postal_name_last'] = $paypalFullName;
-        $params['ecom_shipto_postal_street_line1'] = substr($this->getShippingProperty($order, 'street'), 0, 35);
-        $params['ecom_shipto_postal_street_number'] = substr($this->getShippingProperty($order, 'streetnr'), 0, 10);
-        $params['ecom_shipto_postal_postalcode'] = substr($this->getShippingProperty($order, 'zip'), 0, 10);
-        $params['ecom_shipto_postal_city'] = substr($this->getShippingProperty($order, 'city'), 0, 25);
-        $params['ecom_shipto_postal_countrycode'] = substr($this->getBillPayDeliveryCountryCode($order), 0, 2);
+        $params['ecom_shipto_postal_street_line1'] = substr($this->getShippingProperty('street'), 0, 35);
+        $params['ecom_shipto_postal_street_number'] = substr($this->getShippingProperty('streetnr'), 0, 10);
+        $params['ecom_shipto_postal_postalcode'] = substr($this->getShippingProperty('zip'), 0, 10);
+        $params['ecom_shipto_postal_city'] = substr($this->getShippingProperty('city'), 0, 25);
+        $params['ecom_shipto_postal_countrycode'] = substr($this->getBillPayDeliveryCountryCode(), 0, 2);
 
 
         return $params;
@@ -237,36 +234,49 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         $params['itemname' . $this->billpay_itemNumber] = substr(trim($name), 0, 40);
         $params['itemprice' . $this->billpay_itemNumber] = number_format($price->getNettoPrice(), 2);
         $params['itemquant' . $this->billpay_itemNumber] = $amount;
-        $params['itemvat' . $this->billpay_itemNumber] = ($price->getVat()/100);
+        $params['itemvatcode' . $this->billpay_itemNumber] = $price->getVat() . "%";
         $params['facexcl' . $this->billpay_itemNumber] = number_format($price->getNettoPrice() * $amount, 4);
         $params['factotal' . $this->billpay_itemNumber] = number_format($price->getBruttoPrice() * $amount, 4);
         $params['taxincluded' . $this->billpay_itemNumber] = 1;
         return $params;
     }
 
-    protected function getShippingProperty($order, $property)
+    protected function getBillPayDeliveryCountryCode()
     {
-        $propertyBill = 'oxorder__oxbill' . $property;
-        $propertyDelivery = 'oxorder__oxdel' . $property;
+        $countryid = $this->getShippingProperty("countryid");
+        return \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $countryid . "'");
+    }
 
-        if (!empty($order->$propertyDelivery->value)) {
-            return $order->$propertyDelivery->value;
+        protected function getShippingProperty($property)
+    {
+        $propertyBill = $this->getBillProperty($property);
+        $propertyDelivery = $this->getDelProperty($property);
+
+        if (!empty($propertyDelivery)) {
+            return $propertyDelivery;
         }
-        return $order->$propertyBill->value;
+        return $propertyBill;
     }
 
-    protected function getBillPayDeliveryCountryCode($order)
+    protected function getBillProperty($param)
     {
-        $oxid = !empty($order->oxorder__oxdelcountryid->value) ?
-                $order->oxorder__oxdelcountryid->value :
-                $order->oxorder__oxbillcountryid->value;
-
-        return $this->getCountryCodeById($oxid);
+        if ($param === "email") {
+            $field = "oxuser__oxusername";
+        } else {
+            $field = "oxuser__ox" . $param;
+        }
+        return $this->getOxUser()->$field->value;
     }
 
-    protected function getCountryCodeById($id)
+    protected function getDelProperty($param)
     {
-        return \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $id . "'");
+        $user = $this->getOxUser();
+        if ($user->getSelectedAddressId()) {
+            $field = "oxaddress__ox" . $param;
+            $deliveryAddress = $user->getSelectedAddress();
+            return $deliveryAddress->$field->value;
+        }
+        return null;
     }
-    
+
 }

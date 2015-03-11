@@ -56,22 +56,13 @@ class mo_ogone__order extends mo_ogone__order_parent
 
         //redirect
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
-            /* @var $order oxOrder */
-            $order = oxNew("oxOrder");
-            $order->mo_ogone__initBeforePayment($this->getUser(), oxRegistry::getSession()->getBasket());
-            $redirecturl = $this->getConfig()->getConfigParam('mo_ogone__gateway_url_redirect');
-            $params = Main::getInstance()->getService("OrderRedirectGateway")->buildParams($order);
-            oxRegistry::getUtils()->redirect($redirecturl."?".http_build_query($params));
+            return "mo_ogone__payment_form";
         }
 
         //one page
         if ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
-            /* @var $order oxOrder */
-            $order = oxNew("oxOrder");
-            $order->mo_ogone__initBeforePayment($this->getUser(), $this->getBasket());
-
             // server to server communication
-            $response = Main::getInstance()->getService("OrderDirectGateway")->call($order);
+            $response = Main::getInstance()->getService("OrderDirectGateway")->call();
             $data = array();
             $xml = simplexml_load_string($response);
             //convert to array
@@ -142,7 +133,7 @@ class mo_ogone__order extends mo_ogone__order_parent
 
         $order->mo_ogone__updateOrderStatus($ogoneStatus);
 
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST);
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, "");
 
         $redirectUrl = $this->getConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__order_error&order_id='
                 . $order->oxorder__oxordernr->value;

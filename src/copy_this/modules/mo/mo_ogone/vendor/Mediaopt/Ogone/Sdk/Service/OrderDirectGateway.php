@@ -11,19 +11,19 @@ use Mediaopt\Ogone\Sdk\Model\Url;
 class OrderDirectGateway extends AbstractService
 {
 
-    public function call($order)
+    public function call()
     {
         /* @var $model Url */
         $model = $this->getAdapter()->getFactory("OrderDirectURL")->build();
         $url = $model->getUrl();
-        $params = $this->buildParams($order);
+        $params = $this->buildParams();
         return $this->getClient()->call($url, $params);
     }
 
-    public function buildParams($order)
+    public function buildParams()
     {
         /* @var $model RequestParameters */
-        $model = $this->getAdapter()->getFactory("OrderDirectParamBuilder")->build($order);
+        $model = $this->getAdapter()->getFactory("OrderDirectParamBuilder")->build();
         return $model->getParams();
     }
     
