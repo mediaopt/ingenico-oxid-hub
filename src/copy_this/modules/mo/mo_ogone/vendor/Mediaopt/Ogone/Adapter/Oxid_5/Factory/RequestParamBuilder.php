@@ -12,7 +12,7 @@ class RequestParamBuilder extends AbstractFactory
 {
 
     // mbe: @TODO direkten Zugriff auf oxDB entfernen
-    
+
     protected $oxidSessionParamsForRemoteCalls = null;
 
     protected function getShaSignForParams($params)
@@ -69,12 +69,13 @@ class RequestParamBuilder extends AbstractFactory
         }
         return $url;
     }
-    
+
     /**
      * Creates a unique transaction ID for the Ogone call
      * @return string
      */
-    protected function createTransID(){
+    protected function createTransID()
+    {
         return uniqid("mo_ogone_", true);
     }
 
@@ -88,52 +89,47 @@ class RequestParamBuilder extends AbstractFactory
         return $dAmount;
     }
 
-    /**
-   * fetch billing & delivery address data
-   * 
-   * @return array
-   */
-  protected function getUserData()
-  {
-    $userData = array();
-    $oxUser = $this->oxConfig->getUser();
-
-    if (!$oxUser)
+    protected function getBillProperty($param)
     {
-      return $userData;
+        if ($param === "email") {
+            $field = "oxuser__oxusername";
+        } else {
+            $field = "oxuser__ox" . $param;
+        }
+        return $this->getOxUser()->$field->value;
     }
 
-    //billingaddress
-    $userData['customer_id']          = $oxUser->oxuser__oxcustnr->value;
-    $userData['customer_company']     = $oxUser->oxuser__oxcompany->value;
-    $userData['customer_gender']      = $oxUser->oxuser__oxsal->value == 'MR' ? 'm' : 'f';
-    $userData['customer_firstname']   = $oxUser->oxuser__oxfname->value;
-    $userData['customer_lastname']    = $oxUser->oxuser__oxlname->value;
-    $userData['customer_street']      = $oxUser->oxuser__oxstreet->value;
-    $userData['customer_houseNumber'] = $oxUser->oxuser__oxstreetnr->value;
-    $userData['customer_postcode']    = $oxUser->oxuser__oxzip->value;
-    $userData['customer_city']        = $oxUser->oxuser__oxcity->value;
-    $userData['customer_country']     = $this->getCountryCode($oxUser->oxuser__oxcountryid->value);
-    $userData['customer_dateOfBirth'] = $this->getParamDateOfBirth();
-    $userData['customer_email']       = $oxUser->oxuser__oxusername->value;
-    $userData['customer_phone']       = $oxUser->oxuser__oxfon->value;
-
-
-    if ($oxUser->getSelectedAddressId())
+    protected function getDelProperty($param)
     {
-      $deliveryAddress                         = $oxUser->getSelectedAddress();
-      $userData['deliveryAddress_company']     = $deliveryAddress->oxaddress__oxcompany->value;
-      $userData['deliveryAddress_gender']      = $deliveryAddress->oxaddress__oxsal->value == 'MR' ? 'm' : 'f';
-      $userData['deliveryAddress_firstname']   = $deliveryAddress->oxaddress__oxfname->value;
-      $userData['deliveryAddress_lastname']    = $deliveryAddress->oxaddress__oxlname->value;
-      $userData['deliveryAddress_street']      = $deliveryAddress->oxaddress__oxstreet->value;
-      $userData['deliveryAddress_houseNumber'] = $deliveryAddress->oxaddress__oxstreetnr->value;
-      $userData['deliveryAddress_postcode']    = $deliveryAddress->oxaddress__oxzip->value;
-      $userData['deliveryAddress_city']        = $deliveryAddress->oxaddress__oxcity->value;
-      $userData['deliveryAddress_country']     = $this->getCountryCode($deliveryAddress->oxaddress__oxcountryid->value);
+        $user = $this->getOxUser();
+        if ($user->getSelectedAddressId()) {
+            $field = "oxaddress__ox" . $param;
+            $deliveryAddress = $user->getSelectedAddress();
+            return $deliveryAddress->$field->value;
+        }
+        return null;
     }
 
-    return $userData;
-  }
-    
+    protected function prepareOrderParams()
+    {
+        $params = array(
+            'remote_addr' => $_SERVER['REMOTE_ADDR'],
+            'pspid' => substr($this->getOxConfig()->getConfigParam('ogone_sPSPID'), 0, 30),
+            'orderid' => $this->createTransID(),
+            'amount' => $this->getFormatedOrderAmount(),
+            'currency' => \mo_ogone__main::getInstance()->getOgoneConfig()->getOgoneCurrencyCode($this->getOxConfig()->getActShopCurrencyObject()->name),
+            'operation' => $this->getCreditCardOperation(),
+            'language' => $this->getLanguageCountryCode(),
+            'cn' => substr($this->getBillProperty("fname") . ' ' . $this->getBillProperty("lname"), 0, 35),
+            'email' => substr($this->getBillProperty("email"), 0, 50),
+            'ownerzip' => substr($this->getBillProperty("zip"), 0, 10),
+            'owneraddress' => substr($this->getBillProperty("street") . " " . $this->getBillProperty("streetnr"), 0, 35),
+            'ownercty' => \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $this->getBillProperty("countryid") . "'"),
+            'ownertown' => substr($this->getBillProperty("city"), 0, 25),
+            'orig' => \mo_ogone__main::getInstance()->getOgoneConfig()->applicationId,
+            'paramplus' => substr(http_build_query($this->getOxidSessionParamsForRemoteCalls()), 0, 1000)
+        );
+        return $params;
+    }
+
 }

@@ -17,89 +17,69 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
     protected $billpay_itemNumber = 0;
 
     // used for redirect payments
-    public function build($order)
+    public function build()
     {
+        // prepare the payment request parameter
+        $params = $this->prepareOrderParams();
+
+        // redirect urls
         $redirectUrl = $this->checkUrlLength(
                 $this->getOxConfig()->getSslShopUrl() .
                 // mbe: @TODO remove "&XDEBUG_SESSION_START=netbeans-xdebug"
                 'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect&XDEBUG_SESSION_START=netbeans-xdebug', 200);
+        $params['accepturl'] = $redirectUrl;
+        $params['declineurl'] = $redirectUrl;
+        $params['exceptionurl'] = $redirectUrl;
+        $params['cancelurl'] = $redirectUrl;
+        $params['catalogurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
+        $params['homeurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
+        if ($this->getOxConfig()->getConfigParam('ogone_blBackButton') == 'true') {
+            $params['backurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
+        }
 
-        // prepare the payment request parameter
-        $requestParams = array(
-            'remote_addr' => $_SERVER['REMOTE_ADDR'],
-            'pspid' => substr($this->getOxConfig()->getConfigParam('ogone_sPSPID'), 0, 30),
-            'orderid' => $this->createTransID(),
-            'amount' => $this->getFormatedOrderAmount(),
-            'currency' => \mo_ogone__main::getInstance()->getOgoneConfig()->getOgoneCurrencyCode($this->getOxConfig()->getActShopCurrencyObject()->name),
-            'operation' => $this->getCreditCardOperation(),
-            // oxidLangCodeToOgoneLanguageCountryCode
-            'language' => $this->getLanguageCountryCode(),
-            'cn' => substr($this->getBillProperty("fname") . ' ' . $this->getBillProperty("lname"), 0, 35),
-            'email' => substr($this->getBillProperty("email"), 0, 50),
-            'ownerzip' => substr($this->getBillProperty("zip"), 0, 10),
-            'owneraddress' => substr($this->getBillProperty("street") . " " . $this->getBillProperty("streetnr"), 0, 35),
-            'ownercty' => \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $this->getBillProperty("countryid") . "'"),
-            'ownertown' => substr($this->getBillProperty("city"), 0, 25),
-            // redirect urls
-            'accepturl' => $redirectUrl,
-            'declineurl' => $redirectUrl,
-            'exceptionurl' => $redirectUrl,
-            'cancelurl' => $redirectUrl,
-            'catalogurl' => $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200),
-            'homeurl' => $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200),
-            'pm' => \mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'pm'),
-            'brand' => \mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand'),
-            //'pmliststyle' => $this->getOxConfig()->getConfigParam( 'ogone_sTplPMListStyle' ),
-            'orig' => \mo_ogone__main::getInstance()->getOgoneConfig()->applicationId,
-            'paramvar' => substr(http_build_query($this->getOxidSessionParamsForRemoteCalls()), 0, 1000)
-        );
+        $params['pm'] = \mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'pm');
+        $params['brand'] = \mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand');
 
         // shop logo
         if ($this->getOxConfig()->getConfigParam('ogone_sTplLogo') != '') {
-            $requestParams['logo'] = $this->getOxConfig()->getConfigParam('ogone_sTplLogo');
+            $params['logo'] = $this->getOxConfig()->getConfigParam('ogone_sTplLogo');
         }
 
         // dynamic template
         if ($this->getOxConfig()->getConfigParam('ogone_sTemplate') == 'true') {
-            $requestParams['tp'] = $this->getOxConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__template&' . http_build_query($this->getOxidSessionParamsForRemoteCalls());
+            $params['tp'] = $this->getOxConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__template&' . http_build_query($this->getOxidSessionParamsForRemoteCalls());
 
             // static template
         } else {
-            $requestParams['title'] = $this->getOxConfig()->getConfigParam('ogone_sTplTitle' . $this->getOxLang()->getBaseLanguage());
-            $requestParams['bgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBGColor');
-            $requestParams['txtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplFontColor');
-            $requestParams['tblbgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplTableBGColor');
-            $requestParams['tbltxtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplTbFontColor');
-            $requestParams['buttonbgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBtnBGColor');
-            $requestParams['buttontxtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBtnFontColor');
-            $requestParams['fonttype'] = $this->getOxConfig()->getConfigParam('ogone_sTplFontFamily');
-        }
-
-        // backurl
-        if ($this->getOxConfig()->getConfigParam('ogone_blBackButton') == 'true') {
-            $requestParams['backurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
+            $params['title'] = $this->getOxConfig()->getConfigParam('ogone_sTplTitle' . $this->getOxLang()->getBaseLanguage());
+            $params['bgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBGColor');
+            $params['txtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplFontColor');
+            $params['tblbgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplTableBGColor');
+            $params['tbltxtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplTbFontColor');
+            $params['buttonbgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBtnBGColor');
+            $params['buttontxtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBtnFontColor');
+            $params['fonttype'] = $this->getOxConfig()->getConfigParam('ogone_sTplFontFamily');
         }
 
         // billpay extra params
         if ($this->getOxSession()->getBasket()->getPaymentId() == 'ogone_open_invoice_de') {
-            $requestParams = $this->addBillPayParams($order, $requestParams);
+            $params = $this->addBillPayParams($params);
         }
 
         // paypal extra params
         if ($this->getOxSession()->getBasket()->getPaymentId() == 'ogone_paypal') {
-            $requestParams = $this->addPaypalParams($requestParams);
+            $params = $this->addPaypalParams($params);
         }
-        $requestParams['paramplus'] = http_build_query($this->getOxidSessionParamsForRemoteCalls());
 
-        $requestParams = $this->handleUtf8Options($requestParams);
+        $params = $this->handleUtf8Options($params);
         // generates sha signature of request parameter before send
-        $requestParams['SHASign'] = $this->getShaSignForParams($requestParams);
+        $params['shasign'] = $this->getShaSignForParams($params);
         // mbe: @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($requestParams);
 
         /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
-        $model->setParams($requestParams);
+        $model->setParams($params);
 
         return $model;
     }
@@ -126,7 +106,7 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
       [NODOC-Found] ITEMVATX numeric item VAT code (replace X with a number to send multiple items: ITEMVAT1, ITEMVAT2, ...)
      */
 
-    protected function addBillPayParams($order, $params)
+    protected function addBillPayParams($params)
     {
         $basket = $this->getOxSession()->getBasket();
         $dynvalues = $this->getOxSession()->getVariable('dynvalue');
@@ -155,13 +135,18 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         $params['ecom_shipto_dob'] = $date[2] . '/' . $date[1] . '/' . $date[0];
 
         //articles
-        $params = $this->billpay_addArticles($order, $params);
+        $params = $this->billpay_addArticles($params);
 
         //gift-card
-        $params = $this->billpay_addGiftCard($order, $params);
+        $params = $this->billpay_addGiftCard($params);
 
         //wrapping
-        $params = $this->billpay_addWrapping($order, $params);
+        $params = $this->billpay_addWrapping($params);
+
+        $string = "";
+        foreach ($params as $key => $val)
+            $string = $string . $key . " => " . $val . "\n";
+        $this->getAdapterMain()->getLogger()->info("OrderRedirectParams: " . $string);
 
         return $params;
     }
@@ -186,35 +171,36 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         return $params;
     }
 
-    protected function billpay_addArticles($order, $params)
+    protected function billpay_addArticles($params)
     {
-        foreach ($order->getOrderArticles() as $item) {
+        foreach ($this->getOxSession()->getBasket()->getContents() as $item) {
             $price = $item->getPrice();
-            $name = $item->oxorderarticles__oxtitle->value . ' ' . $item->oxorderarticles__oxselvariant->value;
-            $amount = $item->oxorderarticles__oxamount->value;
+            $name = $item->getTitle();
+            $amount = $item->getAmount();
             $params = array_merge($params, $this->billpay_getItem($name, $price, $amount));
         }
         return $params;
     }
 
-    protected function billpay_addWrapping($order, $params)
+    protected function billpay_addWrapping($params)
     {
-        foreach ($order->getOrderArticles() as $item) {
+        foreach ($this->getOxSession()->getBasket()->getContents() as $item) {
             if (!$wrapping = $item->getWrapping()) {
                 continue;
             }
 
             $price = $wrapping->getWrappingPrice();
-            $name = "Wrapping " . $item->oxorderarticles__oxtitle->value . ' ' . $item->oxorderarticles__oxselvariant->value;
-            $amount = $item->oxorderarticles__oxamount->value;
+            $name = "Wrapping " . $item->getTitle();
+            $amount = $item->getAmount();
             $params = array_merge($params, $this->billpay_getItem($name, $price, $amount));
         }
         return $params;
     }
 
-    protected function billpay_addGiftCard($order, $params)
+    protected function billpay_addGiftCard($params)
     {
-        if (!$card = $order->getGiftCard()) {
+
+        if (!$card = $this->getOxSession()->getBasket()->getCard()) {
             return $params;
         }
 
@@ -247,7 +233,7 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         return \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $countryid . "'");
     }
 
-        protected function getShippingProperty($property)
+    protected function getShippingProperty($property)
     {
         $propertyBill = $this->getBillProperty($property);
         $propertyDelivery = $this->getDelProperty($property);
@@ -256,27 +242,6 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
             return $propertyDelivery;
         }
         return $propertyBill;
-    }
-
-    protected function getBillProperty($param)
-    {
-        if ($param === "email") {
-            $field = "oxuser__oxusername";
-        } else {
-            $field = "oxuser__ox" . $param;
-        }
-        return $this->getOxUser()->$field->value;
-    }
-
-    protected function getDelProperty($param)
-    {
-        $user = $this->getOxUser();
-        if ($user->getSelectedAddressId()) {
-            $field = "oxaddress__ox" . $param;
-            $deliveryAddress = $user->getSelectedAddress();
-            return $deliveryAddress->$field->value;
-        }
-        return null;
     }
 
 }

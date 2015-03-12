@@ -11,58 +11,40 @@ use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 class OrderDirectParamBuilder extends RequestParamBuilder
 {
 
-    // mbe: @TODO direkten Zugriff auf oxDB entfernen
-    
     protected $oxidSessionParamsForRemoteCalls = null;
     protected $billpay_itemNumber = 0;
     protected $paypal_itemNumber = 0;
 
     public function build()
     {
-        $user = $this->getOxUser();
-        $params = array();
-        $params['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-        $params['PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
-        $params['USERID'] = $this->getOxConfig()->getConfigParam('mo_ogone__api_userid');
-        $params['PSWD'] = $this->getApiUserPass();
-        $params['ORDERID'] = $this->createTransID();
-        $params['AMOUNT'] = $this->getFormatedOrderAmount();
-        $params['CURRENCY'] = \mo_ogone__main::getInstance()->getOgoneConfig()->getOgoneCurrencyCode($this->getOxConfig()->getActShopCurrencyObject()->name);
-        $params['CN'] = substr($user->oxuser__oxfname->value . ' ' . $user->oxuser__oxlname->value, 0, 35);
-        $params['EMAIL'] = substr($user->oxuser__oxusername->value, 0, 50);
-        $params['OWNERZIP'] = substr($user->oxuser__oxzip->value, 0, 10);
-        $params['OWNERADDRESS'] = substr($user->oxuser__oxstreet->value . " " . $user->oxuser__oxstreetnr->value, 0, 35);
-        $params['OWNERCTY'] = \oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $user->oxuser__oxcountryid->value . "'");
-        $params['OWNERTOWN'] = substr($user->oxuser__oxcity->value, 0, 25);
-        $params['OPERATION'] = $this->getCreditCardOperation();
-        $params['RTIMEOUT'] = \mo_ogone__main::getInstance()->getOgoneConfig()->rtimeout;
+        $params = $this->prepareOrderParams();
 
-        $params['ORIG'] = \mo_ogone__main::getInstance()->getOgoneConfig()->applicationId;
-
+        // OrderDirect params
+        $params['userid'] = $this->getOxConfig()->getConfigParam('mo_ogone__api_userid');
+        $params['pswd'] = $this->getApiUserPass();
         $sAliasUsage = '&nbsp;';
-        $params['ALIAS'] = $this->getOxSession()->getVariable('mo_ogone__order_alias');
-        $params['ALIASUSAGE'] = $sAliasUsage;
-
-
+        $params['alias'] = $this->getOxSession()->getVariable('mo_ogone__order_alias');
+        $params['aliasusage'] = $sAliasUsage;
+        $params['rtimeout'] = \mo_ogone__main::getInstance()->getOgoneConfig()->rtimeout;
 
         //3D Secure
-        $params['FLAG3D'] = 'Y';
-        $params['HTTP_ACCEPT'] = $_SERVER['HTTP_ACCEPT'];
-        $params['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-        $params['WIN3DS'] = 'MAINW';
-        $params['ACCEPTURL'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
+        $params['flag3d'] = 'Y';
+        $params['http_accept'] = $_SERVER['HTTP_ACCEPT'];
+        $params['http_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+        $params['win3ds'] = 'MAINW';
+
+        // redirect urls
+        $params['accepturl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
                 '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
-        $params['DECLINEURL'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
+        $params['declineurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
                 '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
-        $params['EXCEPTIONURL'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
+        $params['exceptionurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
                 '&fnc=mo_ogone__fncHandleOgoneExceptionFeedbackFrom3dSecureRequest', 200);
-        $params['HOMEURL'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
-        $params['PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls());
-        $params['COMPLUS'] = '';
-        $params['LANGUAGE'] = $this->getLanguageCountryCode();
+        $params['homeurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
+        $params['complus'] = '';
 
         $params = $this->handleUtf8Options($params);
-        $params['SHASIGN'] = $this->getShaSignForParams($params);
+        $params['shasign'] = $this->getShaSignForParams($params);
         // mbe @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($params);
 
@@ -76,10 +58,10 @@ class OrderDirectParamBuilder extends RequestParamBuilder
         return $model;
     }
 
-       protected function getApiUserPass()
+    protected function getApiUserPass()
     {
         $pass = $this->getOxConfig()->getConfigParam('mo_ogone__api_userpass');
         return $pass;
     }
-    
+
 }

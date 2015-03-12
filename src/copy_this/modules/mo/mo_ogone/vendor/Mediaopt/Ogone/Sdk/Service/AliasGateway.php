@@ -11,6 +11,11 @@ use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 class AliasGateway extends AbstractService
 {
 
+    /**
+     * 
+     * @param type $paymentId
+     * @return RequestParameters The Parameters for Calling the AliasGateway
+     */
     public function buildParams($paymentId)
     {
         /* @var $model RequestParameters */
@@ -18,6 +23,10 @@ class AliasGateway extends AbstractService
         return $model->getParams();
     }
     
+    /**
+     * 
+     * @return Status An ErrorStateObject if there is an error, null otherwise
+     */
     public function handleResponse()
     {
         /* @var $responseParams RequestParameters */
@@ -28,6 +37,11 @@ class AliasGateway extends AbstractService
         
     }
     
+    /**
+     * 
+     * @param type $requestParameters all Parameters return by the AliasGateway
+     * @return Status An ErrorStateObject if there is an error, null otherwise
+     */
     public function handleAliasGatewayErrorResponse($requestParameters)
     {
         $error = '';

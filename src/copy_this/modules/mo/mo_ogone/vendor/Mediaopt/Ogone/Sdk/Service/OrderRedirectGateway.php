@@ -12,10 +12,10 @@ use Mediaopt\Ogone\Sdk\Model\StatusType;
 class OrderRedirectGateway extends AbstractService
 {
 
-    public function buildParams($order)
+    public function buildParams()
     {
         /* @var $model RequestParameters */
-        $model = $this->getAdapter()->getFactory("OrderRedirectParamBuilder")->build($order);
+        $model = $this->getAdapter()->getFactory("OrderRedirectParamBuilder")->build();
         return $model->getParams();
     }
 
