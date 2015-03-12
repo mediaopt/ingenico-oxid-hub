@@ -67,33 +67,24 @@ class mo_ogone__order extends mo_ogone__order_parent
             $response = Main::getInstance()->getService("OrderDirectGateway")->call();
             $xml = simplexml_load_string($response);
 
+            /* @var $orderState Status */
+            $orderState = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
+
+            if ($orderState->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
+                return parent::_getNextStep($orderState->getTranslatedStatusMessage());
+            }
+            $data = Main::getInstance()->getService("OrderDirectGateway")->getResponseData($xml);
+            $nextStep = $this->mo_ogone__createOrder($orderState, $data);
+
             //3D-Secure 
             if ($xml->HTML_ANSWER) {
-                $this->logger->info('Ogone 3D-Secure redirection');
+                mo_ogone__main::getInstance()->getLogger()->info('Ogone 3D-Secure redirection');
                 echo '<html><body>';
                 echo base64_decode((string) $xml->HTML_ANSWER);
                 echo '</body></html>';
                 exit;
             }
-            /* @var $orderState Status */
-            $orderState = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
-            
-            if ($orderState->getStatusCode() == StatusType::INCOMPLETE_OR_INVALID) {
-                return parent::_getNextStep($orderState->getTranslatedStatusMessage());
-            }
-            $data =  Main::getInstance()->getService("OrderDirectGateway")->parseXml($xml);
-            if ($orderState->isThankyouStatus()) {
-                $orderState = parent::execute();
-                $orderState = $this->mo_ogone__getOrderStateWithMailError($orderState);
-                $orderId = $this->getBasket()->getOrderId();
-                /* @var $oxOrder oxOrder */
-                $oxOrder = oxNew("oxOrder");
-                $oxOrder->load($orderId);
-                mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $oxOrder->oxorder__oxordernr->value);
-                return $orderState;
-            }
-            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, "");
-            return parent::_getNextStep($orderState->getTranslatedStatusMessage());
+            return $nextStep;
         }
     }
 
@@ -110,22 +101,8 @@ class mo_ogone__order extends mo_ogone__order_parent
         oxRegistry::getSession()->getBasket()->afterUpdate();
         /* @var $orderState Status */
         $orderState = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
-        if ($orderState->isThankyouStatus()) {
-            $oxOrderState = oxOrder::ORDER_STATE_OK;
-        } else {
-            $oxOrderState = $orderState->getTranslatedStatusMessage();
-        }
-        if ($oxOrderState === oxOrder::ORDER_STATE_OK) {
-            $oxOrderState = $this->mo_ogone__getOrderStateWithMailError($oxOrderState);
-            $orderState = parent::execute();
-            /* @var $oxOrder oxOrder */
-            $oxOrder = oxNew("oxOrder");
-            $oxOrder->load($this->getBasket()->getOrderId());
-            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, $oxOrder->oxorder__oxordernr->value);
-            return $orderState;
-        }
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, "");
-        return parent::_getNextStep($oxOrderState);
+        $data = Main::getInstance()->getService("OrderRedirectGateway")->getResponseData();
+        return $this->mo_ogone__createOrder($orderState, $data);
     }
 
     /**
@@ -162,6 +139,31 @@ class mo_ogone__order extends mo_ogone__order_parent
             }
         }
         return $orderState;
+    }
+
+    /**
+     * 
+     * @param StatusType $orderState the returned status of Ogone
+     * @return type The next step to perform (show error or go to thankyou page)
+     */
+    protected function mo_ogone__createOrder($orderState, $data)
+    {
+        if ($orderState->isThankyouStatus()) {
+            $parentState = parent::execute();
+            // ignore parent Mail error
+            if ($parentState === oxOrder::ORDER_STATE_MAILINGERROR) {
+                $parentState = oxOrder::ORDER_STATE_OK;
+            }
+            $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
+            /* @var $oxOrder oxOrder */
+            $oxOrder = oxNew("oxOrder");
+            $oxOrder->load($this->getBasket()->getOrderId());
+            $oxOrder->mo_ogone__updateOrderStatus($orderState->getStatusCode());
+            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $oxOrder->oxorder__oxordernr->value);
+            return $parentState;
+        }
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, "");
+        return parent::_getNextStep($orderState->getTranslatedStatusMessage());
     }
 
     /**

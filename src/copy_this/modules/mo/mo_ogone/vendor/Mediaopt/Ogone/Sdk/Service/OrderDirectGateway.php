@@ -39,7 +39,7 @@ class OrderDirectGateway extends AbstractService
             return $status;
         }
         //convert to array
-        $data = $this->parseXml($xml);
+        $data = $this->getResponseData($xml);
         $this->getAdapter()->getLogger()->info("handleOrderRedirectResponse: " . var_export($data, true));
         //no response: curl timeout etc... we assume an uncertain status, redirect to error view
         if (count($data) === 0) {
@@ -75,7 +75,7 @@ class OrderDirectGateway extends AbstractService
         return $status;
     }
 
-    public function parseXml($xml){
+    public function getResponseData($xml){
         $data = array();
         foreach ($xml->attributes() as $key => $value) {
             $data[(string) $key] = (string) $value;

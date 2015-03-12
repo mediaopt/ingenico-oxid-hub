@@ -21,14 +21,12 @@ class OrderRedirectGateway extends AbstractService
 
     public function handleResponse()
     {
-        /* @var $requestParameters RequestParameters */
-        $requestParameters = $this->getAdapter()->getFactory("RequestParameters")->build();
-
-        $this->getAdapter()->getLogger()->info("handleOrderRedirectResponse: " . var_export($requestParameters->getParams(), true));
+        $requestParameters = $this->getResponseData();
+        $this->getAdapter()->getLogger()->info("handleOrderRedirectResponse: " . var_export($requestParameters, true));
 
         if (!Main::getInstance()->getService("Authenticator")->authenticateRequest()) {
             // no authentication, kick back to payment methods
-            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($requestParameters->getParams(), true));
+            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($requestParameters, true));
             $status = Main::getInstance()->getService("Status")
                     ->usingStatusCode((int) StatusType::SHA_IN_MISMATCH);
             return $status;
@@ -37,7 +35,7 @@ class OrderRedirectGateway extends AbstractService
         // handles redirections from the payment server back to the store
         /* @var $status Status */
         $status = Main::getInstance()->getService("Status")
-                ->usingStatusCode((int) $requestParameters->getParams()['STATUS']);
+                ->usingStatusCode((int) $requestParameters['STATUS']);
         $statusDebugInfo = 'Ogone-Status: ' .
                 $status->getStatusTextForCode() . ' (' . $status->getStatusCode() . ')';
 
@@ -48,7 +46,7 @@ class OrderRedirectGateway extends AbstractService
 
         $errorMessage = $status->getTranslatedStatusMessage();
         if ($_REQUEST['NCERROR']) {
-            $status = Main::getInstance()->getService("Status")->usingStatusCode((int) $requestParameters->getParams()['NCERROR']);
+            $status = Main::getInstance()->getService("Status")->usingStatusCode((int) $requestParameters['NCERROR']);
             $errorMessage = $status->getTranslatedStatusMessage();
         }
 
@@ -56,5 +54,13 @@ class OrderRedirectGateway extends AbstractService
 
         return $status;
     }
-
+    
+    /**
+     * 
+     * @return RequestParameters
+     */
+    public function getResponseData()
+    {
+        return $this->getAdapter()->getFactory("RequestParameters")->build()->getParams();
+    }
 }
