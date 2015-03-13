@@ -45,7 +45,7 @@ class OrderRedirectGateway extends AbstractService
         }
 
         $errorMessage = $status->getTranslatedStatusMessage();
-        if ($_REQUEST['NCERROR']) {
+        if ($requestParameters['NCERROR']) {
             $status = Main::getInstance()->getService("Status")->usingStatusCode((int) $requestParameters['NCERROR']);
             $errorMessage = $status->getTranslatedStatusMessage();
         }

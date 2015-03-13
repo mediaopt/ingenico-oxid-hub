@@ -82,8 +82,22 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
 
     public function mo_ogone__loadByNumber($orderNr)
     {
-        $sSelect = $this->buildSelectString(array($this->getViewName() . '.oxordernr' => $orderNr));
+        $sSelect = $this->buildSelectString(array($this->getViewName() . '.oxtransid' => $orderNr));
         return $this->_isLoaded = $this->assignRecord($sSelect);
+    }
+    
+     /**
+     * Updates order transaction id.
+     *
+     * @param type $orderID order transaction id
+     */
+    public function mo_ogone__setTransID($orderID)
+    {
+        $oDb = oxDb::getDb();
+        $sQ = 'update oxorder set oxtransid=' . $oDb->quote($orderID) . ' where oxid=' . $oDb->quote($this->getId());
+        $oDb->execute($sQ);
+        //updating order object
+        $this->oxorder__oxtransid = new oxField($orderID, oxField::T_RAW);
     }
 
     /**

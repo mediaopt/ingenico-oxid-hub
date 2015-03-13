@@ -117,7 +117,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         $order = oxNew('oxorder');
         $order->load(oxRegistry::getSession()->getVariable('sess_challenge'));
 
-        $ogoneStatus = $_REQUEST['STATUS'];
+        $ogoneStatus = oxRegistry::getConfig()->getRequestParameter('STATUS');
 
         $order->mo_ogone__updateOrderStatus($ogoneStatus);
 
@@ -159,6 +159,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             $oxOrder = oxNew("oxOrder");
             $oxOrder->load($this->getBasket()->getOrderId());
             $oxOrder->mo_ogone__updateOrderStatus($orderState->getStatusCode());
+            $oxOrder->mo_ogone__setTransID($data['orderID']);
             mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $oxOrder->oxorder__oxordernr->value);
             return $parentState;
         }

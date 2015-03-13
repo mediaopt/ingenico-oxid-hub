@@ -24,6 +24,7 @@ class mo_ogone__feedback_handler
         $this->logger->logExecution($requestParams);
 
         if (!Main::getInstance()->getService("Authenticator")->authenticateRequest()) {
+            $this->logger->error("Could not update order status, because of SHA-OUT mismatch!");
             return;
         }
 
@@ -33,15 +34,15 @@ class mo_ogone__feedback_handler
         }
 
         $order = oxNew('oxorder');
+        
         $order->mo_ogone__loadByNumber($requestParams['orderID']);
         if (!$order->isLoaded()) {
             $this->logger->error("Could not load order: " . $requestParams['orderID']);
+            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $requestParams);
             return;
         }
-
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $requestParams, $order->oxorder__oxordernr->value);
         $order->mo_ogone__updateOrderStatus($requestParams['STATUS']);
-
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $requestParams);
     }
 
     protected function checkRequiredParams($params, $requiredParams)

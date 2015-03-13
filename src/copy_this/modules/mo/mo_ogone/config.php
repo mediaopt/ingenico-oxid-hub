@@ -163,6 +163,7 @@ $this->shaOutParameters = array(
     'DCC_INDICATOR',
     'DCC_MARGINPERCENTAGE',
     'DCC_VALIDHOURS',
+    'DEVICEID',
     'DIGESTCARDNO',
     'ECI',
     'ED',
@@ -244,7 +245,7 @@ $this->logTableCreateSql =
     `id` int NOT NULL auto_increment,
 
     `orderID` varchar(30) NOT NULL default '',
-    `transID` varchar(64) UNIQUE NOT NULL default '',
+    `transID` varchar(64) NOT NULL default '',
     `amount` double NOT NULL default '0',
     `currency` varchar(3) NOT NULL default '',
     `language` varchar(5) NOT NULL default '',
