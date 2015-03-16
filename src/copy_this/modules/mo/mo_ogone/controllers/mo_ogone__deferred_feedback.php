@@ -23,7 +23,7 @@ class mo_ogone__deferred_feedback extends oxUBase
                 return;
             }
             mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), $order->oxorder__oxordernr->value);
-            $order->mo_ogone__updateOrderStatus($response->getStatusCode());
+            $order->mo_ogone__updateOrderStatus($response->getStatus()->getStatusCode());
         }
         // offline request from ogone, no further processing needed
         exit;

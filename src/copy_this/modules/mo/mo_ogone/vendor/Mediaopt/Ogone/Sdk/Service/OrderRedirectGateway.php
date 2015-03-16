@@ -27,31 +27,25 @@ class OrderRedirectGateway extends AbstractService
         if (!Main::getInstance()->getService("Authenticator")->authenticateRequest()) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
-            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
             $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
+                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+            $response->setStatus($status);
             return $response;
         }
 
         
         $statusDebugInfo = 'Ogone-Status: ' .
-                $response->getStatusService()->getStatusTextForCode() . ' (' . $response->getStatusCode() . ')';
+                $response->getStatus()->getStatusTextForCode() . ' (' . $response->getStatus()->getStatusCode() . ')';
 
-        if ($response->getStatusService()->isThankyouStatus()) {
+        if ($response->getStatus()->isThankyouStatus()) {
             $this->getAdapter()->getLogger()->info('Ogone Transaction Success - ' . $statusDebugInfo);
             return $response;
         }
 
-        $errorMessage = $response->getStatusService()->getTranslatedStatusMessage();
-        if ($response->getAllParams()['NCERROR']) {
-            $statusCode = (int) $response->getAllParams()['NCERROR'];
-            $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
-            $errorMessage = $status->getTranslatedStatusMessage();
+        if ($response->hasError()) {
+            $errorMessage = $response->getError()->getTranslatedStatusMessage();
+        } else {
+            $errorMessage = $response->getStatus()->getTranslatedStatusMessage();
         }
 
         $this->getAdapter()->getLogger()->info('Ogone Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);

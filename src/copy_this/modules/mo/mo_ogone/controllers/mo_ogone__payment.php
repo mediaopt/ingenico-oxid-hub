@@ -1,7 +1,7 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
-use Mediaopt\Ogone\Sdk\Model\StatusType;
+use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
 
 /**
  * $Id: mo_ogone__payment.php 44 2014-02-06 13:20:24Z martin $ 
@@ -53,12 +53,12 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__handleAliasGatewayResponse(){
         // check for error
-        /* @var $errorstate StatusType */
-        $errorstate = Main::getInstance()->getService("AliasGateway")->handleResponse();
+        /* @var $response OgoneResponse */
+        $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
 
         // check if we got the alias
-        $alias = oxRegistry::getConfig()->getRequestParameter('Alias');
-        if (empty($errorstate) && isset($alias) && !empty($alias)) {
+        $alias = $response->getAlias();
+        if (!$response->hasError() && $alias !== null) {
             // store alias
             oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $alias);
             return 'order';
@@ -74,8 +74,8 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
 
         // error will be displayed        
-        if (!empty($errorstate)) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($errorstate->getTranslatedStatusMessage());
+        if ($response->hasError()) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
         }
         
         return 'payment';

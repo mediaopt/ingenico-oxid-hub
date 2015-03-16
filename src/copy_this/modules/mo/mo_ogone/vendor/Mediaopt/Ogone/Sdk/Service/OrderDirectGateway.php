@@ -36,11 +36,9 @@ class OrderDirectGateway extends AbstractService
         $response = Main::getInstance()->getModel('OgoneResponse');
         if (empty($xml)) {
             $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
-            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
             $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
+                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+            $response->setStatus($status);
             return $response;
         }
         //convert to array
@@ -49,11 +47,9 @@ class OrderDirectGateway extends AbstractService
         //no response: curl timeout etc... we assume an uncertain status, redirect to error view
         if (count($data) === 0) {
             $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
-            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
             $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
+                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+            $response->setStatus($status);
             return $response;
         }
         $response->setAllParams($data);
@@ -63,16 +59,12 @@ class OrderDirectGateway extends AbstractService
         //check for error-code
         if (!isset($data['STATUS'])) {
             $this->getAdapter()->getLogger()->error('DirectLink-Response contains no STATUS-Property!');
-            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
-            $status->setStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
+            $status->setStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+            $response->setStatus($status);
             return $response;
         } else {
-            $statusCode = $data['STATUS'];
-            $status->setStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
+            $status->setStatusCode($data['STATUS']);
+            $response->setStatus($status);
             $this->getAdapter()->getLogger()->info('GOT Ogone-Status in Direct-Link-Response: ' . $status->getStatusCode());
         }
 
@@ -82,12 +74,11 @@ class OrderDirectGateway extends AbstractService
         }
 
         $errorMessage = $status->getTranslatedStatusMessage();
-        if ($data['NCERROR']) {
-            $statusCode = $data['NCERROR'];
-            $status->setStatusCode($statusCode);
-            $response->setStatusCode($statusCode);
-            $response->setStatusService($status);
-            $errorMessage = $status->getTranslatedStatusMessage();
+        if (isset($data['NCERROR'])) {
+            $errorStatus = Main::getInstance()->getService("Status")
+                    ->usingStatusCode($data['NCERROR']);
+            $response->setError($errorStatus);
+            $errorMessage = $errorStatus->getTranslatedStatusMessage();
         }
         $this->getAdapter()->getLogger()->info('Ogone Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
         return $response;

@@ -22,11 +22,11 @@ class OgoneResponse extends AbstractFactory
         $model = $this->getSdkMain()->getModel('OgoneResponse');
         $params = array();
         foreach ($_REQUEST as $val => $key) {
-            $params[$val] = $this->getOxConfig()->getRequestParameter($val, $raw);
+            $params[strtoupper($val)] = $this->getOxConfig()->getRequestParameter($val, $raw);
         }
         $model->setAllParams($params);
-        if (isset($params['orderID'])) {
-            $model->setOrderId($params['orderID']);
+        if (isset($params['ORDERID'])) {
+            $model->setOrderId($params['ORDERID']);
         } else {
             $model->setOrderId(null);
         }
@@ -35,8 +35,27 @@ class OgoneResponse extends AbstractFactory
         } else {
             $statusCode = StatusType::INCOMPLETE_OR_INVALID;
         }
-        $model->setStatusCode($statusCode);
-        $model->setStatusService(Main::getInstance()->getService("Status")->usingStatusCode($statusCode));
+        $model->setStatus(Main::getInstance()->getService("Status")->usingStatusCode($statusCode));
+        $error = null;
+        if (!empty($params['NCERRORCARDNO']) && $params['NCERRORCARDNO'] != '0') {
+            $error = $params['NCERRORCARDNO'];
+        } elseif (!empty($params['NCERRORCVC']) && $params['NCERRORCVC'] != '0') {
+            $error = $params['NCERRORCVC'];
+        } elseif (!empty($params['NCERRORED']) && $params['NCERRORED'] != '0') {
+            $error = $params['NCERRORED'];
+        } elseif (!empty($params['NCERROR']) && $params['NCERROR'] != '0') {
+            $error = $params['NCERROR'];
+        }
+        if ($error !== null) {
+            $model->setError(Main::getInstance()->getService("Status")->usingStatusCode($error));
+        } else {
+            $model->setError(null);
+        }
+        if (!empty($params['ALIAS'])) {
+            $model->setAlias($params['ALIAS']);
+        } else {
+            $model->setAlias(null);
+        }
         return $model;
     }
     

@@ -70,8 +70,8 @@ class mo_ogone__order extends mo_ogone__order_parent
             /* @var $response OgoneResponse */
             $response = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
 
-            if ($response->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
-                return parent::_getNextStep($response->getStatusService()->getTranslatedStatusMessage());
+            if ($response->getStatus()->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
+                return parent::_getNextStep($response->getStatus()->getTranslatedStatusMessage());
             }
             $nextStep = $this->mo_ogone__createOrder($response);
 
@@ -146,7 +146,8 @@ class mo_ogone__order extends mo_ogone__order_parent
      */
     protected function mo_ogone__createOrder($response)
     {
-        if ($response->getStatusService()->isThankyouStatus()) {
+        
+        if (!$response->hasError() && $response->getStatus()->isThankyouStatus()) {
             $parentState = parent::execute();
             // ignore parent Mail error
             if ($parentState === oxOrder::ORDER_STATE_MAILINGERROR) {
@@ -156,13 +157,18 @@ class mo_ogone__order extends mo_ogone__order_parent
             /* @var $oxOrder oxOrder */
             $oxOrder = oxNew("oxOrder");
             $oxOrder->load($this->getBasket()->getOrderId());
-            $oxOrder->mo_ogone__updateOrderStatus($response->getStatusCode());
+            $oxOrder->mo_ogone__updateOrderStatus($response->getStatus()->getStatusCode());
             $oxOrder->mo_ogone__setTransID($response->getOrderId());
             mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             return $parentState;
         }
         mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), "");
-        return parent::_getNextStep($response->getStatusService()->getTranslatedStatusMessage());
+        if ($response->hasError()) {
+            $errorMessage = $response->getError()->getTranslatedStatusMessage();
+        } else {
+            $errorMessage = $response->getStatus()->getTranslatedStatusMessage();
+        }
+        return parent::_getNextStep($errorMessage);
     }
 
     /**

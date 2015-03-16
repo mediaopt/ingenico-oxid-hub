@@ -26,7 +26,7 @@ class DeferredFeedback extends AbstractService
             return null;
         }
 
-        if ($response->getOrderId() === null or $response->getStatusCode() === null) {
+        if ($response->getOrderId() === null or $response->getStatus() === null) {
             $this->getAdapter()->getLogger()->error("Could not update order status, because of missing request params!");
             return null;
         }

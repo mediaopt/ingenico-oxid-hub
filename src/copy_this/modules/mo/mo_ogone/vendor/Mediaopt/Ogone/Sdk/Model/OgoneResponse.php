@@ -9,20 +9,15 @@ use Mediaopt\Ogone\Sdk\Service\Status;
  */
 class OgoneResponse extends AbstractModel
 {
+
     /**
      *
      * @var array
      */
     private $allParams;
-
-    private $statusCode;
-    
-    /**
-     *
-     * @var Status
-     */
-    private $statusService;
-
+    private $status;
+    private $error;
+    private $alias;
     private $orderId;
 
     function getAllParams()
@@ -54,15 +49,40 @@ class OgoneResponse extends AbstractModel
     {
         $this->orderId = $orderId;
     }
-    function getStatusService()
+
+    function getStatus()
     {
-        return $this->statusService;
+        return $this->status;
     }
 
-    function setStatusService(Status $statusService)
+    function setStatus(Status $status)
     {
-        $this->statusService = $statusService;
+        $this->status = $status;
     }
 
+    function getError()
+    {
+        return $this->error;
+    }
+
+    function setError($error)
+    {
+        $this->error = $error;
+    }
+
+    function hasError()
+    {
+        return $this->error !== null;
+    }
+
+    function getAlias()
+    {
+        return $this->alias;
+    }
+
+    function setAlias($alias)
+    {
+        $this->alias = $alias;
+    }
 
 }
