@@ -21,46 +21,50 @@ class OrderRedirectGateway extends AbstractService
 
     public function handleResponse()
     {
-        $requestParameters = $this->getResponseData();
-        $this->getAdapter()->getLogger()->info("handleOrderRedirectResponse: " . var_export($requestParameters, true));
+        $response = $this->getResponse();
+        $this->getAdapter()->getLogger()->info("handleOrderRedirectResponse: " . var_export($response->getAllParams(), true));
 
         if (!Main::getInstance()->getService("Authenticator")->authenticateRequest()) {
             // no authentication, kick back to payment methods
-            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($requestParameters, true));
+            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
+            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
             $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode((int) StatusType::SHA_IN_MISMATCH);
-            return $status;
+                    ->usingStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
+            return $response;
         }
 
-        // handles redirections from the payment server back to the store
-        /* @var $status Status */
-        $status = Main::getInstance()->getService("Status")
-                ->usingStatusCode((int) $requestParameters['STATUS']);
+        
         $statusDebugInfo = 'Ogone-Status: ' .
-                $status->getStatusTextForCode() . ' (' . $status->getStatusCode() . ')';
+                $response->getStatusService()->getStatusTextForCode() . ' (' . $response->getStatusCode() . ')';
 
-        if ($status->isThankyouStatus()) {
+        if ($response->getStatusService()->isThankyouStatus()) {
             $this->getAdapter()->getLogger()->info('Ogone Transaction Success - ' . $statusDebugInfo);
-            return $status;
+            return $response;
         }
 
-        $errorMessage = $status->getTranslatedStatusMessage();
-        if ($requestParameters['NCERROR']) {
-            $status = Main::getInstance()->getService("Status")->usingStatusCode((int) $requestParameters['NCERROR']);
+        $errorMessage = $response->getStatusService()->getTranslatedStatusMessage();
+        if ($response->getAllParams()['NCERROR']) {
+            $statusCode = (int) $response->getAllParams()['NCERROR'];
+            $status = Main::getInstance()->getService("Status")
+                    ->usingStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
             $errorMessage = $status->getTranslatedStatusMessage();
         }
 
         $this->getAdapter()->getLogger()->info('Ogone Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
 
-        return $status;
+        return $response;
     }
     
     /**
      * 
-     * @return RequestParameters
+     * @return \Mediaopt\Ogone\Sdk\Model\OgoneResponse
      */
-    public function getResponseData()
+    public function getResponse()
     {
-        return $this->getAdapter()->getFactory("RequestParameters")->build()->getParams();
+        return $this->getAdapter()->getFactory("OgoneResponse")->build();
     }
 }

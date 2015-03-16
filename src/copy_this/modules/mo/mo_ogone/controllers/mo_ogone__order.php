@@ -1,8 +1,8 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
 use Mediaopt\Ogone\Sdk\Model\StatusType;
-use Mediaopt\Ogone\Sdk\Service\Status;
 
 /**
  * This file is part of Ogone Payment Solutions payment interface
@@ -67,14 +67,13 @@ class mo_ogone__order extends mo_ogone__order_parent
             $response = Main::getInstance()->getService("OrderDirectGateway")->call();
             $xml = simplexml_load_string($response);
 
-            /* @var $orderState Status */
-            $orderState = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
+            /* @var $response OgoneResponse */
+            $response = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
 
-            if ($orderState->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
-                return parent::_getNextStep($orderState->getTranslatedStatusMessage());
+            if ($response->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
+                return parent::_getNextStep($response->getStatusService()->getTranslatedStatusMessage());
             }
-            $data = Main::getInstance()->getService("OrderDirectGateway")->getResponseData($xml);
-            $nextStep = $this->mo_ogone__createOrder($orderState, $data);
+            $nextStep = $this->mo_ogone__createOrder($response);
 
             //3D-Secure 
             if ($xml->HTML_ANSWER) {
@@ -99,10 +98,9 @@ class mo_ogone__order extends mo_ogone__order_parent
         // use of basket between order and thankyou views causes errors, when buying last item in stock
         oxRegistry::getConfig()->setConfigParam('mo_ogone__prevent_recalculate', true);
         oxRegistry::getSession()->getBasket()->afterUpdate();
-        /* @var $orderState Status */
-        $orderState = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
-        $data = Main::getInstance()->getService("OrderRedirectGateway")->getResponseData();
-        return $this->mo_ogone__createOrder($orderState, $data);
+        /* @var $response OgoneResponse */
+        $response = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
+        return $this->mo_ogone__createOrder($response);
     }
 
     /**
@@ -143,12 +141,12 @@ class mo_ogone__order extends mo_ogone__order_parent
 
     /**
      * 
-     * @param StatusType $orderState the returned status of Ogone
+     * @param OgoneResponse $response the response of Ogone
      * @return type The next step to perform (show error or go to thankyou page)
      */
-    protected function mo_ogone__createOrder($orderState, $data)
+    protected function mo_ogone__createOrder($response)
     {
-        if ($orderState->isThankyouStatus()) {
+        if ($response->getStatusService()->isThankyouStatus()) {
             $parentState = parent::execute();
             // ignore parent Mail error
             if ($parentState === oxOrder::ORDER_STATE_MAILINGERROR) {
@@ -158,13 +156,13 @@ class mo_ogone__order extends mo_ogone__order_parent
             /* @var $oxOrder oxOrder */
             $oxOrder = oxNew("oxOrder");
             $oxOrder->load($this->getBasket()->getOrderId());
-            $oxOrder->mo_ogone__updateOrderStatus($orderState->getStatusCode());
-            $oxOrder->mo_ogone__setTransID($data['orderID']);
-            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, $oxOrder->oxorder__oxordernr->value);
+            $oxOrder->mo_ogone__updateOrderStatus($response->getStatusCode());
+            $oxOrder->mo_ogone__setTransID($response->getOrderId());
+            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             return $parentState;
         }
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $data, "");
-        return parent::_getNextStep($orderState->getTranslatedStatusMessage());
+        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), "");
+        return parent::_getNextStep($response->getStatusService()->getTranslatedStatusMessage());
     }
 
     /**

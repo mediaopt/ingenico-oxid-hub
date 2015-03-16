@@ -32,11 +32,16 @@ class OrderDirectGateway extends AbstractService
     // contains no sha-return because of server-to-server communication
     public function handleResponse($xml)
     {
+        /* @var $response \Mediaopt\Ogone\Sdk\Model\OgoneResponse */
+        $response = Main::getInstance()->getModel('OgoneResponse');
         if (empty($xml)) {
             $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
+            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
             $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            return $status;
+                    ->usingStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
+            return $response;
         }
         //convert to array
         $data = $this->getResponseData($xml);
@@ -44,35 +49,48 @@ class OrderDirectGateway extends AbstractService
         //no response: curl timeout etc... we assume an uncertain status, redirect to error view
         if (count($data) === 0) {
             $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
+            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
             $status = Main::getInstance()->getService("Status")
-                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            return $status;
+                    ->usingStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
+            return $response;
         }
-
+        $response->setAllParams($data);
         /* @var $status Status */
         $status = Main::getInstance()->getService("Status");
 
         //check for error-code
         if (!isset($data['STATUS'])) {
-            $status->setStatusCode(StatusType::INCOMPLETE_OR_INVALID);
             $this->getAdapter()->getLogger()->error('DirectLink-Response contains no STATUS-Property!');
+            $statusCode = (int) StatusType::INCOMPLETE_OR_INVALID;
+            $status->setStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
+            return $response;
         } else {
-            $status->setStatusCode($data['STATUS']);
+            $statusCode = $data['STATUS'];
+            $status->setStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
             $this->getAdapter()->getLogger()->info('GOT Ogone-Status in Direct-Link-Response: ' . $status->getStatusCode());
         }
 
         if ($status->isThankyouStatus()) {
             $this->getAdapter()->getLogger()->info('Ogone DirectLink Success (' . $status->getStatusCode() . ')');
-            return $status;
+            return $response;
         }
 
         $errorMessage = $status->getTranslatedStatusMessage();
         if ($data['NCERROR']) {
-            $status = Main::getInstance()->getService("Status")->usingStatusCode($data['NCERROR']);
+            $statusCode = $data['NCERROR'];
+            $status->setStatusCode($statusCode);
+            $response->setStatusCode($statusCode);
+            $response->setStatusService($status);
             $errorMessage = $status->getTranslatedStatusMessage();
         }
         $this->getAdapter()->getLogger()->info('Ogone Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
-        return $status;
+        return $response;
     }
 
     public function getResponseData($xml){
