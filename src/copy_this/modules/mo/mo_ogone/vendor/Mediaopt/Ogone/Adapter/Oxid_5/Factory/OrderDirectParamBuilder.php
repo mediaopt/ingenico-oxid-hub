@@ -39,14 +39,12 @@ class OrderDirectParamBuilder extends RequestParamBuilder
         $params['declineurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
                 '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['exceptionurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
-                '&fnc=mo_ogone__fncHandleOgoneExceptionFeedbackFrom3dSecureRequest', 200);
+                '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['homeurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
         $params['complus'] = '';
 
         $params = $this->handleUtf8Options($params);
         $params['shasign'] = $this->getShaSignForParams($params);
-        // mbe @TODO logExecution übernehmen
-        //$this->getLogger()->logExecution($params);
 
         /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");

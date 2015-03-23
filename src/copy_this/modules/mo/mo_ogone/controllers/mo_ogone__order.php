@@ -103,30 +103,6 @@ class mo_ogone__order extends mo_ogone__order_parent
         return $this->mo_ogone__createOrder($response);
     }
 
-    /**
-     * 3DS-Feedback: EXCEPTIONURL
-     * redirect to error view
-     */
-    public function mo_ogone__fncHandleOgoneExceptionFeedbackFrom3dSecureRequest()
-    {
-        mo_ogone__main::getInstance()->getLogger()->logExecution();
-
-        //set ogone Status
-        $order = oxNew('oxorder');
-        $order->load(oxRegistry::getSession()->getVariable('sess_challenge'));
-
-        $ogoneStatus = oxRegistry::getConfig()->getRequestParameter('STATUS');
-
-        $order->mo_ogone__updateOrderStatus($ogoneStatus);
-
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $_REQUEST, "");
-
-        $redirectUrl = $this->getConfig()->getSslShopUrl() . 'index.php?cl=mo_ogone__order_error&order_id='
-                . $order->oxorder__oxordernr->value;
-        return oxRegistry::getUtils()->redirect($redirectUrl);
-        exit;
-    }
-
     protected function mo_ogone__getOrderStateWithMailError($orderState)
     {
         if ($orderState == oxOrder::ORDER_STATE_OK) {
