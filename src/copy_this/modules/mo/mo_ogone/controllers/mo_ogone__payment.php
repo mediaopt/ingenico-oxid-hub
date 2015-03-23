@@ -40,8 +40,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         //standard procedure with redirect payments
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
             return $parentResult;
-        }
-        elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
+        } elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
             return $this->mo_ogone__handleAliasGatewayResponse();
         } else {
             mo_ogone__main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
@@ -51,7 +50,8 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     /**
      * Redirect fnc for ogone alias gateway: ACCEPTURL, EXCEPTIONURL
      */
-    public function mo_ogone__handleAliasGatewayResponse(){
+    public function mo_ogone__handleAliasGatewayResponse()
+    {
         // check for error
         /* @var $response OgoneResponse */
         $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
@@ -77,10 +77,10 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if ($response->hasError()) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
         }
-        
+
         return 'payment';
     }
-    
+
     /**
      * template method
      */
@@ -150,7 +150,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
         return $this->mo_ogone__currentPaymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->
                 getOgonePaymentByOxidPaymentId($paymentId);
-        
     }
 
     /**
