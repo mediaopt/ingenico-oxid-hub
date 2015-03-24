@@ -36,6 +36,9 @@ class mo_ogone__config
     {
       throw new Exception("Property $property not found!");
     }
+    if ($property === 'paymenttype' && !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
+        return MO_OGONE__PAYMENTTYPE_REDIRECT;
+    }
     return $this->ogonePaymentsByOxidPaymentId[$oxidPaymentId][0][$property];
   }
 

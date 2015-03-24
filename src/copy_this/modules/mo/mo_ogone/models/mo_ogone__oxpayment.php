@@ -39,6 +39,11 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
         break;
       default:
         return $result;
+      case 'ogone_credit_card':
+        return $this->mo_ogone__validateCreditcard($aDynvalue);
+        break;
+      default:
+        return $result;
     }
   }
 
@@ -107,4 +112,17 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
     return true;
   }
 
+  protected function mo_ogone__validateCreditcard($dynvalues){
+      // only check dynvalues if hidden auth is deactivated
+      if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
+          return true;
+      }
+      $id = $this->getId();
+      $brand = $dynvalues['mo_ogone']['cc']['brand'];
+      $options = oxRegistry::getConfig()->getConfigParam('mo_ogone__paymentOptions');
+      $option = isset($options[$id]) ? $options[$id] : array();
+      return in_array($brand, $option);
+      
+  }
+  
 }

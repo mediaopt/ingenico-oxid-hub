@@ -76,6 +76,19 @@
         </tr>
 
         <tr>
+            <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__USE_HIDDEN_AUTH" }]</td>
+            <td valign="top" class="edittext">
+              <input type="hidden" name="confbools[mo_ogone__use_hidden_auth]" value="false" />
+              <input type="checkbox"
+                     class="editinput"
+                     name="confbools[mo_ogone__use_hidden_auth]"
+                     value="true"
+              [{if $confbools.mo_ogone__use_hidden_auth}]checked="checked"[{/if}] />
+            [{ oxinputhelp ident="MO_OGONE__USE_HIDDEN_AUTH_HELP" }]
+          </td>
+        </tr>
+        
+        <tr>
           <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_PSPID" }]</td>
           <td valign="top" class="edittext">
             <input type=text class="editinput" style="width:410px" name=confstrs[ogone_sPSPID] value="[{$confstrs.ogone_sPSPID}]" maxlength="30" />
