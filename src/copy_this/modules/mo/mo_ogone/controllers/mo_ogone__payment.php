@@ -48,7 +48,25 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     }
 
     /**
-     * Redirect fnc for ogone alias gateway: ACCEPTURL, EXCEPTIONURL
+     * Redirect fnc for hosted tokenization gateway: EXCEPTIONURL
+     */
+    public function mo_ogone__handleHostedTokenizationErrorResponse()
+    {
+        // check for error
+        /* @var $response OgoneResponse */
+        $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
+        // error will be displayed
+        if ($response->hasError()) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
+        }
+        if ($response->getStatus()->getStatusCode() == 3) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getStatus()->getTranslatedStatusMessage());
+            return;
+        }
+    }
+
+    /**
+     * Redirect fnc for ogone alias gateway: ACCEPTURL, EXCEPTIONURL and hosted tokenization gateway: ACCEPTURL
      */
     public function mo_ogone__handleAliasGatewayResponse()
     {
@@ -64,18 +82,18 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             return 'order';
         }
 
+        // error will be displayed
+        if ($response->hasError()) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
+        }
+
         // check if js is disabled
-        if (!isset($_REQUEST['PARAMVAR']) || oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
+        elseif (!isset($_REQUEST['PARAMVAR']) || oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
             //fetch necessary auth params and build sha-signature
             $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
             $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
             return;
-        }
-
-        // error will be displayed        
-        if ($response->hasError()) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
         }
 
         return 'payment';
@@ -86,7 +104,13 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__loadRequestParams($paymentId)
     {
-        $this->mo_ogone__aliasGatewayParamsSet = Main::getInstance()->getService("AliasGateway")->buildParams($paymentId);
+        $aliasService;
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')) {
+            $aliasService = Main::getInstance()->getService("HostedTokenizationGateway");
+        } else {
+            $aliasService = Main::getInstance()->getService("AliasGateway");
+        }
+        $this->mo_ogone__aliasGatewayParamsSet = $aliasService->buildParams($paymentId);
     }
 
     /**
@@ -101,6 +125,19 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         unset($params['SHASIGN']);
         unset($params['BRAND']);
         return $params;
+    }
+
+    public function mo_ogone_getIFrameURLsAsJson($paymentId)
+    {
+        $url = oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_hostedtoken') . '?';
+        if (!isset($this->mo_ogone__aliasGatewayParamsSet[0])) {
+            $this->mo_ogone__loadRequestParams($paymentId);
+        }
+        $urls = array();
+        foreach ($this->mo_ogone__aliasGatewayParamsSet as $params) {
+            $urls[$params['CARD.BRAND']] = $url . http_build_query($params);
+        }
+        return json_encode($urls);
     }
 
     /**
@@ -133,7 +170,11 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
             switch ($paymentType) {
                 case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
-                    return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_alias');
+                    if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')) {
+                        return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_hostedtoken');
+                    } else {
+                        return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_alias');
+                    }
                 default:
                     return $this->getViewConfig()->getSslSelfLink();
             }

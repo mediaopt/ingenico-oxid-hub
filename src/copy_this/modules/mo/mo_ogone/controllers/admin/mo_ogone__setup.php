@@ -1,5 +1,7 @@
 <?php
 
+use Mediaopt\Ogone\Sdk\Main;
+
 /**
  * This file is part of Ogone Payment Solutions payment interface
  *
@@ -55,6 +57,7 @@ class mo_ogone__setup extends Shop_Config
   protected $_sPaymentServer = 'https://secure.ogone.com/ncol/test/orderstandard.asp';
   protected $mo_ogone__gateway_url_alias = 'https://secure.ogone.com/ncol/test/alias_gateway.asp';
   protected $mo_ogone__gateway_url_orderdirect = 'https://secure.ogone.com/ncol/test/orderdirect.asp';
+  protected $mo_ogone__gateway_url_hostedtoken = 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
   protected $mo_ogone__is_module_installed = null;
 
   function Init()
@@ -90,6 +93,8 @@ class mo_ogone__setup extends Shop_Config
     $this->_aViewData['mo_ogone__gateway_url_alias'] = $this->mo_ogone__gateway_url_alias;
 
     $this->_aViewData['mo_ogone__gateway_url_orderdir'] = $this->mo_ogone__gateway_url_orderdirect;
+    
+    $this->_aViewData['mo_ogone__gateway_url_hostedtoken'] = $this->mo_ogone__gateway_url_hostedtoken;
 
     $this->_aViewData['mo_ogone__moduleVersion'] = mo_ogone__main::getInstance()->getOgoneConfig()->moduleVersion;
 

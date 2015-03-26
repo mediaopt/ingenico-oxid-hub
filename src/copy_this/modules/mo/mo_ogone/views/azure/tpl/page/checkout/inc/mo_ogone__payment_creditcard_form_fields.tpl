@@ -7,7 +7,11 @@
       <label>[{ oxmultilang ident="CREDITCARD" }]</label>
       
       [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth')}]
-        <select name="BRAND" id="mo_ogone__brand">
+        [{if $oxConfig->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')}]
+            <select name="CARD.BRAND" id="mo_ogone__brand">
+        [{else}]
+            <select name="BRAND" id="mo_ogone__brand">
+        [{/if}]
       [{else}]
         <select name="dynvalue[mo_ogone][cc][brand]" id="mo_ogone__brand">
       [{/if}]
@@ -27,7 +31,17 @@
       <label>[{ oxmultilang ident="CREDITCARD" }]: <strong>[{$mo_ogone__brand}]</strong></label>
     </li>
   [{/if}]
-  [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth')}]
+  [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth') && $oxConfig->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')}]
+    <li>
+        <div>
+            <iframe id="mo_ogone__iframe" src="" width="350px" height="630px">    
+            </iframe>
+        </div>
+    </li>
+
+  [{/if}]
+  [{* Hidden Auth using form on shopsite (not via iFrame) *}]
+  [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth') && !$oxConfig->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')}]
     <li>
       <label>[{ oxmultilang ident="NUMBER" }]</label>
       <input type="text" class="js-oxValidate js-oxValidate_notEmpty" size="20" maxlength="35" name="CardNo" value="" autocomplete="off" />

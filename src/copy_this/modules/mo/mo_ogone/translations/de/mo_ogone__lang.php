@@ -35,6 +35,7 @@ $aLang = array(
     'MO_OGONE__PAYMENT_STATUS_000' => 'Ungültig/Unvollständig',
     'MO_OGONE__PAYMENT_STATUS_001' => 'Sie haben die Bezahlung abgebrochen: Wählen Sie eine andere Zahlungsart aus',
     'MO_OGONE__PAYMENT_STATUS_002' => 'Genehmigung verweigert',
+    'MO_OGONE__PAYMENT_STATUS_003' => 'Sie haben die Bezahlung abgebrochen: Wählen Sie eine andere Zahlungsart aus',
     'MO_OGONE__PAYMENT_STATUS_004' => 'Bestellung gespeichert',
     'MO_OGONE__PAYMENT_STATUS_041' => 'Erwartete Zahlung durch den Kunde',
     'MO_OGONE__PAYMENT_STATUS_005' => 'Genehmigt',

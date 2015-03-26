@@ -33,6 +33,7 @@ $aLang = array(
     'MO_OGONE__PAYMENT_STATUS_000' => 'Incomplete or invalid',
     'MO_OGONE__PAYMENT_STATUS_001' => 'You have cancelled the payment: please select another payment method',
     'MO_OGONE__PAYMENT_STATUS_002' => 'The transaction has been denied: Payment refused by the acquirer',
+    'MO_OGONE__PAYMENT_STATUS_003' => 'You have cancelled the payment: please select another payment method',
     'MO_OGONE__PAYMENT_STATUS_004' => 'Order stored',
     'MO_OGONE__PAYMENT_STATUS_041' => 'Waiting client payment',
     'MO_OGONE__PAYMENT_STATUS_005' => 'Authorized',

@@ -59,6 +59,7 @@ $aLang = array(
     'MO_OGONE__GATEWAY_URL_REDIRECT'               => 'Redirect',
     'MO_OGONE__GATEWAY_URL_ALIAS'                  => 'Alias',
     'MO_OGONE__GATEWAY_URL_ORDERDIRECT'            => 'Orderdirect',
+    'MO_OGONE__GATEWAY_URL_HOSTEDTOKEN'            => 'Hosted Tokenization Page',
 // Zahlarten
     'MO_OGONE__PAYMENT_METHODS_CREDIT_CARD'        => 'Credit card (Ogone)',
     'MO_OGONE__PAYMENT_METHODS_MAESTRO'            => 'Maestro (Ogone)',
@@ -161,6 +162,11 @@ URL.',
     'MO_OGONE__USE_UTF8'                           => 'UTF-8 encode',
     'MO_OGONE__USE_HIDDEN_AUTH'                    => 'Hidden Authorization',
     'MO_OGONE__USE_HIDDEN_AUTH_HELP'               => 'When using Hidden Authorization the user will not be redirected to the PSP to enter his payment information',
+    'MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH' => 'via iFrame',
+    'MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH_HELP' => '' .
+        'Has no effect when hidden authorization is disabled<br />' .
+        'true: the customer puts his card information in an iFrame of the psp (PCI konform)</br>' .
+        'false: the customer puts his card information into a form on the shopsite that is sent to the psp (not PCI conform, PCI-Certificat necessary)',
     'OGONE_SETUP_TITLE'                            => 'Setup',
     'MO_OGONE__CAPTURE_CREDITCARD_HELP'            => 'Transaction type',
     'MO_OGONE__USE_UTF8_HELP'                      => 'Send data Utf8-encoded. If you activate this option you have to change gateway-URLs to Utf8 gateway-URLs',

@@ -8,7 +8,7 @@ use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 /**
  * $Id: RequestParamBuilder.php 55 2015-02-24 10:47:24Z mbe $ 
  */
-class AliasParamBuilder extends RequestParamBuilder
+class HostedTokenizationParamBuilder extends RequestParamBuilder
 {
     
     protected $oxidSessionParamsForRemoteCalls = null;
@@ -25,18 +25,20 @@ class AliasParamBuilder extends RequestParamBuilder
                 continue;
             }
             $params = array();
-            $sslSelfLink = str_replace('&amp;', '&', $oxViewConf->getSslSelfLink());
+            $shopurl = $this->getOxConfig()->getSslShopUrl();
 
-            $params['ACCEPTURL'] = $this->checkUrlLength($sslSelfLink . '&cl=payment&fnc=validatePayment', 200);
-            $params['EXCEPTIONURL'] = $this->checkUrlLength($sslSelfLink . '&cl=payment&fnc=validatePayment', 200);
-            $params['BRAND'] = $option['brand'];
-            $params['PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
-            $params['PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;
+            $params['PARAMETERS.ACCEPTURL'] = $this->checkUrlLength($shopurl .    'modules/mo/mo_ogone/scripts/mo_ogone__redirect_iframe_parent.php?cl=payment&fnc=validatePayment', 200);
+            $params['PARAMETERS.EXCEPTIONURL'] = $this->checkUrlLength($shopurl . 'modules/mo/mo_ogone/scripts/mo_ogone__redirect_iframe_parent.php?cl=payment&fnc=mo_ogone__handleHostedTokenizationErrorResponse', 200);
+            
+            $params['CARD.PAYMENTMETHOD'] = $option['pm'];
+            $params['CARD.BRAND'] = $option['brand'];            
+            $params['ACCOUNT.PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
+            $params['PARAMETERS.PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;
 
             $params = $this->handleUtf8Options($params);
-            $params['SHASIGN'] = $this->getShaSignForParams($params);
-
+            $params['SHASIGNATURE.SHASIGN'] = $this->getShaSignForParams($params);
             $gatewayParams[] = $params;
+            
         }
         // mbe: @TODO logExecution übernehmen
         //$this->getLogger()->logExecution($gatewayParams);
