@@ -65,8 +65,8 @@ class mo_ogone__setup extends Shop_Config
     $this->_aViewData['mo_ogone__sqlExecutionErrors'] = '';
 
     $this->mo_ogone__logger = Main::getInstance()->getLogger();
-    $this->mo_ogone__oxid_payment_ids =
-            mo_ogone__main::getInstance()->getOgoneConfig()->getOxidPaymentIds();
+    $this->mo_ogone__shop_payment_ids =
+        Main::getInstance()->getService('OgonePayments')->getShopPaymentIds();
 
     return parent::Init();
   }
@@ -105,7 +105,7 @@ class mo_ogone__setup extends Shop_Config
 
     // define the payment methods
     $aPaymentMethods = array();
-    foreach ($this->mo_ogone__oxid_payment_ids as $oxidPaymentId)
+    foreach ($this->mo_ogone__shop_payment_ids as $oxidPaymentId)
     {
       $checked = (bool) oxDb::getDb()->getOne(
                       'SELECT 1  
@@ -307,7 +307,7 @@ class mo_ogone__setup extends Shop_Config
 
     $aLanguageParams = array_values($this->getConfig()->getConfigParam('aLanguageParams'));
 
-    foreach ($this->mo_ogone__oxid_payment_ids as $oxidPaymentId)
+    foreach ($this->mo_ogone__shop_payment_ids as $oxidPaymentId)
     {
 
       $oResult = oxDb::getDb()->Execute("SELECT * FROM oxpayments WHERE OXID = '" . $oxidPaymentId . "'");
@@ -558,14 +558,13 @@ class mo_ogone__setup extends Shop_Config
     // @todo check if cache really needs to be cleared and implment if neccessary
     // oxRegistry::getUtils()->rebuildCache();
     // rebuild config
-    mo_ogone__main::getInstance()->getOgoneConfig()->init();
 
     return;
   }
 
   public function mo_ogone__getMultiplePaymentOptionsByOxidPaymentId($oxidPaymentId)
   {
-    $payments = mo_ogone__main::getInstance()->getOgoneConfig()->ogonePaymentsByOxidPaymentId;
+    $payments = Main::getInstance()->getService('OgonePayments')->ogonePaymentsByShopPaymentId;
     if (isset($payments[$oxidPaymentId]) && count($payments[$oxidPaymentId]) > 1)
     {
       return $payments[$oxidPaymentId];

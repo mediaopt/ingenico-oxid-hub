@@ -37,14 +37,14 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
             $params['backurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
         }
 
-        $params['pm'] = \mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'pm');
+        $params['pm'] = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'pm');
         
         // if credit card is used and is using redirect (hidden auth is disabled), use the brand that was submitted
         if ($this->getOxSession()->getBasket()->getPaymentId() == 'ogone_credit_card') {
             $dynvalues = $this->getOxSession()->getVariable('dynvalue');
             $params['brand'] = $dynvalues['mo_ogone']['cc']['brand'];
         } else {
-            $params['brand'] = \mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand');
+            $params['brand'] = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand');
         }
         // shop logo
         if ($this->getOxConfig()->getConfigParam('ogone_sTplLogo') != '') {

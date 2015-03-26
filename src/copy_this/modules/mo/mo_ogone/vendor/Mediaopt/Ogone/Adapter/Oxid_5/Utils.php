@@ -1,12 +1,14 @@
 <?php
 
+namespace Mediaopt\Ogone\Adapter\Oxid_5;
+
 /**
  * $Id: mo_ogone__util.php 7 2012-12-12 10:44:58Z martin $ 
  */
-class mo_ogone__util
+class Utils
 {
 
-  static public function storeTransactionFeedbackInDb($oxDb, $requestParams, $orderid = "")
+  static public function storeTransactionFeedbackInDb($requestParams, $orderid = "")
   {
     $sanitizedParams = array();
     //lowercase keys

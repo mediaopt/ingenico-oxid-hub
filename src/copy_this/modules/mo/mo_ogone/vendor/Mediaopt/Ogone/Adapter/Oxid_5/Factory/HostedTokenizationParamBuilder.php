@@ -19,7 +19,7 @@ class HostedTokenizationParamBuilder extends RequestParamBuilder
         $oxViewConf = $this->getOxConfig()->getActiveView()->getViewConfig();
 
         //build for each paymentoption
-        $paymentOptions = \mo_ogone__main::getInstance()->getOgoneConfig()->getOgonePaymentByOxidPaymentId($paymentId);
+        $paymentOptions = Main::getInstance()->getService('OgonePayments')->getOgonePaymentByShopPaymentId($paymentId);
         foreach ($paymentOptions as $option) {
             if (!$option['active']) {
                 continue;

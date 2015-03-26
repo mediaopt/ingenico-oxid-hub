@@ -5,7 +5,6 @@ namespace Mediaopt\Ogone\Adapter\Oxid_5;
 use Mediaopt\Ogone\Adapter\Oxid_5\Factory\AbstractFactory;
 use Mediaopt\Ogone\Sdk\Main as sdkMain;
 use Monolog\Handler\StreamHandler;
-use Monolog\Processor\TagProcessor;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -40,6 +39,12 @@ class Main
      * @var LoggerInterface
      */
     protected $logger;
+    
+    /**
+     *
+     * @var Utils
+     */
+    protected $utils;
 
     /**
      * constructor
@@ -144,6 +149,19 @@ class Main
         return $this->logger = $logger;
     }
 
+    /**
+     * get utils
+     * @return Utils
+     */
+    public function getUtils()
+    {
+        if ($this->utils !== null) {
+            //update processors
+            return $this->utils;
+        }
+        return $this->utils = new Utils();
+    }
+    
     /**
      * set logger
      * @param LoggerInterface $logger

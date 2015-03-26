@@ -35,7 +35,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             return $parentResult;
         }
 
-        $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
+        $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
 
         //standard procedure with redirect payments
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
@@ -167,7 +167,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         $oxpayment->load($this->getCheckedPaymentId());
 
         if ($oxpayment->mo_ogone__isOgonePayment()) {
-            $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
+            $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
             switch ($paymentType) {
                 case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
                     if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')) {
@@ -189,8 +189,8 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if (!$paymentId) {
             $paymentId = $this->getCheckedPaymentId();
         }
-        return $this->mo_ogone__currentPaymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->
-                getOgonePaymentByOxidPaymentId($paymentId);
+        return $this->mo_ogone__currentPaymentConfig = Main::getInstance()->getService('OgonePayments')->
+                getOgonePaymentByShopPaymentId($paymentId);
     }
 
     /**

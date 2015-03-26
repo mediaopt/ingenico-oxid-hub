@@ -23,111 +23,6 @@ $this->applicationId = '##appid##';
 
 $this->moduleVersion = '2.2.1';
 
-// Mapping from id to payment-method(pm) and brand
-$this->paymentMethods = array(
-    // credit card payments (one page)
-    array(
-        'oxid_payment_id' => 'ogone_credit_card',
-        'pm'              => 'CreditCard',
-        'brand'           => 'VISA',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-    array(
-        'oxid_payment_id' => 'ogone_credit_card',
-        'pm'              => 'CreditCard',
-        'brand'           => 'MasterCard',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-    array(
-        'oxid_payment_id' => 'ogone_credit_card',
-        'pm'              => 'CreditCard',
-        'brand'           => 'American Express',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-    array(
-        'oxid_payment_id' => 'ogone_credit_card',
-        'pm'              => 'CreditCard',
-        'brand'           => 'JCB',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-    array(
-        'oxid_payment_id' => 'ogone_credit_card',
-        'pm'              => 'CreditCard',
-        'brand'           => 'Diners Club',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-    // debit card payments (redirect)
-    array(
-        'oxid_payment_id' => 'ogone_maestro',
-        'pm'              => 'CreditCard',
-        'brand'           => 'Maestro',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    array(
-        'oxid_payment_id' => 'ogone_post_card',
-        'pm'              => 'PostFinance Card',
-        'brand'           => 'PostFinance + card',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    // direct banking payments (redirect)
-    array(
-        'oxid_payment_id' => 'ogone_giropay',
-        'pm'              => 'giropay',
-        'brand'           => 'giropay',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    array(
-        'oxid_payment_id' => 'ogone_sofortueberweisung',
-        'pm'              => 'DirectEbanking',
-        'brand'           => 'Sofort Uberweisung',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    array(
-        'oxid_payment_id' => 'ogone_ideal',
-        'pm'              => 'iDEAL',
-        'brand'           => 'iDEAL',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    array(
-        'oxid_payment_id' => 'ogone_post_efinance',
-        'pm'              => 'PostFinance e-finance',
-        'brand'           => 'PostFinance e-finance',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    array(
-        'oxid_payment_id' => 'ogone_eps',
-        'pm'              => 'EPS',
-        'brand'           => 'EPS',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    // direct debit payments (one-page, but at the moment only redirect is supported)
-    array(
-        'oxid_payment_id' => 'ogone_debit_de',
-        'pm'              => 'Direct Debits DE',
-        'brand'           => 'Direct Debits DE',
-        //~ 'paymenttype' => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    array(
-        'oxid_payment_id' => 'ogone_debit_nl',
-        'pm'              => 'Direct Debits NL',
-        'brand'           => 'Direct Debits NL',
-        //~ 'paymenttype' => MO_OGONE__PAYMENTTYPE_ONE_PAGE),
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    // e-Wallet payments (redirect)
-    array(
-        'oxid_payment_id' => 'ogone_paypal',
-        'pm'              => 'PAYPAL',
-        'brand'           => 'PAYPAL',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    // Mobile payments (redirect)
-    array(
-        'oxid_payment_id' => 'ogone_mpass',
-        'pm'              => 'MPASS',
-        'brand'           => 'MPASS',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    // BillPay (redirect)
-    array(
-        'oxid_payment_id' => 'ogone_open_invoice_de',
-        'pm'              => 'Open Invoice DE',
-        'brand'           => 'Open Invoice DE',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-    // Mister Cash (redirect)
-    array(
-        'oxid_payment_id' => 'ogone_mister_cash',
-        'pm'              => 'CreditCard',
-        'brand'           => 'BCMC',
-        'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
-);
-
-
 /**
  * declare all known response parameter for sha out verification
  */
@@ -234,11 +129,6 @@ $this->oxidLangCodeToOgoneLanguageCountryCode = array(
 //WICHTIG: Der hier angegebene Wert muss kleiner als der Zeitüberschreitungswert in Ihrem System sein!
 $this->rtimeout = 15;
 
-$this->maximumLogfileSizeInBytes = 1024 * 1024;
-
-//$this->logLevels = array('CALL', 'INFO', 'ERROR');
-$this->logLevels = array('ERROR');
-
 $this->logTableCreateSql =
         "CREATE TABLE `mo_ogone__payment_logs` (
     `OXID` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
@@ -278,6 +168,6 @@ $this->logTableCreateSql =
     `BILLFNAME` VARCHAR(255) NOT NULL default '',
     `BILLLNAME` VARCHAR(255) NOT NULL default '',
     `date` timestamp NOT NULL,
-
+    
     PRIMARY KEY (id)
   )";

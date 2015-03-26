@@ -1,5 +1,7 @@
 <?php
 
+use Mediaopt\Ogone\Sdk\Main;
+
 /**
  * $Id: mo_ogone__oxpayment.php 9 2012-12-12 14:15:10Z martin $
  */
@@ -54,7 +56,7 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
 
   public function mo_ogone__isOgonePayment()
   {
-    $paymentConfig = mo_ogone__main::getInstance()->getOgoneConfig()->getOgonePayments();
+    $paymentConfig = Main::getInstance()->getService('OgonePayments')->getOgonePayments();
     return array_key_exists($this->getId(), $paymentConfig);
   }
 

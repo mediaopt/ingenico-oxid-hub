@@ -54,7 +54,7 @@ class mo_ogone__order extends mo_ogone__order_parent
 
         //check for one page checkout => call orderdirect-service
         $paymentId = $this->getPayment()->getId();
-        $paymentType = mo_ogone__main::getInstance()->getOgoneConfig()->getPaymentMethodProperty($paymentId, 'paymenttype');
+        $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($paymentId, 'paymenttype');
 
         //redirect
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
@@ -135,10 +135,10 @@ class mo_ogone__order extends mo_ogone__order_parent
             $oxOrder->load($this->getBasket()->getOrderId());
             $oxOrder->mo_ogone__updateOrderStatus($response->getStatus()->getStatusCode());
             $oxOrder->mo_ogone__setTransID($response->getOrderId());
-            mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
+            Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             return $parentState;
         }
-        mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams(), "");
+        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
         if ($response->hasError()) {
             $errorMessage = $response->getError()->getTranslatedStatusMessage();
         } else {
