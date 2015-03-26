@@ -12,8 +12,6 @@ class mo_ogone__config
 
     include $configFile;
 
-    $this->logger->setConfig($this);
-
     $this->init();
   }
 

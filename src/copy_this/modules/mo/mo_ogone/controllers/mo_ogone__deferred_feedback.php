@@ -18,7 +18,7 @@ class mo_ogone__deferred_feedback extends oxUBase
 
             $order->mo_ogone__loadByNumber($response->getOrderId());
             if (!$order->isLoaded()) {
-                mo_ogone__main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
+                Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
                 mo_ogone__util::storeTransactionFeedbackInDb(oxDb::getDb(), $response->getAllParams());
                 return;
             }

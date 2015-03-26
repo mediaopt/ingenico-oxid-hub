@@ -61,7 +61,7 @@ class mo_ogone__setup extends Shop_Config
   {
     $this->_aViewData['mo_ogone__sqlExecutionErrors'] = '';
 
-    $this->mo_ogone__logger = mo_ogone__main::getInstance()->getLogger();
+    $this->mo_ogone__logger = Main::getInstance()->getLogger();
     $this->mo_ogone__oxid_payment_ids =
             mo_ogone__main::getInstance()->getOgoneConfig()->getOxidPaymentIds();
 
@@ -82,7 +82,7 @@ class mo_ogone__setup extends Shop_Config
 
     $sCurrentAdminShop = $myConfig->getShopId();
 
-    mo_ogone__main::getInstance()->getLogger()->info('Shop Id: ' . $sCurrentAdminShop);
+    Main::getInstance()->getLogger()->info('Shop Id: ' . $sCurrentAdminShop);
 
     // pre-define payment server address for easy setup
     $this->_aViewData['strPaymentServer'] = $this->_sPaymentServer;

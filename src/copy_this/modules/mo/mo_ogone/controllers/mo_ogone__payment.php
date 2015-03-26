@@ -24,7 +24,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function validatePayment()
     {
-        mo_ogone__main::getInstance()->getLogger()->logExecution($_REQUEST);
+        Main::getInstance()->getLogger()->logExecution($_REQUEST);
         /* @var $oxpayment oxpayment */
         $oxpayment = oxNew("oxpayment");
         $oxpayment->load(oxRegistry::getConfig()->getRequestParameter('paymentid'));
@@ -43,7 +43,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         } elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
             return $this->mo_ogone__handleAliasGatewayResponse();
         } else {
-            mo_ogone__main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
+            Main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
         }
     }
 

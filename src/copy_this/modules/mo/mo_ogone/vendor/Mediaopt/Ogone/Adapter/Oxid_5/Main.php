@@ -5,7 +5,6 @@ namespace Mediaopt\Ogone\Adapter\Oxid_5;
 use Mediaopt\Ogone\Adapter\Oxid_5\Factory\AbstractFactory;
 use Mediaopt\Ogone\Sdk\Main as sdkMain;
 use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Monolog\Processor\TagProcessor;
 use Psr\Log\LoggerInterface;
 

@@ -77,7 +77,7 @@ class mo_ogone__order extends mo_ogone__order_parent
 
             //3D-Secure 
             if ($xml->HTML_ANSWER) {
-                mo_ogone__main::getInstance()->getLogger()->info('Ogone 3D-Secure redirection');
+                Main::getInstance()->getLogger()->info('Ogone 3D-Secure redirection');
                 echo '<html><body>';
                 echo base64_decode((string) $xml->HTML_ANSWER);
                 echo '</body></html>';
