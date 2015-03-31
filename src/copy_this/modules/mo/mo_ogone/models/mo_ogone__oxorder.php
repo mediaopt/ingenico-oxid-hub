@@ -153,21 +153,24 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
      */
     protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null)
     {
-        if ($this->mo_ogone__isOgoneOrder() && !$this->mo_ogone__isPaymentDone()) {
-            return self::ORDER_STATE_MAILINGERROR;
+        // Mail will be sent using mo_ogone__sendEmails and checked using variable mo_ogone__mailError
+        if ($this->mo_ogone__isOgoneOrder()) {
+            return self::ORDER_STATE_OK;
         }
         return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
     }
 
     public function mo_ogone__sendEmails()
     {
-        $this->_oBasket = oxRegistry::getSession()->getBasket();
-        $this->_oUser = oxRegistry::getSession()->getUser();
-        $this->_oPayment = $this->getPaymentType();
-        $emailSent = $this->_sendOrderByEmail($this->_oUser, $this->_oBasket, $this->_oPayment);
+        if ($this->mo_ogone__isOgoneOrder() && $this->mo_ogone__isPaymentDone()) {
+            $this->_oBasket = oxRegistry::getSession()->getBasket();
+            $this->_oUser = oxRegistry::getSession()->getUser();
+            $this->_oPayment = $this->getPaymentType();
+            $emailSent = parent::_sendOrderByEmail($this->_oUser, $this->_oBasket, $this->_oPayment);
 
-        if ($emailSent) {
-            oxRegistry::getSession()->deleteVariable('mo_ogone__mailError');
+            if ($emailSent) {
+                oxRegistry::getSession()->deleteVariable('mo_ogone__mailError');
+            }
         }
     }
 

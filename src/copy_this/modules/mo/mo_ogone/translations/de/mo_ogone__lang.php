@@ -31,7 +31,8 @@ $sLangName = "Deutsch";
 // -------------------------------
 $aLang = array(
     'charset'                 => 'UTF-8',
-    'MO_OGONE_TEMPLATE_TITLE' => 'Ogone Payment Solutions',
+    'MO_OGONE__DIVERGENT_AMOUNT'   => 'Ein technisches Problem ist aufgetreten, bitte kontaktieren Sie den Support. Ihre Zahlung wurde mit folgender Nummer verbucht: ',
+    'MO_OGONE_TEMPLATE_TITLE'      => 'Ogone Payment Solutions',
     'MO_OGONE__PAYMENT_STATUS_000' => 'Ungültig/Unvollständig',
     'MO_OGONE__PAYMENT_STATUS_001' => 'Sie haben die Bezahlung abgebrochen: Wählen Sie eine andere Zahlungsart aus',
     'MO_OGONE__PAYMENT_STATUS_002' => 'Genehmigung verweigert',

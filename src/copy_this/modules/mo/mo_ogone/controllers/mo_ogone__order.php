@@ -105,16 +105,26 @@ class mo_ogone__order extends mo_ogone__order_parent
 
     protected function mo_ogone__getOrderStateWithMailError($orderState)
     {
-        if ($orderState == oxOrder::ORDER_STATE_OK) {
+        if ($orderState == 'thankyou') {
             // check for mail error in session
             if (oxRegistry::getSession()->getVariable('mo_ogone__mailError')) {
-                $orderState = oxOrder::ORDER_STATE_MAILINGERROR;
+                $orderState = $this->_getNextStep(oxOrder::ORDER_STATE_MAILINGERROR);
                 oxRegistry::getSession()->deleteVariable('mo_ogone__mailError');
             }
         }
         return $orderState;
     }
 
+        protected function mo_ogone__getFormatedOrderAmount()
+    {
+        $dAmount = oxRegistry::getSession()->getBasket()->getPrice()->getBruttoPrice();
+        $dAmount = number_format($dAmount, 2, '.', '');
+        $dAmount = $dAmount * 100;
+        $dAmount = round($dAmount, 0);
+        $dAmount = substr($dAmount, 0, 15);
+        return $dAmount;
+    }
+    
     /**
      * 
      * @param OgoneResponse $response the response of Ogone
@@ -122,20 +132,27 @@ class mo_ogone__order extends mo_ogone__order_parent
      */
     protected function mo_ogone__createOrder($response)
     {
-        
         if (!$response->hasError() && $response->getStatus()->isThankyouStatus()) {
+            $basketAmount = $this->mo_ogone__getFormatedOrderAmount();
+            if ($basketAmount != $response->getAmount()) {
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__DIVERGENT_AMOUNT') . $response->getOrderId());
+                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+                Main::getInstance()->getLogger()->error('Paid Amount ('. $response->getAmount() .')and Basket Amount ('.$basketAmount.') are not equal. TransId: '.$response->getOrderId());
+                return 'payment';
+            }
+            oxRegistry::getSession()->setVariable('mo_ogone__mailError', true);
             $parentState = parent::execute();
             // ignore parent Mail error
             if ($parentState === oxOrder::ORDER_STATE_MAILINGERROR) {
                 $parentState = oxOrder::ORDER_STATE_OK;
             }
-            $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
             /* @var $oxOrder oxOrder */
             $oxOrder = oxNew("oxOrder");
             $oxOrder->load($this->getBasket()->getOrderId());
             $oxOrder->mo_ogone__updateOrderStatus($response->getStatus()->getStatusCode());
             $oxOrder->mo_ogone__setTransID($response->getOrderId());
             Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
+            $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
             return $parentState;
         }
         Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
