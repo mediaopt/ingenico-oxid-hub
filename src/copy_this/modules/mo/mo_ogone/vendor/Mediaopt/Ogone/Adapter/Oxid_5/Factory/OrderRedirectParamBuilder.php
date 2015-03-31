@@ -80,8 +80,8 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         $params = $this->handleUtf8Options($params);
         // generates sha signature of request parameter before send
         $params['shasign'] = $this->getShaSignForParams($params);
-        // mbe: @TODO logExecution übernehmen
-        //$this->getLogger()->logExecution($requestParams);
+        
+        $this->getAdapterMain()->getLogger()->logExecution($requestParams);
 
         /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");

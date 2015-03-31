@@ -3,7 +3,6 @@
 namespace Mediaopt\Ogone\Adapter\Oxid_5\Factory;
 
 use Mediaopt\Ogone\Sdk\Main;
-use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 
 /**
  * $Id: RequestParamBuilder.php 55 2015-02-24 10:47:24Z mbe $ 
@@ -38,10 +37,10 @@ class AliasParamBuilder extends RequestParamBuilder
 
             $gatewayParams[] = $params;
         }
-        // mbe: @TODO logExecution übernehmen
-        //$this->getLogger()->logExecution($gatewayParams);
         
-        /* @var $model RequestParameters */
+        $this->getAdapterMain()->getLogger()->logExecution($gatewayParams);
+        
+        /* @var $model Mediaopt\Ogone\Sdk\Model\RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
         $model->setParams($gatewayParams);
         
