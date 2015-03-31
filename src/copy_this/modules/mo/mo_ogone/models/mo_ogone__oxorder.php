@@ -106,19 +106,20 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
      */
     public function mo_ogone__updateOrderStatus($ogoneStatus)
     {
-        /* @var $status Status */
-        $status = Main::getInstance()->getService("Status")
-                ->usingStatusCode($ogoneStatus);
-        if ($status->isOkStatus() || $this->_checkOrderExist($this->getId())){
-            $oxidStatus = $status->isOkStatus() ? 'OK' : 'ERROR';
+        if ($ogoneStatus->isOkStatus() || $this->_checkOrderExist($this->getId())){
+            $oxidStatus = $ogoneStatus->isOkStatus() ? 'OK' : 'ERROR';
+            if ($ogoneStatus->isOkStatus()) {
+                $sDate = date('Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime());
+                $this->oxorder__oxpaid = new oxField($sDate, oxField::T_RAW);
+            }
             $this->oxorder__oxtransstatus = new oxField($oxidStatus);
-            $this->oxorder__mo_ogone__status = new oxField($status->getStatusCode());
+            $this->oxorder__mo_ogone__status = new oxField($ogoneStatus->getStatusCode());
 
             $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
-            if ($status->isThankyouStatus() && $activeView == 'order') {
+            if ($ogoneStatus->isThankyouStatus() && $activeView == 'order') {
                 $this->mo_ogone__sendEmails();
             }
-            if ($status->isStornoStatus()) {
+            if ($ogoneStatus->isStornoStatus()) {
                 $this->cancelOrder();
             }
 

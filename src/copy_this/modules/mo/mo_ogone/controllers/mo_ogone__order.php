@@ -149,7 +149,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             /* @var $oxOrder oxOrder */
             $oxOrder = oxNew("oxOrder");
             $oxOrder->load($this->getBasket()->getOrderId());
-            $oxOrder->mo_ogone__updateOrderStatus($response->getStatus()->getStatusCode());
+            $oxOrder->mo_ogone__updateOrderStatus($response->getStatus());
             $oxOrder->mo_ogone__setTransID($response->getOrderId());
             Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
