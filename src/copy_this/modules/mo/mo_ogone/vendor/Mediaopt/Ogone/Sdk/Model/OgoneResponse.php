@@ -19,7 +19,18 @@ class OgoneResponse extends AbstractModel
     private $error;
     private $alias;
     private $orderId;
+    private $amount;
 
+    function getAmount()
+    {
+        return $this->amount;
+    }
+
+    function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+    
     function getAllParams()
     {
         return $this->allParams;

@@ -18,12 +18,22 @@ class OgoneResponse extends AbstractFactory
      */
     public function build($raw = false)
     {
-        /* @var $model Mediaopt\Ogone\Sdk\Model\OgoneResponse */
-        $model = $this->getSdkMain()->getModel('OgoneResponse');
         $params = array();
         foreach ($_REQUEST as $val => $key) {
             $params[strtoupper($val)] = $this->getOxConfig()->getRequestParameter($val, $raw);
         }
+        return $this->buildFromData($params);
+    }
+    
+    /**
+     * populate OgoneResponse model
+     * @param type $params a params array
+     * @return Mediaopt\Ogone\Sdk\Model\OgoneResponse
+     */
+    public function buildFromData($params)
+    {
+        /* @var $model Mediaopt\Ogone\Sdk\Model\OgoneResponse */
+        $model = $this->getSdkMain()->getModel('OgoneResponse');
         $model->setAllParams($params);
         if (isset($params['ORDERID'])) {
             $model->setOrderId($params['ORDERID']);
@@ -56,7 +66,13 @@ class OgoneResponse extends AbstractFactory
         } else {
             $model->setAlias(null);
         }
+        if (!empty($params['AMOUNT'])) {
+            $model->setAmount(floatval($params['AMOUNT'])*100);
+        } elseif (!empty($params['amount'])) {
+            $model->setAmount(floatval($params['amount'])*100);
+        } else {
+            $model->setAmount(null);
+        }
         return $model;
     }
-    
 }
