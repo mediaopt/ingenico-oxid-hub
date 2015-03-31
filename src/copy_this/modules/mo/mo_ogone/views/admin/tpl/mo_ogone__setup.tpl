@@ -48,7 +48,27 @@
               [{/foreach}]
             </td>
           </tr>
-
+          <tr>
+            <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__ISLIVEMODE" }]</td>
+            <td valign="top" class="edittext">
+              <input type="hidden" name="confbools[mo_ogone__isLiveMode]" value="false" />
+              <input type="checkbox" 
+                     class="editinput" 
+                     name="confbools[mo_ogone__isLiveMode]" 
+                     value="true" 
+              [{if $confbools.mo_ogone__isLiveMode}]checked="checked"[{/if}] />
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE_LOGLEVEL" }]</td>
+          <td valign="top" class="edittext">
+            <select name="confstrs[mo_ogone__logLevel]" class="editinput" [{ $readonly }]>
+              <option value="DEBUG" [{ if $confstrs.mo_ogone__logLevel == "DEBUG" }]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_DEBUG" }]</option>
+              <option value="INFO" [{ if $confstrs.mo_ogone__logLevel == "INFO" }]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_INFO" }]</option>
+              <option value="ERROR" [{ if $confstrs.mo_ogone__logLevel == "ERROR"  || $confstrs.ogone_sHashingAlgorithm == ""}]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_ERROR" }]</option>
+            </select>
+          </td>
+        </tr>
           <tr>
             <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__CAPTURE_CREDITCARD" }]</td>
             <td valign="top" class="edittext">
@@ -147,37 +167,7 @@
             <input type=password class="editinput" style="width:410px;" name=confstrs[ogone_sSecureKeyOut] value="[{$confstrs.ogone_sSecureKeyOut}]"><br />
           </td>
         </tr>
-        <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__GATEWAY_URLS" }]</td>
-          <td valign="top" class="edittext">
-            <fieldset>
-              <input type=text 
-                     class="editinput" 
-                     style="width:410px" 
-                     name="confstrs[mo_ogone__gateway_url_redirect]" 
-                     value="[{ if $confstrs.mo_ogone__gateway_url_redirect != "" }][{$confstrs.mo_ogone__gateway_url_redirect}][{else}][{$strPaymentServer}][{/if}]"
-                     > [{oxmultilang ident="MO_OGONE__GATEWAY_URL_REDIRECT"}]<br />
-              <input type=text 
-                     class="editinput" 
-                     style="width:410px" 
-                     name="confstrs[mo_ogone__gateway_url_alias]" 
-                     value="[{if $confstrs.mo_ogone__gateway_url_alias}][{$confstrs.mo_ogone__gateway_url_alias}][{else}][{$mo_ogone__gateway_url_alias}][{/if}]"
-                     > [{oxmultilang ident="MO_OGONE__GATEWAY_URL_ALIAS"}]<br />
-              <input type=text 
-                     class="editinput" 
-                     style="width:410px" 
-                     name="confstrs[mo_ogone__gateway_url_orderdir]" 
-                     value="[{if $confstrs.mo_ogone__gateway_url_orderdir}][{$confstrs.mo_ogone__gateway_url_orderdir}][{else}][{$mo_ogone__gateway_url_orderdir}][{/if}]"
-                     > [{oxmultilang ident="MO_OGONE__GATEWAY_URL_ORDERDIRECT"}]<br />
-              <input type=text 
-                     class="editinput" 
-                     style="width:410px" 
-                     name="confstrs[mo_ogone__url_hostedtoken]" 
-                     value="[{if $confstrs.mo_ogone__url_hostedtoken}][{$confstrs.mo_ogone__url_hostedtoken}][{else}][{$mo_ogone__url_hostedtoken}][{/if}]"
-                     > [{oxmultilang ident="MO_OGONE__GATEWAY_URL_HOSTEDTOKEN"}]<br />
-            </fieldset>
-          </td>
-        </tr>
+
         <!--
         <tr>
           <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_ALIAS" }]</td>

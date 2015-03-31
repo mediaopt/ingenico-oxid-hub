@@ -20,12 +20,26 @@ class mo_ogone__payment_form extends oxUBase
         oxRegistry::getSession()->getBasket()->afterUpdate();
 
         parent::render();
-
-        $this->_aViewData['mo_ogone__form_action'] = $this->getConfig()->getConfigParam('mo_ogone__gateway_url_redirect');
+        
+        $this->_aViewData['mo_ogone__form_action'] = $this->getRedirectUrl();
         $this->_aViewData['mo_ogone__hidden_fields'] = Main::getInstance()->getService("OrderRedirectGateway")->buildParams();
         $this->_aViewData['mo_ogone__debug'] = mo_ogone__main::getInstance()->getOgoneConfig()->debug;
 
         return $this->_sThisTemplate;
+    }
+    
+    protected function getRedirectUrl() {
+        $part1 = '';
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
+            $part1 = 'prod';
+        } else {
+            $part1 = 'test';
+        }
+        $part2 = '';
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_utf8')) {
+            $part2 = '_utf8';
+        }
+        return 'https://secure.ogone.com/ncol/'. $part1 .'/orderstandard'. $part2 .'.asp';
     }
 
 }

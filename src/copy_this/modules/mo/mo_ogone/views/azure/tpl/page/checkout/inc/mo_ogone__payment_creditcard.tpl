@@ -35,7 +35,7 @@
             <script type="text/javascript">
               (function () {
                 var mo_ogone__shaSignatures = [{$oView->getAliasGatewayShaSignaturesAsJson()}];
-                var mo_ogone__aliasGatewayUrl = '[{$oxConfig->getShopConfVar('mo_ogone__gateway_url_alias')}]';
+                var mo_ogone__aliasGatewayUrl = '[{$oView->getAliasUrl()}]';
 
                 function mo_ogone__setShaSignature()
                 {

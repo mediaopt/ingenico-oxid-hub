@@ -129,7 +129,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
     public function mo_ogone_getIFrameURLsAsJson($paymentId)
     {
-        $url = oxRegistry::getConfig()->getShopConfVar('mo_ogone__url_hostedtoken') . '?';
+        $url = $this->getHostedTokenUrl() . '?';
         if (!isset($this->mo_ogone__aliasGatewayParamsSet[0])) {
             $this->mo_ogone__loadRequestParams($paymentId);
         }
@@ -171,9 +171,9 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             switch ($paymentType) {
                 case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
                     if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-                        return oxRegistry::getConfig()->getShopConfVar('mo_ogone__url_hostedtoken');
+                        return $this->getHostedTokenUrl();
                     } else {
-                        return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_alias');
+                        return $this->getAliasUrl();
                     }
                 default:
                     return $this->getViewConfig()->getSslSelfLink();
@@ -246,5 +246,30 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
         return $list;
     }
+    
+    public function getAliasUrl() {
+        $part1 = '';
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
+            $part1 = 'prod';
+        } else {
+            $part1 = 'test';
+        }
+        $part2 = '';
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_utf8')) {
+            $part2 = '_utf8';
+        }
+        return 'https://secure.ogone.com/ncol/'. $part1 .'/alias_gateway'. $part2 .'.asp';
+    }
+    
+    protected function getHostedTokenUrl() {
+        $part1 = '';
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
+            return 'https://secure.ogone.com/Tokenization/HostedPage';
+        } else {
+            return 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
+        }
+    }
+    
+    
 
 }

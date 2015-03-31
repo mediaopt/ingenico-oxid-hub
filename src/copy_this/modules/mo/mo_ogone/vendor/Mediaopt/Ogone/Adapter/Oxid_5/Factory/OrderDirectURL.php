@@ -17,7 +17,18 @@ class OrderDirectURL extends AbstractFactory
     {
         /*@var $model Url */
         $model = $this->getSdkMain()->getModel('Url');
-        $model->setUrl($this->getOxConfig()->getShopConfVar('mo_ogone__gateway_url_orderdir'));
+        $part1 = '';
+        if ($this->getOxConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
+            $part1 = 'prod';
+        } else {
+            $part1 = 'test';
+        }
+        $part2 = '';
+        if ($this->getOxConfig()->getShopConfVar('mo_ogone__use_utf8')) {
+            $part2 = '_utf8';
+        }
+        
+        $model->setUrl('https://secure.ogone.com/ncol/'. $part1 .'/orderdirect'. $part2 .'.asp');
         return $model;
     }
 }

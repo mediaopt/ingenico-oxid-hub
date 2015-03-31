@@ -29,13 +29,6 @@ $sLangName = "Deutsch";
 // -------------------------------
 $aLang = array(
     'charset' => 'UTF-8',
-// Einstellungen
-    'SHOP_MODULE_GROUP_mo_ogone__config' => 'Einstellungen',
-    'SHOP_MODULE_mo_ogone__isLiveMode' => 'Live-Modus',
-    'SHOP_MODULE_mo_ogone__logLevel' => 'Log-Level',
-    'SHOP_MODULE_mo_ogone__logLevel_DEBUG' => 'Debug',
-    'SHOP_MODULE_mo_ogone__logLevel_INFO' => 'Info',
-    'SHOP_MODULE_mo_ogone__logLevel_ERROR' => 'Error',
 // Admin Menu
     'mo_ogone' => 'Ogone',
     'mo_ogone__setup' => 'Einstellungen',
@@ -57,16 +50,16 @@ $aLang = array(
     'OGONE_NCERROR' => 'Fehler',
     'OGONE_TRXDATE' => 'Trans.Zeit',
 // Admin -> Ogone -> Einstellungen
+    'MO_OGONE__ISLIVEMODE' => 'Live-Modus',
+    'MO_OGONE_LOGLEVEL' => 'Log-Level',
+    'MO_OGONE_LOGLEVEL_DEBUG' => 'Debug',
+    'MO_OGONE_LOGLEVEL_INFO' => 'Info',
+    'MO_OGONE_LOGLEVEL_ERROR' => 'Error',
     'HELP_OGONE_PSPID' => 'Tragen Sie hier Ihre (Test)-PSPID ein, die Sie vom Payment Service Provider erhalten haben.',
     'START_SETUP' => 'Installation beginnen',
     'UPDATE_SETUP' => 'Aktualisieren',
     'OGONE_PAYMENT_METHODS' => 'Bitte übertragen Sie hier Ihre<br />bei Ogone freigeschalteten Zahlungsarten:',
     'OGONE_PAYMENT_METHODS_ALL_PAYMENT_METHODS' => 'Alle Zahlungsarten',
-    'MO_OGONE__GATEWAY_URLS' => 'Schnittstellen-URLs',
-    'MO_OGONE__GATEWAY_URL_REDIRECT' => 'Redirect',
-    'MO_OGONE__GATEWAY_URL_ALIAS' => 'Alias',
-    'MO_OGONE__GATEWAY_URL_ORDERDIRECT' => 'Orderdirect',
-    'MO_OGONE__GATEWAY_URL_HOSTEDTOKEN' => 'Hosted Tokenization Page',
 // Zahlarten
     'MO_OGONE__PAYMENT_METHODS_CREDIT_CARD' => 'Kreditkarte (Ogone)',
     'MO_OGONE__PAYMENT_METHODS_MAESTRO' => 'Maestro (Ogone)',

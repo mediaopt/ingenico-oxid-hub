@@ -54,10 +54,6 @@ class mo_ogone__setup extends Shop_Config
    * Pre-define the ISO Payment Server Address.
    * @var string
    */
-  protected $_sPaymentServer = 'https://secure.ogone.com/ncol/test/orderstandard.asp';
-  protected $mo_ogone__gateway_url_alias = 'https://secure.ogone.com/ncol/test/alias_gateway.asp';
-  protected $mo_ogone__gateway_url_orderdirect = 'https://secure.ogone.com/ncol/test/orderdirect.asp';
-  protected $mo_ogone__url_hostedtoken = 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
   protected $mo_ogone__is_module_installed = null;
 
   function Init()
@@ -88,14 +84,7 @@ class mo_ogone__setup extends Shop_Config
     Main::getInstance()->getLogger()->info('Shop Id: ' . $sCurrentAdminShop);
 
     // pre-define payment server address for easy setup
-    $this->_aViewData['strPaymentServer'] = $this->_sPaymentServer;
-
-    $this->_aViewData['mo_ogone__gateway_url_alias'] = $this->mo_ogone__gateway_url_alias;
-
-    $this->_aViewData['mo_ogone__gateway_url_orderdir'] = $this->mo_ogone__gateway_url_orderdirect;
     
-    $this->_aViewData['mo_ogone__url_hostedtoken'] = $this->mo_ogone__url_hostedtoken;
-
     $this->_aViewData['mo_ogone__moduleVersion'] = mo_ogone__main::getInstance()->getOgoneConfig()->moduleVersion;
 
 
@@ -160,7 +149,7 @@ class mo_ogone__setup extends Shop_Config
       $this->_aViewData['start_setup'] = true;
       // if module running in producitve mode -> linking to prod account
     }
-    elseif (stristr($this->getConfig()->getConfigParam('mo_ogone__gateway_url_redirect'), 'prod'))
+    elseif ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode'))
     {
       $this->_aViewData['bottom_buttons'] = 'prod';
     }

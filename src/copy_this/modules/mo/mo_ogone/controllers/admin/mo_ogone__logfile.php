@@ -75,7 +75,7 @@ class mo_ogone__logfile extends oxAdminView
     $this->_aViewData["currentadminshop"] = $sCurrentAdminShop;
     oxRegistry::getSession()->setVariable("currentadminshop", $sCurrentAdminShop);
 
-    if (stristr($this->getConfig()->getConfigParam('mo_ogone__gateway_url_redirect'), 'prod'))
+    if ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode'))
       $this->_aViewData['bottom_buttons'] = 'prod';
     else
       $this->_aViewData['bottom_buttons'] = 'test';

@@ -73,10 +73,4 @@ $aModule = array(
         'payment_form.tpl'                             => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
 
     ),
-    'settings'    => array(
-        array('group' => 'mo_ogone__config', 'name'  => 'mo_ogone__isLiveMode',
-            'type'  => 'bool'),
-        array('group' => 'mo_ogone__config', 'name'  => 'mo_ogone__logLevel',
-            'type'  => 'select', 'constraints' => 'DEBUG|INFO|ERROR'),
-    ),
 );
