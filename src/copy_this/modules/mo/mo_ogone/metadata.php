@@ -10,15 +10,15 @@ $sMetadataVersion = '1.1';
  */
 $aModule = array(
     'id'          => 'mo_ogone',
-    'title'       => 'Ogone 3.0',
+    'title'       => 'Ogone',
     'description' => array(
         'de' => 'Ogone Payment'
     ),
-    'thumbnail'   => 'logo.png',
+    'thumbnail'   => 'ogone.jpeg',
     'version'     => '3.0',
     'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
     'url'         => 'http://www.mediaopt.de',
-    'email'       => 'oxid@mediaopt.de',
+    'email'       => 'support@mediaopt.de',
     'extend'      => array(
         //components
         //controllers (admin)
