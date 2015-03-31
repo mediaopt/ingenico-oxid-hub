@@ -8,7 +8,7 @@
     [{assign var="oxConfig" value=$oView->getConfig()}]
     [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth')}]
         <input type="hidden" id="mo_ogone__paramvar" name="PARAMVAR" value="" />
-        [{if $oxConfig->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')}]
+        [{if $oxConfig->getShopConfVar('mo_ogone__use_iframe')}]
             [{$oView->mo_ogone__loadRequestParams('ogone_credit_card')}]
             
             <script type="text/javascript">

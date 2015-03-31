@@ -54,15 +54,15 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     {
         // check for error
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
+        $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse();
         // error will be displayed
         if ($response->hasError()) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
         }
-        if ($response->getStatus()->getStatusCode() == 3) {
+        elseif ($response->getStatus()->getStatusCode() == 3 || $response->getStatus()->getStatusCode() == 1) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getStatus()->getTranslatedStatusMessage());
-            return;
         }
+        return 'payment';
     }
 
     /**
@@ -88,7 +88,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
 
         // check if js is disabled
-        elseif (!isset($_REQUEST['PARAMVAR']) || oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
+        elseif (oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
             //fetch necessary auth params and build sha-signature
             $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
@@ -105,7 +105,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     public function mo_ogone__loadRequestParams($paymentId)
     {
         $aliasService;
-        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')) {
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
             $aliasService = Main::getInstance()->getService("HostedTokenizationGateway");
         } else {
             $aliasService = Main::getInstance()->getService("AliasGateway");
@@ -129,7 +129,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
     public function mo_ogone_getIFrameURLsAsJson($paymentId)
     {
-        $url = oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_hostedtoken') . '?';
+        $url = oxRegistry::getConfig()->getShopConfVar('mo_ogone__url_hostedtoken') . '?';
         if (!isset($this->mo_ogone__aliasGatewayParamsSet[0])) {
             $this->mo_ogone__loadRequestParams($paymentId);
         }
@@ -170,8 +170,8 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
             switch ($paymentType) {
                 case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
-                    if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe_for_hidden_auth')) {
-                        return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_hostedtoken');
+                    if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
+                        return oxRegistry::getConfig()->getShopConfVar('mo_ogone__url_hostedtoken');
                     } else {
                         return oxRegistry::getConfig()->getShopConfVar('mo_ogone__gateway_url_alias');
                     }

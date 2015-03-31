@@ -91,12 +91,12 @@
         <tr>
             <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH" }]</td>
             <td valign="top" class="edittext">
-              <input type="hidden" name="confbools[mo_ogone__use_iframe_for_hidden_auth]" value="false" />
+              <input type="hidden" name="confbools[mo_ogone__use_iframe]" value="false" />
               <input type="checkbox"
                      class="editinput"
-                     name="confbools[mo_ogone__use_iframe_for_hidden_auth]"
+                     name="confbools[mo_ogone__use_iframe]"
                      value="true"
-              [{if $confbools.mo_ogone__use_iframe_for_hidden_auth}]checked="checked"[{/if}] />
+              [{if $confbools.mo_ogone__use_iframe}]checked="checked"[{/if}] />
             [{ oxinputhelp ident="MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH_HELP" }]
           </td>
         </tr>
@@ -172,8 +172,8 @@
               <input type=text 
                      class="editinput" 
                      style="width:410px" 
-                     name="confstrs[mo_ogone__gateway_url_hostedtoken]" 
-                     value="[{if $confstrs.mo_ogone__gateway_url_hostedtoken}][{$confstrs.mo_ogone__gateway_url_hostedtoken}][{else}][{$mo_ogone__gateway_url_hostedtoken}][{/if}]"
+                     name="confstrs[mo_ogone__url_hostedtoken]" 
+                     value="[{if $confstrs.mo_ogone__url_hostedtoken}][{$confstrs.mo_ogone__url_hostedtoken}][{else}][{$mo_ogone__url_hostedtoken}][{/if}]"
                      > [{oxmultilang ident="MO_OGONE__GATEWAY_URL_HOSTEDTOKEN"}]<br />
             </fieldset>
           </td>
