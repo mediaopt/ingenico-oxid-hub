@@ -21,7 +21,7 @@ $this->debug = false;
  */
 $this->applicationId = '##appid##';
 
-$this->moduleVersion = '2.2.1';
+$this->moduleVersion = '3.0';
 
 /**
  * declare all known response parameter for sha out verification
