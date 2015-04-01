@@ -14,7 +14,7 @@ $aModule = array(
     'description' => array(
         'de' => 'Ogone Payment'
     ),
-    'thumbnail'   => 'ogone.jpeg',
+    'thumbnail'   => 'logo.png',
     'version'     => '3.0',
     'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
     'url'         => 'http://www.mediaopt.de',
