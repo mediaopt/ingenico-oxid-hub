@@ -81,8 +81,7 @@
             [{ oxinputhelp ident="MO_OGONE__CAPTURE_CREDITCARD_HELP" }]
           </td>
         </tr>
-
-          <tr>
+                  <tr>
             <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__USE_UTF8" }]</td>
             <td valign="top" class="edittext">
               <input type="hidden" name="confbools[mo_ogone__use_utf8]" value="false" />
@@ -92,6 +91,18 @@
                      value="true" 
               [{if $confbools.mo_ogone__use_utf8}]checked="checked"[{/if}] />
             [{ oxinputhelp ident="MO_OGONE__USE_UTF8_HELP" }]
+          </td>
+        </tr>
+          <tr>
+            <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__SET_OXPAID" }]</td>
+            <td valign="top" class="edittext">
+              <input type="hidden" name="confbools[mo_ogone__set_oxpaid]" value="false" />
+              <input type="checkbox" 
+                     class="editinput" 
+                     name="confbools[mo_ogone__set_oxpaid]" 
+                     value="true" 
+              [{if $confbools.mo_ogone__set_oxpaid}]checked="checked"[{/if}] />
+            [{ oxinputhelp ident="MO_OGONE__SET_OXPAID_HELP" }]
           </td>
         </tr>
 

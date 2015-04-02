@@ -108,7 +108,7 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
     {
         if ($ogoneStatus->isOkStatus() || $this->_checkOrderExist($this->getId())){
             $oxidStatus = $ogoneStatus->isOkStatus() ? 'OK' : 'ERROR';
-            if ($ogoneStatus->isOkStatus()) {
+            if ($ogoneStatus->isOkStatus() && oxRegistry::getConfig()->getShopConfVar('mo_ogone__set_oxpaid')) {
                 $sDate = date('Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime());
                 $this->oxorder__oxpaid = new oxField($sDate, oxField::T_RAW);
             }

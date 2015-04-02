@@ -147,6 +147,9 @@ $aLang = array(
     'OGONE_ALIAS_USAGE' => 'Alias-Beschreibung',
     'OGONE_ALIAS_USAGE_DESCRIPTION' => 'Beschreibung die dem Kunden als Grund für die Alias-Registrierung angezeigt wird.',
     'MO_OGONE__CAPTURE_CREDITCARD' => 'Kreditkartentransaktionen reservieren',
+    'MO_OGONE__SET_OXPAID' => 'Bezahldatum setzen',
+    'MO_OGONE__SET_OXPAID_HELP' => 'Setzt das Bezahldatum, wenn vom PSP ein OK-Status zurück kommt.<br />' .
+        'ACHTUNG: Dieser Status bedeutet nicht, dass das Geld bei Ihrem Shop eingegangen ist.',
     'MO_OGONE__USE_UTF8' => 'UTF-8 encode',
     'MO_OGONE__USE_HIDDEN_AUTH' => 'Hidden Authorization',
     'MO_OGONE__USE_HIDDEN_AUTH_HELP' => 'Bei der Verwendung von Hidden Authorization verlässt der Nutzer die Shopseite bei eintragen seiner Zahlungsinformationen nicht',
