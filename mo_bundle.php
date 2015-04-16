@@ -66,6 +66,7 @@ function setAppId($brand, $appIdPrefix, $appIdDate)
   file_put_contents($configFile, $content);
 }
 
+exec('composer install');
 exec('rm ' . getDir('bundles') . '/*.zip');
 clearTmp();
 exportSrc();
