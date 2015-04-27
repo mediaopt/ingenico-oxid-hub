@@ -42,7 +42,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             return parent::execute();
         }
 
-        if (!$this->_validateTermsAndConditions()) {
+        if (method_exists(oxNew('oxorder'), '_validateTermsAndConditions') && !$this->_validateTermsAndConditions()) {
             $this->_blConfirmAGBError = 1;
 
             return;
