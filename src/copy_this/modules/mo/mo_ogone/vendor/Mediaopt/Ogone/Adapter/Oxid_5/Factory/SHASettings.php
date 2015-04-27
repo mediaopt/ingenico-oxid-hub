@@ -19,6 +19,8 @@ class SHASettings extends AbstractFactory
         $model->setSHAOutKey($this->oxConfig->getConfigParam('ogone_sSecureKeyOut'));
         $model->setSHAAlgorithm($this->getOxConfig()->getConfigParam('ogone_sHashingAlgorithm'));
         $model->setSHAOutParameters(\mo_ogone__main::getInstance()->getOgoneConfig()->shaOutParameters);
+        $model->setSHAOutParametersAliasGateway(\mo_ogone__main::getInstance()->getOgoneConfig()->shaOutParametersAliasGateway);
+        $model->setSHAOutParametersHostedTokenizationPage(\mo_ogone__main::getInstance()->getOgoneConfig()->shaOutParametersHostedTokenization);
         return $model;
     }
 }

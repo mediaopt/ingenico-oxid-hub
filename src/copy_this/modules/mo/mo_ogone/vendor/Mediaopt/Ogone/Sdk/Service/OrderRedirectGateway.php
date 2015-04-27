@@ -30,6 +30,7 @@ class OrderRedirectGateway extends AbstractService
             $status = Main::getInstance()->getService("Status")
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);
+            $response->setError($status);
             return $response;
         }
 

@@ -19,7 +19,7 @@ class RequestParameters extends AbstractFactory
         $model = $this->getSdkMain()->getModel('RequestParameters');
         $params = array();
         foreach ($_REQUEST as $val => $key) {
-            $params[$val] = $this->getOxConfig()->getRequestParameter($val, $raw);
+            $params[strtoupper($val)] = $this->getOxConfig()->getRequestParameter($val, $raw);
         }
         $model->setParams($params);
 

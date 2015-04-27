@@ -31,6 +31,18 @@ class SHASettings
      */
     private $SHAOutParameters;
     
+        /**
+     *
+     * @var array
+     */
+    private $SHAOutParametersAliasGateway;
+    
+        /**
+     *
+     * @var array
+     */
+    private $SHAOutParametersHostedTokenizationPage;
+    
     function getSHAInKey()
     {
         return $this->SHAInKey;
@@ -69,6 +81,26 @@ class SHASettings
     function setSHAOutParameters($SHAOutParameters)
     {
         $this->SHAOutParameters = $SHAOutParameters;
+    }
+
+    function getSHAOutParametersAliasGateway()
+    {
+        return $this->SHAOutParametersAliasGateway;
+    }
+
+    function getSHAOutParametersHostedTokenizationPage()
+    {
+        return $this->SHAOutParametersHostedTokenizationPage;
+    }
+
+    function setSHAOutParametersAliasGateway($SHAOutParametersAliasGateway)
+    {
+        $this->SHAOutParametersAliasGateway = $SHAOutParametersAliasGateway;
+    }
+
+    function setSHAOutParametersHostedTokenizationPage($SHAOutParametersHostedTokenizationPage)
+    {
+        $this->SHAOutParametersHostedTokenizationPage = $SHAOutParametersHostedTokenizationPage;
     }
 
 

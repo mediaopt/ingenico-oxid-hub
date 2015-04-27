@@ -10,11 +10,17 @@ class SignatureBuilder extends AbstractService
     /**
      * @return array with filtered params and uppercased keys
      */
-    public function filterResponseParams($params)
+    public function filterResponseParams($params, $type = "")
     {
         $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
-        $shaOutParameters = $shaSettings->getSHAOutParameters();
-
+        if ($type === "AliasGateway") {
+            $shaOutParameters = $shaSettings->getSHAOutParametersAliasGateway();
+        } elseif ($type === "HostedTokenizationPage") {
+            $shaOutParameters = $shaSettings->getSHAOutParametersHostedTokenizationPage();
+        } else {
+            $shaOutParameters = $shaSettings->getSHAOutParameters();
+        }
+        
         // convert input param-keys to upercase
         $uppercasedParams = array();
         foreach ($params as $k => $v) {

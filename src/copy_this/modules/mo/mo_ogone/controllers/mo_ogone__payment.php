@@ -41,7 +41,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
             return $parentResult;
         } elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
-            return $this->mo_ogone__handleAliasGatewayResponse();
+            return $this->mo_ogone__handleHiddenAuthorizationResponse();
         } else {
             Main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
         }
@@ -68,12 +68,15 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     /**
      * Redirect fnc for ogone alias gateway: ACCEPTURL, EXCEPTIONURL and hosted tokenization gateway: ACCEPTURL
      */
-    public function mo_ogone__handleAliasGatewayResponse()
+    public function mo_ogone__handleHiddenAuthorizationResponse()
     {
         // check for error
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
-
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
+            $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse();
+        } else {
+            $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
+        }
         // check if we got the alias
         $alias = $response->getAlias();
         if (!$response->hasError() && $alias !== null) {

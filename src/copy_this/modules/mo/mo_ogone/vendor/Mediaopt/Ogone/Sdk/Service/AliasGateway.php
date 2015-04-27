@@ -35,12 +35,13 @@ class AliasGateway extends AbstractService
         $response = $this->getAdapter()->getFactory("OgoneResponse")->build();
         $this->getAdapter()->getLogger()->info("handleAliasResponse: " . var_export($response->getAllParams(), true));
         
-        if (!Main::getInstance()->getService("Authenticator")->authenticateRequest()) {
+        if (!Main::getInstance()->getService("Authenticator")->authenticateRequest("AliasGateway")) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
             $status = Main::getInstance()->getService("Status")
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);
+            $response->setError($status);
             return $response;
         }
         

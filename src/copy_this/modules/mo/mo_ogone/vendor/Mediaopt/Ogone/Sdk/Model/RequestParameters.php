@@ -20,7 +20,9 @@ class RequestParameters extends AbstractModel
 
     function setParams($params)
     {
-        $this->params = $params;
+        $this->params = array();
+        foreach ($params as $key => $val)
+        $this->params[strtoupper($key)] = $val;
     }
 
 

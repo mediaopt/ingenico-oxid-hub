@@ -19,8 +19,8 @@ class OgoneResponse extends AbstractFactory
     public function build($raw = false)
     {
         $params = array();
-        foreach ($_REQUEST as $val => $key) {
-            $params[strtoupper($val)] = $this->getOxConfig()->getRequestParameter($val, $raw);
+        foreach ($_REQUEST as $key => $val) {
+            $params[strtoupper($key)] = $this->getOxConfig()->getRequestParameter($key, $raw);
         }
         return $this->buildFromData($params);
     }
