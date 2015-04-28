@@ -13,7 +13,7 @@ $aModule = array(
     'title'       => 'Ogone',
     'description' => 'Ogone Payment ##revision##',
     'thumbnail'   => 'logo.png',
-    'version'     => '3.0',
+    'version'     => '3.0.1',
     'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
     'url'         => 'http://www.mediaopt.de',
     'email'       => 'support@mediaopt.de',
