@@ -134,10 +134,10 @@ class mo_ogone__order extends mo_ogone__order_parent
     {
         if (!$response->hasError() && $response->getStatus()->isThankyouStatus()) {
             $basketAmount = $this->mo_ogone__getFormatedOrderAmount();
-            if ($basketAmount != $response->getAmount()) {
+            if (intval($basketAmount) !== intval($response->getAmount())) {
                 oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__DIVERGENT_AMOUNT') . $response->getOrderId());
                 Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
-                Main::getInstance()->getLogger()->error('Paid Amount ('. $response->getAmount() .')and Basket Amount ('.$basketAmount.') are not equal. TransId: '.$response->getOrderId());
+                Main::getInstance()->getLogger()->error('Paid Amount ('. intval($response->getAmount()) .')and Basket Amount ('.intval($basketAmount) .') are not equal. TransId: '.$response->getOrderId());
                 return 'payment';
             }
             oxRegistry::getSession()->setVariable('mo_ogone__mailError', true);
