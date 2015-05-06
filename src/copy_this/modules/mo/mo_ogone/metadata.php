@@ -53,6 +53,16 @@ $aModule = array(
             'block'       => 'select_payment',
             'file'        => 'views/blocks/page/checkout/payment/select_payment.tpl'
         ),
+        array(
+            'template'    => 'order_overview.tpl',
+            'block'       => 'admin_order_overview_export',
+            'file'        => 'views/blocks/admin/admin_order_overview_export.tpl'
+        ),
+        array(
+            'template'    => 'order_overview.tpl',
+            'block'       => 'admin_order_overview_status',
+            'file'        => 'views/blocks/admin/admin_order_overview_status.tpl'
+        ),
     ),
     'templates'   => array(
         'mo_ogone__interface.tpl'                      => 'mo/mo_ogone/views/admin/tpl/mo_ogone__interface.tpl',
