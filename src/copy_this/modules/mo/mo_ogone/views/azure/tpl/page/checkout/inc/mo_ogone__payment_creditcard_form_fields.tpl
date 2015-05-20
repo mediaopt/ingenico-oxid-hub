@@ -20,7 +20,11 @@
         value=$oView->mo_ogone__getCurrentPaymentConfig('ogone_credit_card')}]
         [{foreach from=$mo_ogone__currentPaymentConfig item="paymentData"}]
           [{if $paymentData.active}]
-            <option value="[{$paymentData.brand}]">[{$paymentData.brand}]</option>
+                [{if $oxConfig->getShopConfVar('mo_ogone__use_iframe') && $paymentData.brand == 'MasterCard'}]
+                    <option value="Eurocard">[{$paymentData.brand}]</option>
+                [{ else }]
+                    <option value="[{$paymentData.brand}]">[{$paymentData.brand}]</option>
+                [{/if}]
           [{/if}]
         [{/foreach}]
       </select>

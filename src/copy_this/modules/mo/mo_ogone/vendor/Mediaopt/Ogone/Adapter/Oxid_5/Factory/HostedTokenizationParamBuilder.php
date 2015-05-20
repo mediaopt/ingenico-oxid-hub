@@ -30,7 +30,11 @@ class HostedTokenizationParamBuilder extends RequestParamBuilder
             $params['PARAMETERS.EXCEPTIONURL'] = $this->checkUrlLength($shopurl . 'modules/mo/mo_ogone/scripts/mo_ogone__redirect_iframe_parent.php?cl=payment&fnc=mo_ogone__handleHostedTokenizationErrorResponse', 200);
             
             $params['CARD.PAYMENTMETHOD'] = $option['pm'];
-            $params['CARD.BRAND'] = $option['brand'];            
+            if ($option['brand'] === 'MasterCard') {
+                $params['CARD.BRAND'] = 'Eurocard';
+            } else {
+                $params['CARD.BRAND'] = $option['brand'];
+            }
             $params['ACCOUNT.PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
             $params['PARAMETERS.PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;
 
