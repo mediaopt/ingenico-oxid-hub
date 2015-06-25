@@ -31,7 +31,8 @@ class Status extends AbstractService
 
     public function getStatusTextForCode()
     {
-        return StatusType::getStatusTextByCode()[$this->code];
+        $statusTextArray = StatusType::getStatusTextByCode();
+        return $statusTextArray[$this->code];
     }
 
     public function isCancelledByClient()
