@@ -46,8 +46,11 @@ class mo_ogone__order extends mo_ogone__order_parent
             $this->_blConfirmAGBError = 1;
 
             return;
+        } elseif (!oxConfig::getParameter( 'ord_agb' ) && $this->getConfig()->getConfigParam( 'blConfirmAGB' )) {
+            $this->_blConfirmAGBError = 1;
+            return;
         }
-
+        
         /* if ($orderState === oxOrder::ORDER_STATE_MAILINGERROR) {
           oxRegistry::getSession()->setVariable('mo_ogone__mailError', true);
           } */

@@ -26,6 +26,7 @@ class RequestParamBuilder extends AbstractFactory
     {
         if ($this->oxidSessionParamsForRemoteCalls === null) {
             $this->oxidSessionParamsForRemoteCalls = array();
+            $this->oxidSessionParamsForRemoteCalls['ord_agb'] = true;
             $this->oxidSessionParamsForRemoteCalls['sess_challenge'] = $this->getOxSession()->getVariable('sess_challenge');
             $this->oxidSessionParamsForRemoteCalls[$this->getOxSession()->getName()] = $this->getOxSession()->getId();
             $this->oxidSessionParamsForRemoteCalls['stoken'] = $this->getOxSession()->getSessionChallengeToken();
