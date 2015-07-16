@@ -25,8 +25,7 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         // redirect urls
         $redirectUrl = $this->checkUrlLength(
                 $this->getOxConfig()->getSslShopUrl() .
-                // mbe: @TODO remove "&XDEBUG_SESSION_START=netbeans-xdebug"
-                'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect&XDEBUG_SESSION_START=netbeans-xdebug', 200);
+                'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['accepturl'] = $redirectUrl;
         $params['declineurl'] = $redirectUrl;
         $params['exceptionurl'] = $redirectUrl;
