@@ -72,7 +72,7 @@ class OrderDirectGateway extends AbstractService
     {
         $data = array();
         foreach ($xml->attributes() as $key => $value) {
-            $data[(string) $key] = (string) $value;
+            $data[strtoupper($key)] = (string) $value;
         }
         return $this->getAdapter()->getFactory("OgoneResponse")->buildFromData($data);
     }
