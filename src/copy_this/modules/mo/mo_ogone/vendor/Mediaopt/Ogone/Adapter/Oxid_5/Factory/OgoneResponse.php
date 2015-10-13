@@ -68,8 +68,6 @@ class OgoneResponse extends AbstractFactory
         }
         if (!empty($params['AMOUNT'])) {
             $model->setAmount(intval(strval(floatval($params['AMOUNT'])*100)));
-        } elseif (!empty($params['amount'])) {
-            $model->setAmount(intval(strval(floatval($params['amount'])*100)));
         } else {
             $model->setAmount(null);
         }
