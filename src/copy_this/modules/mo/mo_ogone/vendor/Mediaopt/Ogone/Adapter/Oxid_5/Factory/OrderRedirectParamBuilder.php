@@ -80,7 +80,7 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         // generates sha signature of request parameter before send
         $params['shasign'] = $this->getShaSignForParams($params);
         
-        $this->getAdapterMain()->getLogger()->logExecution($requestParams);
+        $this->getAdapterMain()->getLogger()->logExecution($params);
 
         /* @var $model RequestParameters */
         $model = $this->getSdkMain()->getModel("RequestParameters");
@@ -171,6 +171,9 @@ class OrderRedirectParamBuilder extends RequestParamBuilder
         $params['ecom_shipto_postal_postalcode'] = substr($this->getShippingProperty('zip'), 0, 10);
         $params['ecom_shipto_postal_city'] = substr($this->getShippingProperty('city'), 0, 25);
         $params['ecom_shipto_postal_countrycode'] = substr($this->getBillPayDeliveryCountryCode(), 0, 2);
+        if ($state = $this->getShippingProperty('stateid')) {
+            $params['ecom_shipto_postal_state'] = substr($state, 0, 2);
+        }
 
 
         return $params;

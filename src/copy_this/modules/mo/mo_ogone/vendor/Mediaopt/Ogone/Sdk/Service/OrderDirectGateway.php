@@ -74,6 +74,7 @@ class OrderDirectGateway extends AbstractService
         foreach ($xml->attributes() as $key => $value) {
             $data[strtoupper($key)] = (string) $value;
         }
+        $this->getAdapter()->getLogger()->info('DirectGateway Parsed Response: ' . json_encode($data));
         return $this->getAdapter()->getFactory("OgoneResponse")->buildFromData($data);
     }
     
