@@ -1,0 +1,15 @@
+{
+    "platform": "Oxid",
+    "pluginEnvironment": "Needed for Shopware Plugins",
+    "pluginFolder": "Needed for Shopware Plugins",
+    "prefix": "mo_",
+    "suffix": "",
+    "projectName": "Ogone",
+    "pathToModule": "copy_this/modules/mo/mo_ogone",
+    "compatibility": {
+        "minimumVersion": " 4.7/5.0",
+        "maximumVersion": null,
+        "blacklist": [
+        ]
+    }
+}
