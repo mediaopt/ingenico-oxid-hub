@@ -197,7 +197,7 @@ class CustomBundleMaker extends BundleMaker
 
     protected function getBrandFolder()
     {
-        return $this->baseDir . '/static-branding-files';
+        return $this->config->getBaseDir() . '/static-branding-files';
     }
 
     /**
