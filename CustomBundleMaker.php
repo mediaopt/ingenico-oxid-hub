@@ -183,7 +183,7 @@ class CustomBundleMaker extends BundleMaker
 
     protected function copyBrandFilesToTmp($brand)
     {
-        exec('cp -R ' . $this->getDir('bundles') . '/mo_' . $brand . '/* ' . $this->getDir('tmp'));
+        exec('cp -R ' . $this->config->getBundlesFolder() . '/mo_' . $brand . '/* ' . $this->config->getTemporaryFolder());
     }
 
     /**
