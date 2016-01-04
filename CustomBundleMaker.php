@@ -39,47 +39,13 @@ class CustomBundleMaker extends BundleMaker
                 ),
                 'app_id_prefix' => 'ACOX',
             ),
-        ),
-        'skipList' => array(
-            'directories' => array('.svn'),
-            'files' => array(),
         )
     );
     private $currentBrand = null;
-
-    function doEnterDir($dirname)
-    {
-
-        if ($dirname == '.' || $dirname == '..') {
-            return false;
-        }
-
-        //skip directories
-        if (in_array($dirname, $this->brandConfig['skipList']['directories'])) {
-            return false;
-        }
-
-        return true;
-    }
-
     
     function getFiles($path)
     {
         return new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-        $files = array();
-
-        $dh = opendir($path);
-
-        while (($file = readdir($dh)) !== false) {
-            if (!is_dir($path . '/' . $file)) {
-                $files[] = $path . '/' . $file;
-            } elseif ($this->doEnterDir($file)) {
-                $files = array_merge($this->getFiles($path . '/' . $file), $files);
-            }
-        }
-        closedir($dh);
-
-        return $files;
     }
 
     function getBrandDir($brand)
