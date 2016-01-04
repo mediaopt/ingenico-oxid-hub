@@ -148,18 +148,15 @@ class CustomBundleMaker extends BundleMaker
             $this->setAppId('OGOX');
             $this->copyBrandFiles('ogone', $this->config->getTemporaryFolder());
             $this->zipTmpContents();
-            $this->clearTmp();
 
-            
+            // prepare branded files
             foreach ($this->brandConfig['brands'] as $brand => $brandConfig) {
-                $this->exportSrc();
-                $this->setMetadataInformation();
                 $this->setAppId($brandConfig['app_id_prefix']);
                 $this->copySrcFilesToBrandFolder($brand);
                 $this->brandFiles($brand, $brandConfig);
-                $this->clearTmp();
             }
-
+            $this->clearTmp();
+            // package brand files
             foreach ($this->brandConfig['brands'] as $brand => $data) {
                 $this->copyBrandFilesToTmp($brand);
                 $this->currentBrand = $data['app_id_prefix'];
@@ -202,7 +199,7 @@ class CustomBundleMaker extends BundleMaker
     }
 
     /**
-     * get name for new bundle file
+     * get name for new bundle file using current brand name
      * @return string
      */
     protected function getFileName()
