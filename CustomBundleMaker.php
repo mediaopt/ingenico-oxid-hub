@@ -85,9 +85,10 @@ class CustomBundleMaker extends BundleMaker
         return $this->config->getBundlesFolder() . '/mo_' . $brand;
     }
 
-    function copySrcFilesToBrandFolder($files, $sourceBaseDir, $brand)
+    function copySrcFilesToBrandFolder($brand)
     {
-        $strLength = strlen($sourceBaseDir . '/');
+        $files = $this->getFiles($this->config->getTemporaryFolder());
+        $strLength = strlen($this->config->getTemporaryFolder() . '/');
         $bundleDir = $this->getBrandDir($brand);
 
         $newName = $this->brandConfig['brands'][$brand]['replacements']['name_lower_short'];
@@ -149,18 +150,18 @@ class CustomBundleMaker extends BundleMaker
             $this->zipTmpContents();
             $this->clearTmp();
 
-            $files = $this->getFiles($this->config->getSourceCodeFolder());
+            
             foreach ($this->brandConfig['brands'] as $brand => $brandConfig) {
                 $this->exportSrc();
-                $this->copySrcFilesToBrandFolder($files, $this->config->getSourceCodeFolder(), $brand);
+                $this->setMetadataInformation();
+                $this->setAppId($brandConfig['app_id_prefix']);
+                $this->copySrcFilesToBrandFolder($brand);
                 $this->brandFiles($brand, $brandConfig);
                 $this->clearTmp();
             }
 
             foreach ($this->brandConfig['brands'] as $brand => $data) {
                 $this->copyBrandFilesToTmp($brand);
-                $this->setMetadataInformation();
-                $this->setAppId($data['app_id_prefix']);
                 $this->currentBrand = $data['app_id_prefix'];
                 $this->copyBrandFiles($brand, $this->config->getTemporaryFolder());
                 $this->zipTmpContents();
