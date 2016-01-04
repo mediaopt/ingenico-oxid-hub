@@ -192,7 +192,7 @@ class CustomBundleMaker extends BundleMaker
     function setAppId($appIdPrefix)
     {
         $appIdDate = date('ymd');
-        $this->replacePatternInFile($this->getPathToModule() . '/config.php', '##appid##', $appIdPrefix . $appIdDate);
+        $this->replacePatternInFile($this->config->getPathToModule() . '/config.php', '##appid##', $appIdPrefix . $appIdDate);
     }
 
     protected function getBrandFolder()
