@@ -62,8 +62,10 @@ class CustomBundleMaker extends BundleMaker
         return true;
     }
 
+    
     function getFiles($path)
     {
+        return new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
         $files = array();
 
         $dh = opendir($path);
@@ -85,7 +87,11 @@ class CustomBundleMaker extends BundleMaker
         return $this->config->getBundlesFolder() . '/mo_' . $brand;
     }
 
-    function copySrcFilesToBrandFolder($brand)
+    /**
+     * copy files from temp folder to brand folder and rename the files and folders according to the brand config
+     * @param type $brand
+     */
+    function copyFilesToBrandFolder($brand)
     {
         $files = $this->getFiles($this->config->getTemporaryFolder());
         $strLength = strlen($this->config->getTemporaryFolder() . '/');
@@ -95,7 +101,7 @@ class CustomBundleMaker extends BundleMaker
 
         foreach ($files as $file) {
 //build targetPath
-            $targetName = substr($file, $strLength); //remove base-dir from targetName
+            $targetName = substr($file->getPathname(), $strLength); //remove base-dir from targetName
             $targetName = str_replace('ogone', $brand, $targetName); //rename folder
             $targetName = str_replace('Ogone', $this->brandConfig['brands'][$brand]['replacements']['name_normal'], $targetName); //rename folder
             $targetName = str_replace($brand . '__', $newName, $targetName); //rename files
@@ -104,10 +110,14 @@ class CustomBundleMaker extends BundleMaker
 //create subdir
             $this->createSubDirsForFile($targetPath);
 
-            copy($file, $targetPath);
+            copy($file->getPathname(), $targetPath);
         }
     }
 
+    /**
+     * create SubDirectories if they did not exist yet
+     * @param type $filePath
+     */
     function createSubDirsForFile($filePath)
     {
         $subDir = preg_replace('#^(.+)?/[^/]+$#', '$1', $filePath);
@@ -126,16 +136,20 @@ class CustomBundleMaker extends BundleMaker
     {
 
         foreach ($this->getFiles($this->getBrandDir($brand)) as $file) {
-            $content = file_get_contents($file);
+            $content = file_get_contents($file->getPathname());
 
             foreach ($this->brandConfig['values2beReplaced'] as $replaceParam => $replaceValue) {
                 $content = str_replace($replaceValue, $brandConfig['replacements'][$replaceParam], $content);
             }
 
-            file_put_contents($file, $content);
+            file_put_contents($file->getPathname(), $content);
         }
     }
 
+    /**
+     * Special bundle creation script including brandings for concardis and accaptance
+     * @return int
+     */
     public function createBundle()
     {
         try {
@@ -152,7 +166,7 @@ class CustomBundleMaker extends BundleMaker
             // prepare branded files
             foreach ($this->brandConfig['brands'] as $brand => $brandConfig) {
                 $this->setAppId($brandConfig['app_id_prefix']);
-                $this->copySrcFilesToBrandFolder($brand);
+                $this->copyFilesToBrandFolder($brand);
                 $this->brandFiles($brand, $brandConfig);
             }
             $this->clearTmp();
