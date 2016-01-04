@@ -100,6 +100,9 @@ class CustomBundleMaker extends BundleMaker
         $newName = $this->brandConfig['brands'][$brand]['replacements']['name_lower_short'];
 
         foreach ($files as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
 //build targetPath
             $targetName = substr($file->getPathname(), $strLength); //remove base-dir from targetName
             $targetName = str_replace('ogone', $brand, $targetName); //rename folder
@@ -136,6 +139,9 @@ class CustomBundleMaker extends BundleMaker
     {
 
         foreach ($this->getFiles($this->getBrandDir($brand)) as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
             $content = file_get_contents($file->getPathname());
 
             foreach ($this->brandConfig['values2beReplaced'] as $replaceParam => $replaceValue) {
