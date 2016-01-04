@@ -80,15 +80,15 @@ class CustomBundleMaker extends BundleMaker
         return $files;
     }
 
-    function getBundleDir($brand)
+    function getBrandDir($brand)
     {
-        return __DIR__ . '/bundles/mo_' . $brand;
+        return $this->config->getBundlesFolder() . '/mo_' . $brand;
     }
 
-    function copyFiles($files, $sourceBaseDir, $brand)
+    function copySrcFilesToBrandFolder($files, $sourceBaseDir, $brand)
     {
         $strLength = strlen($sourceBaseDir . '/');
-        $bundleDir = $this->getBundleDir($brand);
+        $bundleDir = $this->getBrandDir($brand);
 
         $newName = $this->brandConfig['brands'][$brand]['replacements']['name_lower_short'];
 
@@ -116,10 +116,15 @@ class CustomBundleMaker extends BundleMaker
         }
     }
 
+    /**
+     * Replace special names in all files to match the new branding. Replacements come from brandConfig
+     * @param type $brand
+     * @param type $brandConfig
+     */
     function brandFiles($brand, $brandConfig)
     {
 
-        foreach ($this->getFiles($this->getBundleDir($brand)) as $file) {
+        foreach ($this->getFiles($this->getBrandDir($brand)) as $file) {
             $content = file_get_contents($file);
 
             foreach ($this->brandConfig['values2beReplaced'] as $replaceParam => $replaceValue) {
@@ -128,11 +133,6 @@ class CustomBundleMaker extends BundleMaker
 
             file_put_contents($file, $content);
         }
-    }
-
-    function getClassNameFromFilepath($filepath)
-    {
-        return preg_replace('#^.+?/([^/]+)\.php$#', '$1', $filepath);
     }
 
     public function createBundle()
@@ -151,14 +151,14 @@ class CustomBundleMaker extends BundleMaker
 
             $files = $this->getFiles($this->config->getSourceCodeFolder());
             foreach ($this->brandConfig['brands'] as $brand => $brandConfig) {
-                $this->copyFiles($files, $this->config->getSourceCodeFolder(), $brand);
+                $this->exportSrc();
+                $this->copySrcFilesToBrandFolder($files, $this->config->getSourceCodeFolder(), $brand);
                 $this->brandFiles($brand, $brandConfig);
+                $this->clearTmp();
             }
 
             foreach ($this->brandConfig['brands'] as $brand => $data) {
                 $this->copyBrandFilesToTmp($brand);
-
-                $this->exportSrc();
                 $this->setMetadataInformation();
                 $this->setAppId($data['app_id_prefix']);
                 $this->currentBrand = $data['app_id_prefix'];
@@ -167,7 +167,7 @@ class CustomBundleMaker extends BundleMaker
                 $this->clearTmp();
 
                 //delete bundle-dir
-                exec('rm -rf ' . $this->getBundleDir($brand));
+                exec('rm -rf ' . $this->getBrandDir($brand));
             }
         } catch (Exception $exc) {
             echo $exc->getTraceAsString();
