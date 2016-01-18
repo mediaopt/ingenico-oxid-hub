@@ -324,7 +324,6 @@
   </tr>
 </table>
 </form>
-<div style="text-align:right; font-weight:bold;">Ogone Module Version: [{$mo_ogone__moduleVersion}]</div>
 [{include file="pagenavisnippet.tpl"}]
 </div>
 [{include file="pagetabsnippet.tpl"}]

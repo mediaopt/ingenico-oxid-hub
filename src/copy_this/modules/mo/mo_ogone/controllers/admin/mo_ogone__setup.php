@@ -84,9 +84,6 @@ class mo_ogone__setup extends Shop_Config
     Main::getInstance()->getLogger()->info('Shop Id: ' . $sCurrentAdminShop);
 
     // pre-define payment server address for easy setup
-    
-    $this->_aViewData['mo_ogone__moduleVersion'] = mo_ogone__main::getInstance()->getOgoneConfig()->moduleVersion;
-
 
     // install new table and what this module need, before setup runs first time
     $this->mo_ogone__install_payment_log_table();
