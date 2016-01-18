@@ -84,19 +84,19 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $alias);
             return 'order';
         }
-
-        // error will be displayed
-        if ($response->hasError()) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
-        }
-
+        
         // check if js is disabled
-        elseif (oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
+        if (oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
             //fetch necessary auth params and build sha-signature
             $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
             $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
             return;
+        }
+        
+        // error will be displayed
+        if ($response->hasError()) {
+            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
         }
 
         return 'payment';
