@@ -38,6 +38,18 @@ $config = array(
             ),
             'app_id_prefix'    => 'ACOX',
         ),
+        'igenico'          => array(
+            'replacements' => array(
+                'url'              => 'secure.ogone.de',
+                'hostedtokentesturl' => 'https://ogone.test.v-psp.com',
+                'app_id'           => 'MOOGOXDv30',
+                'name_normal'      => 'Ingenico',
+                'name_lower_short' => 'ingenico__',
+                'name_lower'       => 'ingenico',
+                'name_upper'       => 'INGENICO'
+            ),
+            'app_id_prefix'    => 'OGOX',
+        ),
     ),
     'skipList'         => array(
         'directories' => array('.svn'),
