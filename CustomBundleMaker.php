@@ -8,7 +8,6 @@ class CustomBundleMaker extends BundleMaker
         'values2beReplaced' => array(
             'url' => 'secure.ogone.com',
             'hostedtokentesturl' => 'https://ogone.test.v-psp.com',
-            'app_id' => 'MOOGOXDv30',
             'name_normal' => 'Ogone',
             'name_lower_short' => 'ogone__',
             'name_lower' => 'ogone',
@@ -19,7 +18,6 @@ class CustomBundleMaker extends BundleMaker
                 'replacements' => array(
                     'url' => 'secure.payengine.de',
                     'hostedtokentesturl' => 'https://payengine.test.v-psp.com',
-                    'app_id' => 'MOPEOXD30',
                     'name_normal' => 'PayEngine',
                     'name_lower_short' => 'payen__',
                     'name_lower' => 'payengine',
@@ -31,13 +29,23 @@ class CustomBundleMaker extends BundleMaker
                 'replacements' => array(
                     'url' => 'secure.paytool.de',
                     'hostedtokentesturl' => 'https://paytool.test.v-psp.com',
-                    'app_id' => 'MOPTOXD30',
                     'name_normal' => 'PayTool',
                     'name_lower_short' => 'ptool__',
                     'name_lower' => 'paytool',
                     'name_upper' => 'PAYTOOL'
                 ),
                 'app_id_prefix' => 'ACOX',
+            ),
+            'ingenico'          => array(
+                'replacements' => array(
+                    'url'              => 'secure.ogone.de',
+                    'hostedtokentesturl' => 'https://ogone.test.v-psp.com',
+                    'name_normal'      => 'Ingenico',
+                    'name_lower_short' => 'ingenico__',
+                    'name_lower'       => 'ingenico',
+                    'name_upper'       => 'INGENICO'
+                ),
+                'app_id_prefix'    => 'INOX',
             ),
         )
     );
