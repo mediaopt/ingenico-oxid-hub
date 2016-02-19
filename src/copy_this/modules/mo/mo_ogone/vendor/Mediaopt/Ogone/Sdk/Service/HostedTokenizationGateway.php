@@ -3,7 +3,9 @@
 namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
 use Mediaopt\Ogone\Sdk\Model\RequestParameters;
+use Mediaopt\Ogone\Sdk\Model\StatusType;
 
 /**
  * $Id: $
@@ -28,7 +30,7 @@ class HostedTokenizationGateway extends AbstractService
      */
     public function handleResponse()
     {
-        /* @var $response \Mediaopt\Ogone\Sdk\Model\OgoneResponse */
+        /* @var $response OgoneResponse */
         $response = $this->getAdapter()->getFactory("OgoneResponse")->build();
         $this->getAdapter()->getLogger()->info("handleHostedTokenizationResponse: " . var_export($response->getAllParams(), true));
         
