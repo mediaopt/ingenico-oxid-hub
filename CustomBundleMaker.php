@@ -119,6 +119,9 @@ class CustomBundleMaker extends BundleMaker
             $content = file_get_contents($file->getPathname());
 
             foreach ($this->brandConfig['values2beReplaced'] as $replaceParam => $replaceValue) {
+                if ($brand === 'ingenico' && ($replaceParam === 'url' || $replaceParam === 'hostedtokentesturl')) {
+                    continue;
+                }
                 $content = str_replace($replaceValue, $brandConfig['replacements'][$replaceParam], $content);
             }
 
