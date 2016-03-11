@@ -143,7 +143,7 @@ class CustomBundleMaker extends BundleMaker
             $this->setMetadataInformation();
             $this->currentBrand = 'OGOX';
             $this->setAppId('OGOX');
-            $this->copyBrandFiles('ogone', $this->config->getTemporaryFolder());
+            #$this->copyBrandFiles('ogone', $this->config->getTemporaryFolder());
             $this->zipTmpContents();
 
             // prepare branded files
