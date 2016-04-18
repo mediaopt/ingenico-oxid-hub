@@ -152,7 +152,12 @@ class mo_ogone__order extends mo_ogone__order_parent
             $oxOrder = oxNew("oxOrder");
             $oxOrder->load($this->getBasket()->getOrderId());
             $oxOrder->mo_ogone__updateOrderStatus($response->getStatus());
-            $oxOrder->mo_ogone__setTransID($response->getOrderId());
+            if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__transid_param') === 'PAYID') {
+                $id = $response->getPayId();
+            } else {
+                $id = $response->getOrderId();
+            }
+            $oxOrder->mo_ogone__setTransID($id);
             Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
             return $parentState;

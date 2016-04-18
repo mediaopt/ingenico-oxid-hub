@@ -66,6 +66,11 @@ class OgoneResponse extends AbstractFactory
         } else {
             $model->setAlias(null);
         }
+        if (!empty($params['PAYID'])) {
+            $model->setPayId($params['PAYID']);
+        } else {
+            $model->setPayId(null);
+        }
         if (!empty($params['AMOUNT'])) {
             $model->setAmount(intval(strval(floatval($params['AMOUNT'])*100)));
         } else {

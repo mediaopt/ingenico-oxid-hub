@@ -133,6 +133,17 @@
         </tr>
         
         <tr>
+          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__OXTRANSID_PARAM" }]</td>
+          <td valign="top" class="edittext">
+            <select name="confstrs[mo_ogone__transid_param]" class="editinput" [{ $readonly }]>
+              <option value="ORDERID" [{ if $confstrs.mo_ogone__transid_param == "ORDERID" }]SELECTED[{/if}]>ORDERID</option>
+              <option value="PAYID" [{ if $confstrs.mo_ogone__transid_param == "PAYID" || $confstrs.ogone_sHashingAlgorithm == "" }]SELECTED[{/if}]>PAYID</option>
+            </select>
+            [{ oxinputhelp ident="MO_OGONE__OXTRANSID_PARAM_HELP" }]
+          </td>
+        </tr>
+        
+        <tr>
           <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_PSPID" }]</td>
           <td valign="top" class="edittext">
             <input type=text class="editinput" style="width:410px" name=confstrs[ogone_sPSPID] value="[{$confstrs.ogone_sPSPID}]" maxlength="30" />

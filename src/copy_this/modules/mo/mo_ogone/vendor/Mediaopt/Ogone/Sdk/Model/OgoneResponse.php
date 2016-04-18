@@ -20,12 +20,23 @@ class OgoneResponse extends AbstractModel
     private $alias;
     private $orderId;
     private $amount;
+    private $payId;
 
     function getAmount()
     {
         return $this->amount;
     }
-
+    
+    function getPayId()
+    {
+        return $this->payId;
+    }
+    
+    function setPayId($payId)
+    {
+        $this->payId = $payId;
+    }
+    
     function setAmount($amount)
     {
         $this->amount = $amount;

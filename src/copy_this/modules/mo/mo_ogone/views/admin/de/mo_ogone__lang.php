@@ -153,6 +153,11 @@ $aLang = array(
     'MO_OGONE__USE_UTF8' => 'UTF-8 encode',
     'MO_OGONE__USE_HIDDEN_AUTH' => 'Hidden Authorization',
     'MO_OGONE__USE_HIDDEN_AUTH_HELP' => 'Bei der Verwendung von Hidden Authorization verlässt der Nutzer die Shopseite bei eintragen seiner Zahlungsinformationen nicht',
+    'MO_OGONE__OXTRANSID_PARAM' => 'In Order zu speichernde TransID',
+    'MO_OGONE__OXTRANSID_PARAM_HELP' => '' .
+        'Gibt an, welcher Wert als OXTRANSID in der Tabelle OXORDER gespeichert werden soll:<br />' .
+        'ORDERID: die vom Modul erstellte ID (z.b.: mo_ogone_123456)<br />' .
+        'PAYID: die von Ogone erstellte ID',
     'MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH' => 'via iFrame',
     'MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH_HELP' => '' .
         'Hat keinen Effekt, wenn Hidden Authorization deaktiviert ist<br />' .

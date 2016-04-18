@@ -16,12 +16,31 @@ class mo_ogone__deferred_feedback extends oxUBase
         if ($response !== null) {
             $order = oxNew('oxorder');
 
-            $order->mo_ogone__loadByNumber($response->getOrderId());
-            if (!$order->isLoaded()) {
-                Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
-                return;
+            if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__transid_param') === 'PAYID') {
+                $order->mo_ogone__loadByNumber($response->getPayId());
+                if (!$order->isLoaded()) {
+                    Main::getInstance()->getLogger()->error("Could not load order: " . $response->getPayId());
+                    $order->mo_ogone__loadByNumber($response->getOrderId());
+                    if (!$order->isLoaded()) {
+                        Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
+                        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
+                        return;
+                    }
+                }
+                
+            } else {
+                $order->mo_ogone__loadByNumber($response->getOrderId());
+                if (!$order->isLoaded()) {
+                    Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
+                    $order->mo_ogone__loadByNumber($response->getPayId());
+                    if (!$order->isLoaded()) {
+                        Main::getInstance()->getLogger()->error("Could not load order: " . $response->getPayId());
+                        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
+                        return;
+                    }
+                }
             }
+            
             Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
             $order->mo_ogone__updateOrderStatus($response->getStatus());
         }
