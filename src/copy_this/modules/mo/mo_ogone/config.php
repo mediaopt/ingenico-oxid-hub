@@ -189,7 +189,7 @@ $this->logTableCreateSql =
     `VC` varchar(3) NOT NULL default '',
     `SCORING` varchar(4) NOT NULL default '',
     `SCO_CATEGORY` varchar(1) NOT NULL default '',
-    `PAYID` int(9) NOT NULL default '0',
+    `PAYID` varchar(255) NOT NULL default '0',
     `PAYIDSUB` int(3) NOT NULL default '0',
     `SHASIGN` varchar(40) NOT NULL default '',
     `SESSION_ID` varchar(255) NOT NULL default '',

@@ -214,6 +214,20 @@ class mo_ogone__setup extends Shop_Config
   }
 
   /**
+   * Update Payment Log Table
+   */
+  protected function mo_ogone__update_payment_log_table()
+  {
+    $dbName    = oxRegistry::getConfig()->getConfigParam('dbName');
+
+    $sQuery = "select DATA_TYPE from information_schema.columns WHERE table_schema = '" . mysql_real_escape_string($dbName) . "' AND table_name = 'mo_ogone__payment_logs' AND column_name = 'PAYID';";
+    $oResult = oxDb::getDb()->getOne($sQuery);
+    if ($oResult !== 'varchar') {
+        $this->mo_ogone__execute_sql("ALTER TABLE  `mo_ogone__payment_logs` CHANGE  `PAYID`  `PAYID` VARCHAR( 255 ) NOT NULL DEFAULT  '0';");
+    }
+  }
+  
+  /**
    * Install new tables, update fields and clear cache
    */
   protected function mo_ogone__install_payment_log_table()
@@ -232,6 +246,8 @@ class mo_ogone__setup extends Shop_Config
       // install sql-table mo_ogone__payment_logs
       $sQuery = mo_ogone__main::getInstance()->getOgoneConfig()->logTableCreateSql . $sCharset;
       $this->mo_ogone__execute_sql($sQuery);
+    } else {
+        $this->mo_ogone__update_payment_log_table();
     }
 
     $this->mo_ogone__addOgoneStatusColumnInOrderTable();
