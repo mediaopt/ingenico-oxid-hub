@@ -7,8 +7,8 @@
     "projectName": "ogone",
     "pathToModule": "copy_this/modules/mo/mo_ogone",
     "compatibility": {
-        "minimumVersion": " 4.7/5.0",
-        "maximumVersion": null,
+        "minimumVersion": "4.7/5.0",
+        "maximumVersion": "4.9.7/5.2.7",
         "blacklist": [
         ]
     }
