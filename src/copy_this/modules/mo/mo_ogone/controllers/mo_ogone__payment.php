@@ -85,8 +85,9 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             return 'order';
         }
         
-        // check if js is disabled
-        if (oxRegistry::getConfig()->getRequestParameter('PARAMVAR') != 'JS_ENABLED') {
+        // check if js is disabled for Alias Gateway
+        if (!oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe') && !strstr(oxRegistry::getConfig()->getRequestParameter('PARAMVAR'),'JS_ENABLED')) {
+            Main::getInstance()->getLogger()->error('JS is not enabled');
             //fetch necessary auth params and build sha-signature
             $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5

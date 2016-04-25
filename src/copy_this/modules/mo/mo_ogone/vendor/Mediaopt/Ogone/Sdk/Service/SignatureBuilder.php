@@ -22,22 +22,20 @@ class SignatureBuilder extends AbstractService
         }
         
         // convert input param-keys to upercase
-        $uppercasedParams = array();
-        foreach ($params as $k => $v) {
-            $uppercasedParams[strtoupper($k)] = $v;
-        }
+        $params = array_change_key_case($params, CASE_UPPER);
 
         // create an array with all params that should used for authentication
         $shaParams = array();
 
         // filter params
         foreach ($shaOutParameters as $paramName) {
-            if (!isset($uppercasedParams[$paramName]) || $uppercasedParams[$paramName] === '') {
+            if (!isset($params[$paramName]) || $params[$paramName] === '') {
                 continue;
             }
-            $shaParams[strtoupper($paramName)] = $uppercasedParams[$paramName];
+            $newParamName = str_replace("ALIAS_", "ALIAS.", $paramName);
+            $newParamName = str_replace("CARD_", "CARD.", $newParamName);
+            $shaParams[$newParamName] = $params[$paramName];
         }
-
         return $shaParams;
     }
 
@@ -48,7 +46,7 @@ class SignatureBuilder extends AbstractService
         }
 
         // sort parameters alphabetically
-        $shaParams = $this->keyNatSort($shaParams);
+        uksort($shaParams, "strnatcasecmp");
 
         // generate parameter signature before hashing
         $signature = '';
@@ -68,24 +66,6 @@ class SignatureBuilder extends AbstractService
         $hashingAlgorithm = $shaSettings->getSHAAlgorithm();
         $algo = str_replace('-', '', strtolower($hashingAlgorithm));
         $result = strtoupper(hash($algo, $signature));
-        return $result;
-    }
-
-    /**
-     * sort array keys naturally
-     * 
-     * @param type $array
-     * @return type 
-     */
-    protected function keyNatSort($array)
-    {
-        $result = array();
-        $keys = array_keys($array);
-
-        natsort($keys);
-        foreach ($keys as $key) {
-            $result[$key] = $array[$key];
-        }
         return $result;
     }
 
