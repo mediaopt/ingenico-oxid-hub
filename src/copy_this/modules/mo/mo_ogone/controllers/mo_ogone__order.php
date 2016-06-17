@@ -102,6 +102,10 @@ class mo_ogone__order extends mo_ogone__order_parent
         oxRegistry::getSession()->getBasket()->afterUpdate();
         /* @var $response OgoneResponse */
         $response = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
+        if ($order = $this->mo_ogone__loadOrder($response)) {
+            Main::getInstance()->getLogger()->info("OgoneRedirect: Order already exists. Redirect to thankyou page");
+            return 'thankyou';
+        }
         return $this->mo_ogone__createOrder($response);
     }
 
@@ -187,4 +191,52 @@ class mo_ogone__order extends mo_ogone__order_parent
         return $payment->mo_ogone__isOgonePayment();
     }
 
+    /**
+     * Handles: 
+     *  - deferred feedback
+     */
+    public function mo_ogone__fncHandleDeferredFeedback()
+    {
+        // process deferred feedback
+        /* @var $response Mediaopt\Ogone\Sdk\Model\OgoneResponse */
+        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse();
+        if ($response !== null) {
+            if ($order = $this->mo_ogone__loadOrder($response)) {
+                Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
+                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+                $order->mo_ogone__updateOrderStatus($response->getStatus());
+            } else {
+                Main::getInstance()->getLogger()->warning("DeferredFeedback: Could not load order by OrderId: " . $response->getOrderId()." or PAYID ".$response->getPayId());
+                $this->mo_ogone__createOrder($response);
+            }
+        }
+        // offline request from ogone, no further processing needed
+        exit;
+    }
+    
+    protected function mo_ogone__loadOrder($response)
+    {
+        $order = oxNew('oxorder');
+
+        if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__transid_param') === 'PAYID') {
+            $order->mo_ogone__loadByNumber($response->getPayId());
+            if ($order->isLoaded()) {
+                return $order;
+            }
+            $order->mo_ogone__loadByNumber($response->getOrderId());
+            if ($order->isLoaded()) {
+                return $order;
+            }
+        } else {
+            $order->mo_ogone__loadByNumber($response->getOrderId());
+            if ($order->isLoaded()) {
+                return $order;
+            }
+            $order->mo_ogone__loadByNumber($response->getPayId());
+            if ($order->isLoaded()) {
+                return $order;
+            }
+        }
+        return false;
+    }
 }

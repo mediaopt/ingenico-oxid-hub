@@ -59,6 +59,7 @@ $this->shaOutParameters = array(
     'NCERROR',
     'ORDERID',
     'PAYID',
+    'PAYIDSUB',
     'PAYLIBIDREQUEST',
     'PAYLIBTRANSID',
     'PAYMENT_REFERENCE',
