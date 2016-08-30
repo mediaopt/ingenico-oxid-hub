@@ -146,6 +146,10 @@ class mo_ogone__order extends mo_ogone__order_parent
                 Main::getInstance()->getLogger()->error('Paid Amount ('. intval($response->getAmount()) .') and Basket Amount ('.intval($basketAmount) .') are not equal. TransId: '.$response->getOrderId());
                 return 'payment';
             }
+            if ($response->getShopId() !== NULL && $response->getShopId() !== oxRegistry::getConfig()->getShopId()) {
+                Main::getInstance()->getLogger()->info('Changing shopId from '.oxRegistry::getConfig()->getShopId()." to ".$response->getShopId(). " for Order Creation of TransId ".$response->getOrderId());
+                oxRegistry::getConfig()->setShopId($response->getShopId());
+            }
             oxRegistry::getSession()->setVariable('mo_ogone__mailError', true);
             $parentState = parent::execute();
             // ignore parent Mail error

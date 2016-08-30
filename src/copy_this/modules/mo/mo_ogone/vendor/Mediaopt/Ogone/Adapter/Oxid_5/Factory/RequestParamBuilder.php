@@ -31,6 +31,7 @@ class RequestParamBuilder extends AbstractFactory
             $this->oxidSessionParamsForRemoteCalls[$this->getOxSession()->getName()] = $this->getOxSession()->getId();
             $this->oxidSessionParamsForRemoteCalls['stoken'] = $this->getOxSession()->getSessionChallengeToken();
             $this->oxidSessionParamsForRemoteCalls['rtoken'] = $this->getOxSession()->getRemoteAccessToken(true);
+            $this->oxidSessionParamsForRemoteCalls['shopid'] = $this->getOxConfig()->getShopId();
             $this->oxidSessionParamsForRemoteCalls['sDeliveryAddressMD5'] = $this->getOxSession()->getUser()->getEncodedDeliveryAddress();
             if($oDelAddress = $this->getDelAddressInfo()){
                 $this->oxidSessionParamsForRemoteCalls['sDeliveryAddressMD5'] .= $oDelAddress->getEncodedDeliveryAddress();

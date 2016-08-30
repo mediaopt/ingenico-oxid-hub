@@ -21,6 +21,15 @@ class OgoneResponse extends AbstractModel
     private $orderId;
     private $amount;
     private $payId;
+    private $shopId;
+
+    function getShopId() {
+        return $this->shopId;
+    }
+
+    function setShopId($shopId) {
+        $this->shopId = $shopId;
+    }
 
     function getAmount()
     {
