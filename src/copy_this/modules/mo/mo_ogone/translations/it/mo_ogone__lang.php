@@ -548,4 +548,6 @@ $aLang = array(
     'MO_OGONE__PAYMENT_60001151'   => "Addebito diretto già convertito/revocato/ripristinato",
     'MO_OGONE__PAYMENT_60001153'   => "Numero di conto pagante non noto",
     'MO_OGONE__PAGE_CHECKOUT_PAYMENT_SECURITYCODEDESCRIPTION' => "The CVV2/CVC2 three-digit value is printed just above the signature panel in reverse italics on the back of your card.<br>Usually it is preceded by your card number.<br />(If you are an American Express customer, please enter your 4-digit CID)",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT' => "Si verrà reindirizzati automaticamente alla <strong>pagamento</strong>.<br />Se non si viene reindirizzati automaticamente",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON' => "clicca qui"
 );

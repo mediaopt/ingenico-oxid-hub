@@ -548,4 +548,6 @@ $aLang = array(
     'MO_OGONE__PAYMENT_STATUS_60001151'   => "Domiciliëring al herzien/herroepen/hersteld",
     'MO_OGONE__PAYMENT_STATUS_60001153'   => "Rekeningnummer betaler onbekend",
     'MO_OGONE__PAGE_CHECKOUT_PAYMENT_SECURITYCODEDESCRIPTION' => "The CVV2/CVC2 three-digit value is printed just above the signature panel in reverse italics on the back of your card.<br>Usually it is preceded by your card number.<br />(If you are an American Express customer, please enter your 4-digit CID)",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT' => "U wordt nu automatisch doorverwezen naar de <strong>betaalpagina</strong>.<br />Als dit niet gebeurt klik dan op onderstaande button.",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON' => "klik hier",
 );

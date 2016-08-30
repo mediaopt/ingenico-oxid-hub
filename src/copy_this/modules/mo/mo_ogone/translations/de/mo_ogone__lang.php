@@ -550,4 +550,6 @@ $aLang = array(
     'MO_OGONE__PAYMENT_STATUS_60001151'   => "Abbuchung bereits umgekehrt/widerrufen/wieder hergestellt",
     'MO_OGONE__PAYMENT_STATUS_60001153'   => "Kontonummer des Zahlers unbekannt",
     'MO_OGONE__PAGE_CHECKOUT_PAYMENT_SECURITYCODEDESCRIPTION' => "Diese befindet sich auf der Rückseite Ihrer Kreditkarte. Die Prüfziffer<br>sind die letzten drei Ziffern im Unterschriftsfeld.<br />(American Express Kunden geben hier bitte ihre 4-stellige CID ein.)",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT' => "Sie werden nun automatisch zur <strong>Bezahlseite weitergeleitet</strong>.<br />Falls Sie nicht automatisch weitergeitet werden",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON' => "klicken Sie hier",
 );

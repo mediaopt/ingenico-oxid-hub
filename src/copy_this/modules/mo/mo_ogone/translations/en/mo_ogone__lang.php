@@ -550,4 +550,6 @@ $aLang = array(
     'MO_OGONE__PAYMENT_STATUS_60001151'                       => "Direct debit already reversed/revoked/restored",
     'MO_OGONE__PAYMENT_STATUS_60001153'                       => "Payer’s account number not known",
     'MO_OGONE__PAGE_CHECKOUT_PAYMENT_SECURITYCODEDESCRIPTION' => "The CVV2/CVC2 three-digit value is printed just above the signature panel in reverse italics on the back of your card.<br>Usually it is preceded by your card number.<br />(If you are an American Express customer, please enter your 4-digit CID)",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT' => "You will be automatically redirected to the <strong>Payment Page</strong>.<br />If you are not redirected automatically",
+    'MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON' => "click here",
 );

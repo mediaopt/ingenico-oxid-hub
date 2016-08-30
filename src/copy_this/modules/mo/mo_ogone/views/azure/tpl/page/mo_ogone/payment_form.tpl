@@ -9,9 +9,8 @@
 
   <form id="mo_ogone__form" action="[{$mo_ogone__form_action}]" method="post">
     <p>
-      Sie werden nun automatisch zur <strong>Bezahlseite weitergeleitet</strong>. <br />
-      Falls Sie nicht automatisch weitergeitet werden<br />
-      <button class="submitButton largeButton" type="submit">klicken Sie hier</button>
+      [{ oxmultilang ident="MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT"}]<br />
+      <button class="submitButton largeButton" type="submit">[{ oxmultilang ident="MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON"}]</button>
     </p>
 
     [{if $mo_ogone__debug}]
