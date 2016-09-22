@@ -149,6 +149,8 @@ class mo_ogone__order extends mo_ogone__order_parent
             if ($response->getShopId() !== NULL && $response->getShopId() !== oxRegistry::getConfig()->getShopId()) {
                 Main::getInstance()->getLogger()->info('Changing shopId from '.oxRegistry::getConfig()->getShopId()." to ".$response->getShopId(). " for Order Creation of TransId ".$response->getOrderId());
                 oxRegistry::getConfig()->setShopId($response->getShopId());
+            } else {
+                Main::getInstance()->getLogger()->info('ShopId is correct ('.oxRegistry::getConfig()->getShopId(). ") for Order Creation of TransId ".$response->getOrderId());
             }
             oxRegistry::getSession()->setVariable('mo_ogone__mailError', true);
             $parentState = parent::execute();
