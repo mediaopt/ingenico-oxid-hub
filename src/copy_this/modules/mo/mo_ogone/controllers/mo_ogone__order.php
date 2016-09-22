@@ -79,7 +79,7 @@ class mo_ogone__order extends mo_ogone__order_parent
 
             //3D-Secure 
             if ($xml->HTML_ANSWER) {
-                Main::getInstance()->getLogger()->info('Ogone 3D-Secure redirection');
+                Main::getInstance()->getLogger()->info('Ogone 3D-Secure redirection for TransId '.$response->getOrderId());
                 echo '<html><body>';
                 echo base64_decode((string) $xml->HTML_ANSWER);
                 echo '</body></html>';
@@ -103,7 +103,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         /* @var $response OgoneResponse */
         $response = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
         if ($order = $this->mo_ogone__loadOrder($response)) {
-            Main::getInstance()->getLogger()->info("OgoneRedirect: Order already exists. Redirect to thankyou page");
+            Main::getInstance()->getLogger()->info("OgoneRedirect: Order already exists. Redirect to thankyou page for TransId ".$response->getOrderId());
             return 'thankyou';
         }
         return $this->mo_ogone__createOrder($response);
@@ -168,6 +168,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             $oxOrder->mo_ogone__setTransID($id);
             Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
+            Main::getInstance()->getLogger()->debug("OgoneRedirect: Will now redirect to ".$parentState." for TransId ".$response->getOrderId());
             return $parentState;
         }
         Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
@@ -176,7 +177,9 @@ class mo_ogone__order extends mo_ogone__order_parent
         } else {
             $errorMessage = $response->getStatus()->getTranslatedStatusMessage();
         }
-        return parent::_getNextStep($errorMessage);
+        $nextStep = parent::_getNextStep($errorMessage);
+        Main::getInstance()->getLogger()->debug("OgoneRedirect: Will now redirect to ".$nextStep." for TransId ".$response->getOrderId());
+        return $nextStep;
     }
 
     /**
