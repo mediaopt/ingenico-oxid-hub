@@ -41,7 +41,7 @@ class OgoneResponse extends AbstractFactory
             $model->setOrderId(null);
         }
         if (isset($params['SHOPID'])) {
-            $model->setShopId($params['SHOPID']);
+            $model->setShopId(intval($params['SHOPID']));
         } else {
             $model->setShopId(null);
         }
