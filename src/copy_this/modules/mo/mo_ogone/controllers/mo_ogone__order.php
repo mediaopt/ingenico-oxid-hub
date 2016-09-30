@@ -214,6 +214,14 @@ class mo_ogone__order extends mo_ogone__order_parent
                 Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
                 Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
                 $order->mo_ogone__updateOrderStatus($response->getStatus());
+                exit;
+            }
+            Main::getInstance()->getLogger()->info("DeferredFeedback: Order does not exist yet (".$response->getOrderId()."). Will wait 15 seconds");
+            sleep(15);
+            if ($order = $this->mo_ogone__loadOrder($response)) {
+                Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
+                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+                $order->mo_ogone__updateOrderStatus($response->getStatus());
             } else {
                 Main::getInstance()->getLogger()->warning("DeferredFeedback: Could not load order by OrderId: " . $response->getOrderId()." or PAYID ".$response->getPayId());
                 $this->mo_ogone__createOrder($response);
