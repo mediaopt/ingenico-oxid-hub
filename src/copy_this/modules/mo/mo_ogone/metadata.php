@@ -12,7 +12,7 @@ $aModule = array(
     'id'          => 'mo_ogone',
     'title'       => 'Ogone',
     'description' => 'Ogone Payment ##revision##<br /><br />'
-                   . 'Die Dokumentation <a href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">finden Sie hier</a>',
+                   . 'Die Dokumentation <a "target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">finden Sie hier</a>',
     'thumbnail'   => 'logo.png',
     'version'     => '3.2.2',
     'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
