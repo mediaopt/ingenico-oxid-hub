@@ -125,6 +125,9 @@ class CustomBundleMaker extends BundleMaker
                 $content = str_replace($brandConfig['replacements']['url'], $this->brandConfig['values2beReplaced']['url'], $content);
                 $content = str_replace($brandConfig['replacements']['hostedtokentesturl'], $this->brandConfig['values2beReplaced']['hostedtokentesturl'], $content);
             }
+            if ($file->getFilename() === 'metadata.php') {
+                $content = str_replace('projects.mediaopt.de/projects/'.$brandConfig['replacements']['name_lower'].'-puc/','projects.mediaopt.de/projects/'.$this->brandConfig['values2beReplaced']['name_lower'].'-puc/', $content);
+            }
             file_put_contents($file->getPathname(), $content);
         }
     }
