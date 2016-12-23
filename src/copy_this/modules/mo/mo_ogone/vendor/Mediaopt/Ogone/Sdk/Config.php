@@ -110,6 +110,18 @@ class Config {
                 'pm'              => 'CreditCard',
                 'brand'           => 'Bancontact/Mister Cash',
                 'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
+            /// VVV (redirect)
+            array(
+                'shop_payment_id' => 'ogone_vvv',
+                'pm'              => 'Intersolve',
+                'brand'           => 'VVV Giftcard',
+                'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
+            // Dankort (redirect)
+            array(
+                'shop_payment_id' => 'ogone_credit_card',
+                'pm'              => 'CreditCard',
+                'brand'           => 'Dankort',
+                'paymenttype'     => MO_OGONE__PAYMENTTYPE_REDIRECT),
         );
     }
 }

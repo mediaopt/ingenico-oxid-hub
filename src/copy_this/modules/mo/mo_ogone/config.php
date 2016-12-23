@@ -64,6 +64,8 @@ $this->shaOutParameters = array(
     'PAYLIBTRANSID',
     'PAYMENT_REFERENCE',
     'PM',
+    'SCO_CATEGORY',
+    'SCORING',
     'SEQUENCETYPE',
     'SIGNDATE',
     'STATUS',
@@ -71,7 +73,6 @@ $this->shaOutParameters = array(
     'SUBSCRIPTION_ID',
     'TRXDATE',
     'VC',
-    'WALLET',
 );
 
 

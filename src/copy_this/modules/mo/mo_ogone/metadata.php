@@ -14,7 +14,7 @@ $aModule = array(
     'description' => 'Ogone Payment ##revision##<br /><br />'
                    . 'Die Dokumentation <a target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">finden Sie hier</a>',
     'thumbnail'   => 'logo.png',
-    'version'     => '3.2.2',
+    'version'     => '3.3.0',
     'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
     'url'         => 'http://www.mediaopt.de',
     'email'       => 'support@mediaopt.de',

@@ -32,7 +32,7 @@ class OgoneResponse extends AbstractFactory
      */
     public function buildFromData($params)
     {
-        /* @var $model Mediaopt\Ogone\Sdk\Model\OgoneResponse */
+        /* @var $model \Mediaopt\Ogone\Sdk\Model\OgoneResponse */
         $model = $this->getSdkMain()->getModel('OgoneResponse');
         $model->setAllParams($params);
         if (isset($params['ORDERID'])) {
@@ -75,6 +75,11 @@ class OgoneResponse extends AbstractFactory
             $model->setPayId($params['PAYID']);
         } else {
             $model->setPayId(null);
+        }
+        if (!empty($params['SESS_CHALLENGE'])) {
+            $model->setSessionChallenge($params['SESS_CHALLENGE']);
+        } else {
+            $model->setSessionChallenge(null);
         }
         if (!empty($params['AMOUNT'])) {
             $model->setAmount(intval(strval(floatval($params['AMOUNT'])*100)));

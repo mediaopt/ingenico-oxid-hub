@@ -159,8 +159,13 @@ class mo_ogone__order extends mo_ogone__order_parent
                 $parentState = oxOrder::ORDER_STATE_OK;
             }
             /* @var $oxOrder oxOrder */
-            $oxOrder = oxNew("oxOrder");
-            $oxOrder->load($this->getBasket()->getOrderId());
+            $oxOrder = $this->mo_ogone__loadOrder($response);
+            if (!$oxOrder) {
+                oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ORDER_NOT_CREATED') . $response->getOrderId());
+                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+                Main::getInstance()->getLogger()->error('The order could not be created. TransId: '.$response->getOrderId());
+                return 'payment';
+            }
             $oxOrder->mo_ogone__updateOrderStatus($response->getStatus());
             if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__transid_param') === 'PAYID') {
                 $id = $response->getPayId();
@@ -230,11 +235,19 @@ class mo_ogone__order extends mo_ogone__order_parent
         // offline request from ogone, no further processing needed
         exit;
     }
-    
+
+    /**
+     * @param $response Mediaopt\Ogone\Sdk\Model\OgoneResponse
+     * @return bool|oxOrder
+     */
     protected function mo_ogone__loadOrder($response)
     {
         $order = oxNew('oxorder');
-
+        // load by session challenge since that is the new order id (oxid)
+        $order->load($response->getSessionChallenge());
+        if ($order->isLoaded()) {
+            return $order;
+        }
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__transid_param') === 'PAYID') {
             $order->mo_ogone__loadByNumber($response->getPayId());
             if ($order->isLoaded()) {

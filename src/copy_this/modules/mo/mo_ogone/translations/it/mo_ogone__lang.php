@@ -29,6 +29,8 @@ $sLangName = "Italian";
 // -------------------------------
 $aLang = array(
     'charset'                 => 'UTF-8',
+    'MO_OGONE__DIVERGENT_AMOUNT'   => 'Un problema tecnico si è verificato, si prega di contattare helpdesk. Il numero interno del vostro pagamento è ',
+    'MO_OGONE__ORDER_NOT_CREATED'  => 'Un problema tecnico si è verificato, si prega di contattare helpdesk. Il numero interno del vostro pagamento è ',
     'MO_OGONE_TEMPLATE_TITLE' => 'Ogone Payment Solutions',
     'MO_OGONE__PAYMENT_STATUS_000' => 'Incompleto o invalido',
     'MO_OGONE__PAYMENT_STATUS_001' => 'Avete cancellato il pagamento: Si prega diselzionare un altro metodo di pagamento',

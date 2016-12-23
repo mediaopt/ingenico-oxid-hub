@@ -22,6 +22,23 @@ class OgoneResponse extends AbstractModel
     private $amount;
     private $payId;
     private $shopId;
+    private $sessionChallenge;
+
+    /**
+     * @return mixed
+     */
+    public function getSessionChallenge()
+    {
+        return $this->sessionChellange;
+    }
+
+    /**
+     * @param mixed $sessionChallenge
+     */
+    public function setSessionChallenge($sessionChallenge)
+    {
+        $this->sessionChallenge = $sessionChallenge;
+    }
 
     function getShopId() {
         return $this->shopId;
