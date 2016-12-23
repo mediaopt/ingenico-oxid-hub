@@ -146,8 +146,8 @@ class mo_ogone__order extends mo_ogone__order_parent
                 Main::getInstance()->getLogger()->error('Paid Amount ('. intval($response->getAmount()) .') and Basket Amount ('.intval($basketAmount) .') are not equal. TransId: '.$response->getOrderId());
                 return 'payment';
             }
-            if ($response->getShopId() !== NULL && $response->getShopId() !== oxRegistry::getConfig()->getShopId()) {
-                Main::getInstance()->getLogger()->info('Changing shopId from '.oxRegistry::getConfig()->getShopId()." to ".$response->getShopId(). " for Order Creation of TransId ".$response->getOrderId());
+            if ($response->getShopId() !== NULL && $response->getShopId() !== intval(oxRegistry::getConfig()->getShopId())) {
+                Main::getInstance()->getLogger()->info('Changing shopId from '.intval(oxRegistry::getConfig()->getShopId())." to ".$response->getShopId(). " for Order Creation of TransId ".$response->getOrderId());
                 oxRegistry::getConfig()->setShopId($response->getShopId());
             } else {
                 Main::getInstance()->getLogger()->info('ShopId is correct ('.oxRegistry::getConfig()->getShopId(). ") for Order Creation of TransId ".$response->getOrderId());
@@ -159,7 +159,8 @@ class mo_ogone__order extends mo_ogone__order_parent
                 $parentState = oxOrder::ORDER_STATE_OK;
             }
             /* @var $oxOrder oxOrder */
-            $oxOrder = $this->mo_ogone__loadOrder($response);
+            $oxOrder = oxNew("oxOrder");
+            $oxOrder->load($this->getBasket()->getOrderId());
             if (!$oxOrder) {
                 oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ORDER_NOT_CREATED') . $response->getOrderId());
                 Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
