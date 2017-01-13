@@ -11,13 +11,7 @@ class Main
     static protected $instance = null;
     
     protected $adapter = null;
-    
-    /**
-     *
-     * @var Helper
-     */
-    protected $helper = null;
-    
+
     /**
      *
      * @var \Psr\Log\LoggerInterface
@@ -87,22 +81,14 @@ class Main
     {
         //PHP doesn't resolve a class from variable with relative namespace ! prepend full namespace...
         $name = __NAMESPACE__ . '\Service\\' . ucfirst($type);
-        return new $name($this->getAdapter(), $this->getClient(), $this->getHelper());
+        return new $name($this->getAdapter(), $this->getClient());
     }
     
     public function getClient()
     {
         return new Client($this->getLogger());
     }
-    
-    public function getHelper()
-    {
-        if ($this->helper !== null) {
-            return $this->helper;
-        }
-        return $this->helper = new Helper();
-    }
-    
+
     /**
      * 
      * @return \Psr\Log\LoggerInterface

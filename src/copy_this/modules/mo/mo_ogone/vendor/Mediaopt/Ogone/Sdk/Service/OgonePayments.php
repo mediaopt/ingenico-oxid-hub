@@ -8,9 +8,9 @@ use Mediaopt\Ogone\Sdk\Main;
 class OgonePayments extends AbstractService
 {
 
-    public function __construct($adapter, \Mediaopt\Ogone\Sdk\Client $client, \Mediaopt\Ogone\Sdk\Helper $helper)
+    public function __construct($adapter, \Mediaopt\Ogone\Sdk\Client $client)
     {
-        parent::__construct($adapter, $client, $helper);
+        parent::__construct($adapter, $client);
         $this->init();
     }
   /**
