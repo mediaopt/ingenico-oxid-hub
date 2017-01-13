@@ -175,4 +175,8 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         }
     }
 
+    public function mo_ogone__getStatusText()
+    {
+        return \Mediaopt\Ogone\Sdk\Main::getInstance()->getService("Status")->usingStatusCode($this->oxorder__mo_ogone__status->value)->getTranslatedStatusMessage();
+    }
 }
