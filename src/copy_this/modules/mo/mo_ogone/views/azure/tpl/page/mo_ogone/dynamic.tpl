@@ -1,7 +1,7 @@
 [{* TODO: HK: clean update dynamic tpl content => base-tag not allowed by ogone *}]
 [{assign var="template_title" value="MO_OGONE_TEMPLATE_TITLE"|oxmultilangassign}]
 
-[{oxstyle include="css/mo_ogone.css"}]
+[{oxstyle include=$oViewConf->getModuleUrl('mo_ogone','out/src/css/mo_ogone.css')}]
 
 [{capture append="oxidBlock_content"}]
 
