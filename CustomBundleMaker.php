@@ -136,7 +136,7 @@ class CustomBundleMaker extends BundleMaker
      * Special bundle creation script including brandings for concardis and accaptance
      * @return int
      */
-    public function createBundle()
+    public function createBundle($exclusive = null)
     {
         try {
             $this->clearBundles();
@@ -144,6 +144,32 @@ class CustomBundleMaker extends BundleMaker
             $this->clearTmp();
             $this->exportSrc();
             $this->setMetadataInformation();
+
+            if ($exclusive) {
+                if (strtolower($exclusive) == 'ogone') {
+                    $this->currentBrand = 'OGOX';
+                    $this->setAppId('OGOX');
+                    $this->zipTmpContents();
+                    $this->clearTmp();
+                } else {
+                    $brand = strtolower($exclusive);
+                    $brandConfig = $this->brandConfig['brands'][$brand];
+                    $this->setAppId($brandConfig['app_id_prefix']);
+                    $this->copyFilesToBrandFolder($brand);
+                    $this->brandFiles($brand, $brandConfig);
+                    $this->clearTmp();
+                    $this->copyBrandFilesToTmp($brand);
+                    $this->currentBrand = $brandConfig['app_id_prefix'];
+                    $this->copyBrandFiles($brand, $this->config->getTemporaryFolder());
+                    $this->zipTmpContents();
+                    $this->clearTmp();
+
+                    //delete bundle-dir
+                    exec('rm -rf ' . $this->getBrandDir($brand));
+                }
+                return 0;
+            }
+
             $this->currentBrand = 'OGOX';
             $this->setAppId('OGOX');
             #$this->copyBrandFiles('ogone', $this->config->getTemporaryFolder());
