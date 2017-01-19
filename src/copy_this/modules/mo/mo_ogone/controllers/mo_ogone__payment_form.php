@@ -20,9 +20,9 @@ class mo_ogone__payment_form extends oxUBase
         oxRegistry::getSession()->getBasket()->afterUpdate();
 
         parent::render();
-        
+
         $this->_aViewData['mo_ogone__form_action'] = $this->getRedirectUrl();
-        $this->_aViewData['mo_ogone__hidden_fields'] = Main::getInstance()->getService("OrderRedirectGateway")->buildParams();
+        $this->_aViewData['mo_ogone__hidden_fields'] = oxNew('mo_ogone__order_redirect_param_builder')->build()->getParams();
         $this->_aViewData['mo_ogone__debug'] = mo_ogone__main::getInstance()->getOgoneConfig()->debug;
 
         return $this->_sThisTemplate;

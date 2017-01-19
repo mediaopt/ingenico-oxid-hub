@@ -44,9 +44,17 @@ $aModule = array(
         //models
         'mo_ogone__order_number_reservation' => 'mo/mo_ogone/models/mo_ogone__order_number_reservation.php',
         'mo_ogone__payment_log'              => 'mo/mo_ogone/models/mo_ogone__payment_log.php',
+        //adapter
+        'mo_ogone__abstract_factory'                  => 'mo/mo_ogone/classes/adapter/mo_ogone__abstract_factory.php',
+        'mo_ogone__request_param_builder'             => 'mo/mo_ogone/classes/adapter/mo_ingenico__request_param_builder.php',
+        'mo_ogone__alias_param_builder'               => 'mo/mo_ogone/classes/adapter/mo_ogone__alias_param_builder.php',
+        'mo_ogone__order_redirect_param_builder'      => 'mo/mo_ogone/classes/adapter/mo_ogone__order_redirect_param_builder.php',
+        'mo_ogone__order_direct_param_builder'        => 'mo/mo_ogone/classes/adapter/mo_ogone__order_direct_param_builder.php',
+        'mo_ogone__hosted_tokenization_param_builder' => 'mo/mo_ogone/classes/adapter/mo_ogone__hosted_tokenization_param_builder.php',
         //core
         'mo_ogone__config'                   => 'mo/mo_ogone/classes/mo_ogone__config.php',
         'mo_ogone__main'                     => 'mo/mo_ogone/classes/mo_ogone__main.php',
+        'mo_ogone__logger'                     => 'mo/mo_ogone/classes/mo_ogone__logger.php',
     ),
     'blocks'      => array(
         array(

@@ -108,13 +108,12 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__loadRequestParams($paymentId)
     {
-        $aliasService;
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-            $aliasService = Main::getInstance()->getService("HostedTokenizationGateway");
+            $aliasService = oxNew('mo_ogone__hosted_tokenization_param_builder');
         } else {
-            $aliasService = Main::getInstance()->getService("AliasGateway");
+            $aliasService = oxNew('mo_ogone__alias_param_builder');
         }
-        $this->mo_ogone__aliasGatewayParamsSet = $aliasService->buildParams($paymentId);
+        $this->mo_ogone__aliasGatewayParamsSet = $aliasService->build($paymentId)->getParams();
     }
 
     /**

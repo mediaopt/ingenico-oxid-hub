@@ -66,7 +66,9 @@ class mo_ogone__order extends mo_ogone__order_parent
         //one page
         if ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
             // server to server communication
-            $response = Main::getInstance()->getService("OrderDirectGateway")->call();
+            $paramBuilder = oxNew('mo_ogone__order_direct_param_builder');
+            $params = $paramBuilder->build();
+            $response = Main::getInstance()->getService("OrderDirectGateway")->call($paramBuilder->getUrl(), $params);
             $xml = simplexml_load_string($response);
 
             /* @var $response OgoneResponse */
