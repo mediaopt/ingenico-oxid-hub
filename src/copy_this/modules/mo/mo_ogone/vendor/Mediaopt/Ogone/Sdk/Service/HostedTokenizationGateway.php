@@ -28,13 +28,13 @@ class HostedTokenizationGateway extends AbstractService
     /**
      * 
      */
-    public function handleResponse()
+    public function handleResponse(Authenticator $authenticator)
     {
         /* @var $response OgoneResponse */
         $response = $this->getAdapter()->getFactory("OgoneResponse")->build();
         $this->getAdapter()->getLogger()->info("handleHostedTokenizationResponse: " . var_export($response->getAllParams(), true));
         
-        if (!Main::getInstance()->getService("Authenticator")->authenticateRequest("HostedTokenizationPage")) {
+        if (!$authenticator->authenticateRequest("HostedTokenizationPage")) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
             $status = Main::getInstance()->getService("Status")

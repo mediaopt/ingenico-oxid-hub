@@ -8,6 +8,7 @@ namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Main;
 use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
+use Mediaopt\Ogone\Sdk\Model\SHASettings;
 
 /**
  * Authenticates so called SHAOut-Requests
@@ -16,6 +17,16 @@ use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
  */
 class Authenticator extends AbstractService
 {
+
+    /**
+     * @var SHASettings
+     */
+    protected $shaSettings;
+
+    public function setShaSettings(SHASettings $shaSettings)
+    {
+        $this->shaSettings = $shaSettings;
+    }
 
     // TODO: HK: Check signature with umlauts and different encodings
     public function authenticateRequest($type = "")
@@ -29,13 +40,13 @@ class Authenticator extends AbstractService
             return false;
         }
 
-        $this->signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
-        $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
-        $shaOutKey = $shaSettings->getSHAOutKey();
-        $signature = $this->signatureBuilder->build(
-                $this->signatureBuilder->filterResponseParams($params, $type), $shaOutKey);
+        /** @var SignatureBuilder $signatureBuilder */
+        $signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
+        $signatureBuilder->setShaSettings($this->shaSettings);
+        $signature = $signatureBuilder->build(
+            $signatureBuilder->filterResponseParams($params, $type), SignatureBuilder::MODE_OUT);
 
-        $signature = $this->signatureBuilder->hash($signature);
+        $signature = $signatureBuilder->hash($signature);
 
         if ($params['SHASIGN'] == $signature) {
             return true;

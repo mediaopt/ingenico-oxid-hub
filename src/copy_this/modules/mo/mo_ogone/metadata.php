@@ -46,6 +46,7 @@ $aModule = array(
         'mo_ogone__payment_log'              => 'mo/mo_ogone/models/mo_ogone__payment_log.php',
         //adapter
         'mo_ogone__abstract_factory'                  => 'mo/mo_ogone/classes/adapter/mo_ogone__abstract_factory.php',
+        'mo_ogone__sha_settings'                      => 'mo/mo_ogone/classes/adapter/mo_ogone__sha_settings.php',
         'mo_ogone__request_param_builder'             => 'mo/mo_ogone/classes/adapter/mo_ingenico__request_param_builder.php',
         'mo_ogone__alias_param_builder'               => 'mo/mo_ogone/classes/adapter/mo_ogone__alias_param_builder.php',
         'mo_ogone__order_redirect_param_builder'      => 'mo/mo_ogone/classes/adapter/mo_ogone__order_redirect_param_builder.php',

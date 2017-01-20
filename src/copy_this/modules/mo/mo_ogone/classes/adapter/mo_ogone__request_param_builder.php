@@ -1,6 +1,7 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main;
+use Mediaopt\Ogone\Sdk\Service\SignatureBuilder;
 
 class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
 {
@@ -11,10 +12,12 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
 
     protected function getShaSignForParams($params)
     {
-        $signatureBuilder = $this->getSdkMain()->getService("SignatureBuilder");
+        /** @var SignatureBuilder $signatureBuilder */
+        $signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
+        $signatureBuilder->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         return $signatureBuilder->hash(
                         $signatureBuilder->build(
-                                $params, $this->getOxConfig()->getConfigParam('ogone_sSecureKeyIn')));
+                                $params, SignatureBuilder::MODE_IN));
     }
 
     protected function getOxidSessionParamsForRemoteCalls()

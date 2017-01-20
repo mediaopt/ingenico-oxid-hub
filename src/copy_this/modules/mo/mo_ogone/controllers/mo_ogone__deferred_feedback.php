@@ -11,8 +11,10 @@ class mo_ogone__deferred_feedback extends oxUBase
     public function render()
     {
         // process deferred feedback
+        $authenticator = Main::getInstance()->getService("Authenticator");
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         /* @var $response Mediaopt\Ogone\Sdk\Model\OgoneResponse */
-        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse();
+        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse($authenticator);
         if ($response !== null) {
             $order = oxNew('oxorder');
 

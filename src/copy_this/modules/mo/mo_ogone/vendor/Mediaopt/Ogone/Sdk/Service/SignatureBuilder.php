@@ -1,24 +1,38 @@
 <?php
 
 namespace Mediaopt\Ogone\Sdk\Service;
+use Mediaopt\Ogone\Sdk\Model\SHASettings;
 
 /**
  * $Id: SignatureBuilder.php 6 2015-02-23 15:50:57Z mbe $ 
  */
 class SignatureBuilder extends AbstractService
 {
+
+    const MODE_IN = 0;
+    const MODE_OUT = 1;
+
+    /**
+     * @var SHASettings
+     */
+    protected $shaSettings;
+
+    public function setShaSettings(SHASettings $shaSettings)
+    {
+        $this->shaSettings = $shaSettings;
+    }
+
     /**
      * @return array with filtered params and uppercased keys
      */
     public function filterResponseParams($params, $type = "")
     {
-        $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
         if ($type === "AliasGateway") {
-            $shaOutParameters = $shaSettings->getSHAOutParametersAliasGateway();
+            $shaOutParameters = $this->shaSettings->getSHAOutParametersAliasGateway();
         } elseif ($type === "HostedTokenizationPage") {
-            $shaOutParameters = $shaSettings->getSHAOutParametersHostedTokenizationPage();
+            $shaOutParameters = $this->shaSettings->getSHAOutParametersHostedTokenizationPage();
         } else {
-            $shaOutParameters = $shaSettings->getSHAOutParameters();
+            $shaOutParameters = $this->shaSettings->getSHAOutParameters();
         }
         
         // convert input param-keys to upercase
@@ -39,11 +53,13 @@ class SignatureBuilder extends AbstractService
         return $shaParams;
     }
 
-    public function build($shaParams, $passPhrase)
+    public function build($shaParams, $mode)
     {
         if (empty($shaParams)) {
             return '';
         }
+
+        $passPhrase = $mode === self::MODE_IN ? $this->shaSettings->getSHAInKey() : $this->shaSettings->getSHAOutKey();
 
         // sort parameters alphabetically
         uksort($shaParams, "strnatcasecmp");
@@ -62,8 +78,7 @@ class SignatureBuilder extends AbstractService
 
     public function hash($signature)
     {
-        $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
-        $hashingAlgorithm = $shaSettings->getSHAAlgorithm();
+        $hashingAlgorithm = $this->shaSettings->getSHAAlgorithm();
         $algo = str_replace('-', '', strtolower($hashingAlgorithm));
         $result = strtoupper(hash($algo, $signature));
         return $result;

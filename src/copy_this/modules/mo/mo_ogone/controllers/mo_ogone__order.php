@@ -102,8 +102,10 @@ class mo_ogone__order extends mo_ogone__order_parent
         // use of basket between order and thankyou views causes errors, when buying last item in stock
         oxRegistry::getConfig()->setConfigParam('mo_ogone__prevent_recalculate', true);
         oxRegistry::getSession()->getBasket()->afterUpdate();
+        $authenticator = Main::getInstance()->getService("Authenticator");
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
+        $response = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse($authenticator);
         if ($order = $this->mo_ogone__loadOrder($response)) {
             Main::getInstance()->getLogger()->info("OgoneRedirect: Order already exists. Redirect to thankyou page for TransId ".$response->getOrderId());
             return 'thankyou';
@@ -214,9 +216,11 @@ class mo_ogone__order extends mo_ogone__order_parent
      */
     public function mo_ogone__fncHandleDeferredFeedback()
     {
+        $authenticator = Main::getInstance()->getService("Authenticator");
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         // process deferred feedback
         /* @var $response Mediaopt\Ogone\Sdk\Model\OgoneResponse */
-        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse();
+        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse($authenticator);
         if ($response !== null) {
             if ($order = $this->mo_ogone__loadOrder($response)) {
                 Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");

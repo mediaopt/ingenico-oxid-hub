@@ -52,9 +52,11 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__handleHostedTokenizationErrorResponse()
     {
+        $authenticator = Main::getInstance()->getService("Authenticator");
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         // check for error
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse();
+        $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse($authenticator);
         // error will be displayed
         if ($response->hasError()) {
             oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
@@ -70,12 +72,14 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__handleHiddenAuthorizationResponse()
     {
+        $authenticator = Main::getInstance()->getService("Authenticator");
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         // check for error
         /* @var $response OgoneResponse */
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-            $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse();
+            $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse($authenticator);
         } else {
-            $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
+            $response = Main::getInstance()->getService("AliasGateway")->handleResponse($authenticator);
         }
         // check if we got the alias
         $alias = $response->getAlias();
