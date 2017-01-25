@@ -3,7 +3,6 @@
 namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Main;
-use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 use Mediaopt\Ogone\Sdk\Model\StatusType;
 
 /**
@@ -11,13 +10,6 @@ use Mediaopt\Ogone\Sdk\Model\StatusType;
  */
 class OrderRedirectGateway extends AbstractService
 {
-
-    public function buildParams()
-    {
-        /* @var $model RequestParameters */
-        $model = $this->getAdapter()->getFactory("OrderRedirectParamBuilder")->build();
-        return $model->getParams();
-    }
 
     public function handleResponse(Authenticator $authenticator)
     {

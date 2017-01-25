@@ -5,7 +5,6 @@ namespace Mediaopt\Ogone\Sdk\Service;
 use Mediaopt\Ogone\Sdk\Main;
 use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 use Mediaopt\Ogone\Sdk\Model\StatusType;
-use Mediaopt\Ogone\Sdk\Model\Url;
 
 /**
  * $Id: $

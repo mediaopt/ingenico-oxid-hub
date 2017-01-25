@@ -2,9 +2,6 @@
 
 use Mediaopt\Ogone\Sdk\Main;
 
-/**
- * $Id: RequestParamBuilder.php 55 2015-02-24 10:47:24Z mbe $ 
- */
 class mo_ogone__hosted_tokenization_param_builder extends mo_ogone__request_param_builder
 {
     

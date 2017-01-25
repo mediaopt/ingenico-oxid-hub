@@ -32,15 +32,6 @@ abstract class AbstractService
         return $this->client;
     }
 
-     /**
-     * 
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getAdapter()->getFactory('Config')->build();
-    }
-    
     public function setAdapter($adapter)
     {
         $this->adapter = $adapter;
@@ -49,11 +40,6 @@ abstract class AbstractService
     public function setClient(Client $client)
     {
         $this->client = $client;
-    }
-    
-    protected function getApiHostUrl()
-    {
-        return $this->getConfig()->getIsLiveMode() ? self::API_HOST_URL__PROD : self::API_HOST_URL__DEV;
     }
 
 }

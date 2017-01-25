@@ -42,7 +42,23 @@ class SHASettings
      * @var array
      */
     private $SHAOutParametersHostedTokenizationPage;
-    
+
+    /**
+     *
+     * @var boolean
+     */
+    public $isLiveMode;
+
+    public function getIsLiveMode()
+    {
+        return $this->isLiveMode;
+    }
+
+    public function setIsLiveMode($isLiveMode)
+    {
+        $this->isLiveMode = $isLiveMode;
+    }
+
     function getSHAInKey()
     {
         return $this->SHAInKey;

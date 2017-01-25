@@ -56,6 +56,7 @@ $aModule = array(
         'mo_ogone__config'                   => 'mo/mo_ogone/classes/mo_ogone__config.php',
         'mo_ogone__main'                     => 'mo/mo_ogone/classes/mo_ogone__main.php',
         'mo_ogone__logger'                     => 'mo/mo_ogone/classes/mo_ogone__logger.php',
+        'mo_ogone__transaction_logger'       => 'mo/mo_ogone/classes/mo_ogone__transaction_logger.php',
     ),
     'blocks'      => array(
         array(

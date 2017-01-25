@@ -39,12 +39,6 @@ class Main
      * @var LoggerInterface
      */
     protected $logger;
-    
-    /**
-     *
-     * @var Utils
-     */
-    protected $utils;
 
     /**
      * constructor
@@ -149,19 +143,6 @@ class Main
         return $this->logger = $logger;
     }
 
-    /**
-     * get utils
-     * @return Utils
-     */
-    public function getUtils()
-    {
-        if ($this->utils !== null) {
-            //update processors
-            return $this->utils;
-        }
-        return $this->utils = new Utils();
-    }
-    
     /**
      * set logger
      * @param LoggerInterface $logger

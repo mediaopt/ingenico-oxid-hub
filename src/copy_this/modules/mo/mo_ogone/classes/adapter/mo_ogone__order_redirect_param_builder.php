@@ -3,9 +3,6 @@
 use Mediaopt\Ogone\Sdk\Main;
 use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 
-/**
- * $Id: RequestParamBuilder.php 55 2015-02-24 10:47:24Z mbe $ 
- */
 class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_builder
 {
 

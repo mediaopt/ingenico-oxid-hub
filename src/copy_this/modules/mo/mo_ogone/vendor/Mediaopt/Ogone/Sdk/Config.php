@@ -3,9 +3,6 @@
 namespace Mediaopt\Ogone\Sdk;
 
 class Config {
-  
-    const API_HOST_URL__DEV = 'TODO';
-    const API_HOST_URL__PROD = 'TODO';
 
     // Mapping from id to payment-method(pm) and brand
     public static function getPaymentMethods() {

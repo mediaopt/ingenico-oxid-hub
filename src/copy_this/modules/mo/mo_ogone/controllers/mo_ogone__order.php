@@ -146,7 +146,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             $basketAmount = $this->mo_ogone__getFormatedOrderAmount();
             if (intval($basketAmount) !== intval($response->getAmount())) {
                 oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__DIVERGENT_AMOUNT') . $response->getOrderId());
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
                 Main::getInstance()->getLogger()->error('Paid Amount ('. intval($response->getAmount()) .') and Basket Amount ('.intval($basketAmount) .') are not equal. TransId: '.$response->getOrderId());
                 return 'payment';
             }
@@ -167,7 +167,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             $oxOrder->load($this->getBasket()->getOrderId());
             if (!$oxOrder) {
                 oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ORDER_NOT_CREATED') . $response->getOrderId());
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
                 Main::getInstance()->getLogger()->error('The order could not be created. TransId: '.$response->getOrderId());
                 return 'payment';
             }
@@ -178,12 +178,12 @@ class mo_ogone__order extends mo_ogone__order_parent
                 $id = $response->getOrderId();
             }
             $oxOrder->mo_ogone__setTransID($id);
-            Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
+            oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
             Main::getInstance()->getLogger()->debug("OgoneRedirect: Will now redirect to ".$parentState." for TransId ".$response->getOrderId());
             return $parentState;
         }
-        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+        oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
         if ($response->hasError()) {
             $errorMessage = $response->getError()->getTranslatedStatusMessage();
         } else {
@@ -224,7 +224,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         if ($response !== null) {
             if ($order = $this->mo_ogone__loadOrder($response)) {
                 Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
                 $order->mo_ogone__updateOrderStatus($response->getStatus());
                 exit;
             }
@@ -232,7 +232,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             sleep(15);
             if ($order = $this->mo_ogone__loadOrder($response)) {
                 Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
                 $order->mo_ogone__updateOrderStatus($response->getStatus());
             } else {
                 Main::getInstance()->getLogger()->warning("DeferredFeedback: Could not load order by OrderId: " . $response->getOrderId()." or PAYID ".$response->getPayId());

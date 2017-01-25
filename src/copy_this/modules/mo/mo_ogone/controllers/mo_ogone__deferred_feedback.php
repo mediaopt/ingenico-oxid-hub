@@ -25,7 +25,7 @@ class mo_ogone__deferred_feedback extends oxUBase
                     $order->mo_ogone__loadByNumber($response->getOrderId());
                     if (!$order->isLoaded()) {
                         Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
-                        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
+                        oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams());
                         return;
                     }
                 }
@@ -37,13 +37,13 @@ class mo_ogone__deferred_feedback extends oxUBase
                     $order->mo_ogone__loadByNumber($response->getPayId());
                     if (!$order->isLoaded()) {
                         Main::getInstance()->getLogger()->error("Could not load order: " . $response->getPayId());
-                        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
+                        oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams());
                         return;
                     }
                 }
             }
-            
-            Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+
+            oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
             $order->mo_ogone__updateOrderStatus($response->getStatus());
         }
         // offline request from ogone, no further processing needed
