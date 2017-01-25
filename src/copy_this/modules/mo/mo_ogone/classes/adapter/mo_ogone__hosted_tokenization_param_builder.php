@@ -14,8 +14,9 @@ class mo_ogone__hosted_tokenization_param_builder extends mo_ogone__request_para
 
         //build for each paymentoption
         $paymentOptions = $this->getSdkMain()->getService('OgonePayments')->getOgonePaymentByShopPaymentId($paymentId);
-        foreach ($paymentOptions as $option) {
-            if (!$option['active']) {
+        $brands = is_array($paymentOptions['brand'])?$paymentOptions['brand']:array($paymentOptions['brand']);
+        foreach ($brands as $brand) {
+            if (!oxNew('mo_ogone__helper')->mo_ogone__isBrandActive($paymentId, $brand)) {
                 continue;
             }
             $params = array();
@@ -24,11 +25,11 @@ class mo_ogone__hosted_tokenization_param_builder extends mo_ogone__request_para
             $params['PARAMETERS.ACCEPTURL'] = $this->checkUrlLength($shopurl .    'modules/mo/mo_ogone/scripts/mo_ogone__redirect_iframe_parent.php?cl=payment&fnc=validatePayment', 200);
             $params['PARAMETERS.EXCEPTIONURL'] = $this->checkUrlLength($shopurl . 'modules/mo/mo_ogone/scripts/mo_ogone__redirect_iframe_parent.php?cl=payment&fnc=mo_ogone__handleHostedTokenizationErrorResponse', 200);
             
-            $params['CARD.PAYMENTMETHOD'] = $option['pm'];
-            if ($option['brand'] === 'MasterCard') {
+            $params['CARD.PAYMENTMETHOD'] = $paymentOptions['pm'];
+            if ($brand === 'MasterCard') {
                 $params['CARD.BRAND'] = 'Eurocard';
             } else {
-                $params['CARD.BRAND'] = $option['brand'];
+                $params['CARD.BRAND'] = $brand;
             }
             $params['ACCOUNT.PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
             $params['PARAMETERS.PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;

@@ -564,14 +564,14 @@ class mo_ogone__setup extends Shop_Config
     return;
   }
 
-  public function mo_ogone__getMultiplePaymentOptionsByOxidPaymentId($oxidPaymentId)
+  public function mo_ogone__isBrandActive($pm, $brand)
   {
-    $payments = Main::getInstance()->getService('OgonePayments')->ogonePaymentsByShopPaymentId;
-    if (isset($payments[$oxidPaymentId]) && count($payments[$oxidPaymentId]) > 1)
-    {
-      return $payments[$oxidPaymentId];
-    }
-    return array();
+      return oxNew('mo_ogone__helper')->mo_ogone__isBrandActive($pm, $brand);
+  }
+
+  public function mo_ogone__getBrands($oxidPaymentId)
+  {
+    return Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxidPaymentId, 'brand');
   }
 
   protected function mo_ogone__execute_sql($sql)

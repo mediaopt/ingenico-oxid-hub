@@ -38,12 +38,10 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
 
         //standard procedure with redirect payments
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
+        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
             return $parentResult;
-        } elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
-            return $this->mo_ogone__handleHiddenAuthorizationResponse();
         } else {
-            Main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
+            return $this->mo_ogone__handleHiddenAuthorizationResponse();
         }
     }
 
@@ -175,15 +173,14 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
         if ($oxpayment->mo_ogone__isOgonePayment()) {
             $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
-            switch ($paymentType) {
-                case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
-                    if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-                        return $this->getHostedTokenUrl();
-                    } else {
-                        return $this->getAliasUrl();
-                    }
-                default:
-                    return $this->getViewConfig()->getSslSelfLink();
+            if ($paymentType == MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
+                return $this->getViewConfig()->getSslSelfLink();
+            }
+            // one page
+            if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
+                return $this->getHostedTokenUrl();
+            } else {
+                return $this->getAliasUrl();
             }
         }
     }
@@ -196,8 +193,16 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if (!$paymentId) {
             $paymentId = $this->getCheckedPaymentId();
         }
-        return $this->mo_ogone__currentPaymentConfig = Main::getInstance()->getService('OgonePayments')->
-                getOgonePaymentByShopPaymentId($paymentId);
+        $options = Main::getInstance()->getService('OgonePayments')->
+        getOgonePaymentByShopPaymentId($paymentId);
+        if (is_array($options['brand'])) {
+            foreach ($options['brand'] as $key => $brand) {
+                if (!oxNew('mo_ogone__helper')->mo_ogone__isBrandActive($paymentId, $brand)) {
+                    unset($options['brand'][$key]);
+                }
+            }
+        }
+        return $this->mo_ogone__currentPaymentConfig = $options;
     }
 
     /**
@@ -276,7 +281,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             return 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
         }
     }
-    
-    
+
 
 }

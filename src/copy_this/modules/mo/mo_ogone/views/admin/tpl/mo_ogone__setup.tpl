@@ -34,14 +34,14 @@
                   <input type="checkbox" name="ogone_aPaymentMethods[]" value=[{$pm.id}][{ if $pm.checked}] checked="checked"[{ /if }]> [{ oxmultilang ident=$pm.name }]<br />
 
                   [{* check for payment options *}]
-                  [{assign var="mo_ogone__paymentOptions" value=$oView->mo_ogone__getMultiplePaymentOptionsByOxidPaymentId($pm.id)}]
-                  [{if $mo_ogone__paymentOptions}]
-                    [{foreach from=$mo_ogone__paymentOptions item="mo_ogone__paymentOption"}]
+                  [{assign var="mo_ogone__brands" value=$oView->mo_ogone__getBrands($pm.id)}]
+                  [{if $mo_ogone__brands|is_array }]
+                    [{foreach from=$mo_ogone__brands item="mo_ogone__brand"}]
                       <input  style="margin-left: 20px;" 
                               type="checkbox" 
                               name="mo_ogone__paymentOptions[[{$pm.id}]][]" 
-                      [{if $mo_ogone__paymentOption.active}]checked="checked"[{/if}]
-                      value="[{$mo_ogone__paymentOption.brand}]"  /> [{$mo_ogone__paymentOption.brand}]<br />
+                      [{if $oView->mo_ogone__isBrandActive($pm.id, $mo_ogone__brand)}]checked="checked"[{/if}]
+                      value="[{$mo_ogone__brand}]"  /> [{$mo_ogone__brand}]<br />
                   [{/foreach}]
                 [{/if}]
 

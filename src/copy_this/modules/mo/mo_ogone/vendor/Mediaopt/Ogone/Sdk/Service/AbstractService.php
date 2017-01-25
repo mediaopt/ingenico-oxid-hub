@@ -3,7 +3,6 @@
 namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Client;
-use Mediaopt\Ogone\Sdk\Config;
 
 abstract class AbstractService
 {

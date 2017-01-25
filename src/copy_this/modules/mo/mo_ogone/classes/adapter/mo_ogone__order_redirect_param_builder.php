@@ -36,7 +36,8 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
             $dynvalues = $this->getOxSession()->getVariable('dynvalue');
             $params['brand'] = $dynvalues['mo_ogone']['cc']['brand'];
         } else {
-            $params['brand'] = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand');
+            $brand = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand');
+            $params['brand'] = is_array($brand)?$brand[0]:$brand;
         }
         // shop logo
         if ($this->getOxConfig()->getConfigParam('ogone_sTplLogo') != '') {

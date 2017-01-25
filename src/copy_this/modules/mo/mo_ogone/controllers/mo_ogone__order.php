@@ -59,12 +59,10 @@ class mo_ogone__order extends mo_ogone__order_parent
         $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($paymentId, 'paymenttype');
 
         //redirect
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
+        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
             return "mo_ogone__payment_form";
-        }
-
-        //one page
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
+        } else {
+            // one page
             // server to server communication
             $paramBuilder = oxNew('mo_ogone__order_direct_param_builder');
             $params = $paramBuilder->build();

@@ -12,8 +12,9 @@ class mo_ogone__alias_param_builder extends mo_ogone__request_param_builder
 
         //build for each paymentoption
         $paymentOptions = $this->getSdkMain()->getService('OgonePayments')->getOgonePaymentByShopPaymentId($paymentId);
-        foreach ($paymentOptions as $option) {
-            if (!$option['active']) {
+        $brands = is_array($paymentOptions['brand'])?$paymentOptions['brand']:array($paymentOptions['brand']);
+        foreach ($brands as $brand) {
+            if (!oxNew('mo_ogone__helper')->mo_ogone__isBrandActive($paymentId, $brand)) {
                 continue;
             }
             $params = array();
@@ -21,7 +22,7 @@ class mo_ogone__alias_param_builder extends mo_ogone__request_param_builder
 
             $params['ACCEPTURL'] = $this->checkUrlLength($sslSelfLink . '&cl=payment&fnc=validatePayment', 200);
             $params['EXCEPTIONURL'] = $this->checkUrlLength($sslSelfLink . '&cl=payment&fnc=validatePayment', 200);
-            $params['BRAND'] = $option['brand'];
+            $params['BRAND'] = $brand;
             $params['PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
             $params['PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;
 

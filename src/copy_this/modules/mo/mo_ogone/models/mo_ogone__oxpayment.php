@@ -49,15 +49,14 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
     }
   }
 
-  /*
+  /**
    * check if given paymentid is ogone-payment
-   * @return type 
+   * @return bool
    */
-
   public function mo_ogone__isOgonePayment()
   {
-    $paymentConfig = Main::getInstance()->getService('OgonePayments')->getOgonePayments();
-    return array_key_exists($this->getId(), $paymentConfig);
+    $paymentIds = Main::getInstance()->getService('OgonePayments')->getShopPaymentIds();
+    return in_array($this->getId(), $paymentIds);
   }
 
   /**
