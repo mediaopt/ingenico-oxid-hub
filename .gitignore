@@ -12,3 +12,6 @@ src/copy_this/modules/mo/mo_ogone/vendor/composer/*
 src/copy_this/modules/mo/mo_ogone/vendor/monolog/*
 src/copy_this/modules/mo/mo_ogone/vendor/psr/*
 src/copy_this/modules/mo/mo_ogone/vendor/autoload.php
+/genericBundler/
+/shops/
+/.idea/
