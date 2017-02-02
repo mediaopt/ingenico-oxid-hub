@@ -31,7 +31,7 @@
               <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_PAYMENT_METHODS" }]</td>
               <td valign="top" class="edittext">
                 [{foreach from=$aPaymentMethods item=pm}]
-                  <input type="checkbox" name="ogone_aPaymentMethods[]" value=[{$pm.id}][{ if $pm.checked}] checked="checked"[{ /if }]> [{ oxmultilang ident=$pm.name }]<br />
+                  <input type="checkbox" name="ogone_aPaymentMethods[]" value=[{$pm.id}][{if $pm.checked}] checked="checked"[{/if }]> [{ oxmultilang ident=$pm.name }]<br />
 
                   [{* check for payment options *}]
                   [{assign var="mo_ogone__brands" value=$oView->mo_ogone__getBrands($pm.id)}]
@@ -62,10 +62,10 @@
         <tr>
           <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE_LOGLEVEL" }]</td>
           <td valign="top" class="edittext">
-            <select name="confstrs[mo_ogone__logLevel]" class="editinput" [{ $readonly }]>
-              <option value="DEBUG" [{ if $confstrs.mo_ogone__logLevel == "DEBUG" }]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_DEBUG" }]</option>
-              <option value="INFO" [{ if $confstrs.mo_ogone__logLevel == "INFO" }]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_INFO" }]</option>
-              <option value="ERROR" [{ if $confstrs.mo_ogone__logLevel == "ERROR"  || $confstrs.ogone_sHashingAlgorithm == ""}]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_ERROR" }]</option>
+            <select name="confstrs[mo_ogone__logLevel]" class="editinput" [{$readonly }]>
+              <option value="DEBUG" [{if $confstrs.mo_ogone__logLevel == "DEBUG" }]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_DEBUG" }]</option>
+              <option value="INFO" [{if $confstrs.mo_ogone__logLevel == "INFO" }]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_INFO" }]</option>
+              <option value="ERROR" [{if $confstrs.mo_ogone__logLevel == "ERROR"  || $confstrs.ogone_sHashingAlgorithm == ""}]SELECTED[{/if}]>[{ oxmultilang ident="MO_OGONE_LOGLEVEL_ERROR" }]</option>
             </select>
           </td>
         </tr>
@@ -78,11 +78,11 @@
                      name="confbools[mo_ogone__capture_creditcard]" 
                      value="true" 
               [{if $confbools.mo_ogone__capture_creditcard}]checked="checked"[{/if}] />
-            [{ oxinputhelp ident="MO_OGONE__CAPTURE_CREDITCARD_HELP" }]
+            [{oxinputhelp ident="MO_OGONE__CAPTURE_CREDITCARD_HELP" }]
           </td>
         </tr>
                   <tr>
-            <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__USE_UTF8" }]</td>
+            <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="MO_OGONE__USE_UTF8" }]</td>
             <td valign="top" class="edittext">
               <input type="hidden" name="confbools[mo_ogone__use_utf8]" value="false" />
               <input type="checkbox" 
@@ -90,11 +90,11 @@
                      name="confbools[mo_ogone__use_utf8]" 
                      value="true" 
               [{if $confbools.mo_ogone__use_utf8}]checked="checked"[{/if}] />
-            [{ oxinputhelp ident="MO_OGONE__USE_UTF8_HELP" }]
+            [{oxinputhelp ident="MO_OGONE__USE_UTF8_HELP" }]
           </td>
         </tr>
           <tr>
-            <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__SET_OXPAID" }]</td>
+            <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="MO_OGONE__SET_OXPAID" }]</td>
             <td valign="top" class="edittext">
               <input type="hidden" name="confbools[mo_ogone__set_oxpaid]" value="false" />
               <input type="checkbox" 
@@ -115,12 +115,12 @@
                      name="confbools[mo_ogone__use_hidden_auth]"
                      value="true"
               [{if $confbools.mo_ogone__use_hidden_auth}]checked="checked"[{/if}] />
-            [{ oxinputhelp ident="MO_OGONE__USE_HIDDEN_AUTH_HELP" }]
+            [{oxinputhelp ident="MO_OGONE__USE_HIDDEN_AUTH_HELP" }]
           </td>
         </tr>
         
         <tr>
-            <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH" }]</td>
+            <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH" }]</td>
             <td valign="top" class="edittext">
               <input type="hidden" name="confbools[mo_ogone__use_iframe]" value="false" />
               <input type="checkbox"
@@ -128,63 +128,63 @@
                      name="confbools[mo_ogone__use_iframe]"
                      value="true"
               [{if $confbools.mo_ogone__use_iframe}]checked="checked"[{/if}] />
-            [{ oxinputhelp ident="MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH_HELP" }]
+            [{oxinputhelp ident="MO_OGONE__USE_IFRAME_FOR_HIDDEN_AUTH_HELP" }]
           </td>
         </tr>
         
         <tr>
           <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__OXTRANSID_PARAM" }]</td>
           <td valign="top" class="edittext">
-            <select name="confstrs[mo_ogone__transid_param]" class="editinput" [{ $readonly }]>
-              <option value="ORDERID" [{ if $confstrs.mo_ogone__transid_param == "ORDERID" }]SELECTED[{/if}]>ORDERID</option>
-              <option value="PAYID" [{ if $confstrs.mo_ogone__transid_param == "PAYID" || $confstrs.ogone_sHashingAlgorithm == "" }]SELECTED[{/if}]>PAYID</option>
+            <select name="confstrs[mo_ogone__transid_param]" class="editinput" [{$readonly }]>
+              <option value="ORDERID" [{if $confstrs.mo_ogone__transid_param == "ORDERID" }]SELECTED[{/if}]>ORDERID</option>
+              <option value="PAYID" [{if $confstrs.mo_ogone__transid_param == "PAYID" || $confstrs.ogone_sHashingAlgorithm == "" }]SELECTED[{/if}]>PAYID</option>
             </select>
             [{ oxinputhelp ident="MO_OGONE__OXTRANSID_PARAM_HELP" }]
           </td>
         </tr>
         
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_PSPID" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="OGONE_PSPID" }]</td>
           <td valign="top" class="edittext">
             <input type=text class="editinput" style="width:410px" name=confstrs[ogone_sPSPID] value="[{$confstrs.ogone_sPSPID}]" maxlength="30" />
-            [{ oxinputhelp ident="HELP_OGONE_PSPID" }]
+            [{oxinputhelp ident="HELP_OGONE_PSPID" }]
           </td>
         </tr>
 
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__API_USERID" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="MO_OGONE__API_USERID" }]</td>
           <td valign="top" class="edittext">
             <input type=text class="editinput" style="width:410px" name=confstrs[mo_ogone__api_userid] value="[{$confstrs.mo_ogone__api_userid}]" maxlength="30" />
-            [{ oxinputhelp ident="MO_OGONE__API_USERID_HELP" }]
+            [{oxinputhelp ident="MO_OGONE__API_USERID_HELP" }]
           </td>
         </tr>
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="MO_OGONE__API_USERPASS" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="MO_OGONE__API_USERPASS" }]</td>
           <td valign="top" class="edittext">
             <input type="password" class="editinput" style="width:410px" name="confstrs[mo_ogone__api_userpass]" value="[{$confstrs.mo_ogone__api_userpass}]" maxlength="30" />
-            [{ oxinputhelp ident="MO_OGONE__API_USERPASS_HELP" }]
+            [{oxinputhelp ident="MO_OGONE__API_USERPASS_HELP" }]
           </td>
         </tr>
 
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_HASHING" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="OGONE_HASHING" }]</td>
           <td valign="top" class="edittext">
-            <select name="confstrs[ogone_sHashingAlgorithm]" class="editinput" [{ $readonly }]>
-              <option value="SHA-1" [{ if $confstrs.ogone_sHashingAlgorithm == "SHA-1" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_HASHING_ALGORITHM_SHA_1" }]</option>
-              <option value="SHA-256" [{ if $confstrs.ogone_sHashingAlgorithm == "SHA-256" || $confstrs.ogone_sHashingAlgorithm == "" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_HASHING_ALGORITHM_SHA_256" }]</option>
-              <option value="SHA-512" [{ if $confstrs.ogone_sHashingAlgorithm == "SHA-512" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_HASHING_ALGORITHM_SHA_512" }]</option>
+            <select name="confstrs[ogone_sHashingAlgorithm]" class="editinput" [{$readonly }]>
+              <option value="SHA-1" [{if $confstrs.ogone_sHashingAlgorithm == "SHA-1" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_HASHING_ALGORITHM_SHA_1" }]</option>
+              <option value="SHA-256" [{if $confstrs.ogone_sHashingAlgorithm == "SHA-256" || $confstrs.ogone_sHashingAlgorithm == "" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_HASHING_ALGORITHM_SHA_256" }]</option>
+              <option value="SHA-512" [{if $confstrs.ogone_sHashingAlgorithm == "SHA-512" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_HASHING_ALGORITHM_SHA_512" }]</option>
             </select>
           </td>
         </tr>
 
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_SECURE_KEY_IN" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="OGONE_SECURE_KEY_IN" }]</td>
           <td valign="top" class="edittext">
             <input type=password class="editinput" style="width:410px;" name=confstrs[ogone_sSecureKeyIn] value="[{$confstrs.ogone_sSecureKeyIn}]"><br />
           </td>
         </tr>
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{ oxmultilang ident="OGONE_SECURE_KEY_OUT" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="OGONE_SECURE_KEY_OUT" }]</td>
           <td valign="top" class="edittext">
             <input type=password class="editinput" style="width:410px;" name=confstrs[ogone_sSecureKeyOut] value="[{$confstrs.ogone_sSecureKeyOut}]"><br />
           </td>
@@ -197,7 +197,7 @@
             <fieldset id="ogonetemplate">
               <legend>
                 <input type=hidden name=confbools[ogone_blAlias] value=false>
-                <input type="checkbox" name=confbools[ogone_blAlias] value="true"[{ if $confbools.ogone_blAlias == true }] checked=""[{/if}] onchange="Javascript:templateAlias(this);" [{ $readonly }]>
+                <input type="checkbox" name=confbools[ogone_blAlias] value="true"[{if $confbools.ogone_blAlias == true }] checked=""[{/if}] onchange="Javascript:templateAlias(this);" [{ $readonly }]>
               </legend>
         [{ oxmultilang ident="OGONE_ALIAS_USAGE" }]<br />
         <span id="alias_usage" style="display:inline;">
@@ -214,19 +214,19 @@
           <td valign="top" class="edittext">
             <fieldset id="ogonetemplate">
               <legend>
-                <select name=confstrs[ogone_sTemplate] class="editinput" onchange="Javascript:templateOptions(this);" [{ $readonly }]>
-                  <option value="true" [{ if $confstrs.ogone_sTemplate == "true" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_TEMPLATE_TRUE" }]</option>
-                  <option value="false" [{ if $confstrs.ogone_sTemplate == "false" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_TEMPLATE_FALSE" }]</option>
+                <select name=confstrs[ogone_sTemplate] class="editinput" onchange="templateOptions(this);" [{$readonly }]>
+                  <option value="true" [{if $confstrs.ogone_sTemplate == "true" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_TEMPLATE_TRUE" }]</option>
+                  <option value="false" [{if $confstrs.ogone_sTemplate == "false" }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_TEMPLATE_FALSE" }]</option>
                 </select>
               </legend>
               <table id="template_styling" cellspacing="0" cellpadding="5" border="0" class="edittext" style="text-align: left;">
                 <tr>
                   <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="OGONE_PMLISTSTYLE_TITLE" }]</td>
                   <td valign="top" class="edittext" nowrap="">
-                    <select name="confstrs[ogone_sTplPMListStyle]" class="editinput" [{ $readonly }]>
-                      <option value="0" [{ if $confstrs.ogone_sTplPMListStyle == 0 }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_PMLISTSTYLE_0" }]</option>
-                      <option value="1" [{ if $confstrs.ogone_sTplPMListStyle == 1 }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_PMLISTSTYLE_1" }]</option>
-                      <option value="2" [{ if $confstrs.ogone_sTplPMListStyle == 2 }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_PMLISTSTYLE_2" }]</option>
+                    <select name="confstrs[ogone_sTplPMListStyle]" class="editinput" [{$readonly }]>
+                      <option value="0" [{if $confstrs.ogone_sTplPMListStyle == 0 }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_PMLISTSTYLE_0" }]</option>
+                      <option value="1" [{if $confstrs.ogone_sTplPMListStyle == 1 }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_PMLISTSTYLE_1" }]</option>
+                      <option value="2" [{if $confstrs.ogone_sTplPMListStyle == 2 }]SELECTED[{/if}]>[{ oxmultilang ident="OGONE_PMLISTSTYLE_2" }]</option>
                     </select>
                     [{ oxinputhelp ident="OGONE_PMLISTSTYLE_TITLE_DESCRIPTION" }]
                   </td>
@@ -235,7 +235,7 @@
                   <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="OGONE_BACK_TITLE" }]</td>
                   <td valign="top" class="edittext" nowrap="">
                     <input type=hidden name=confbools[ogone_blBackButton] value=false>
-                    <input type="checkbox" name=confbools[ogone_blBackButton] value="true"[{ if $confbools.ogone_blBackButton == 'true' }] checked[{/if}] [{ $readonly }]>
+                    <input type="checkbox" name=confbools[ogone_blBackButton] value="true"[{if $confbools.ogone_blBackButton == 'true' }] checked[{/if}] [{ $readonly }]>
                   </td>
                 </tr>
               </table>
@@ -247,12 +247,12 @@
                 <tr>
                   <td valign="top" class="edittext" nowrap="">[{ oxmultilang ident="OGONE_TEMPLATE_TITLE" }]</td>
                   <td valign="top" class="edittext" nowrap="">
-                    <input type="checkbox" name=confbools[ogone_blTplTitle] value="true"[{ if $confbools.ogone_blTplTitle == 'true' }] checked[{/if}] onchange="Javascript:templateTitle(this);" [{ $readonly }]>
+                    <input type="checkbox" name=confbools[ogone_blTplTitle] value="true"[{if $confbools.ogone_blTplTitle == 'true' }] checked[{/if}] onchange="Javascript:templateTitle(this);" [{ $readonly }]>
                     [{ oxinputhelp ident="OGONE_TEMPLATE_TITLE_DESCRIPTION" }]
                     <br />
                     <span id="template_title">
                       [{foreach from=$languages item=lang}]
-                        [{ $lang->name }] <input type=text class="editinput" style="width:410px;" name=confstrs[ogone_sTplTitle[{ $lang->id }]] value="[{ $lang->tplTitle }]"><br />
+                        [{ $lang->name }] <input type=text class="editinput" style="width:410px;" name=confstrs[ogone_sTplTitle[{$lang->id }]] value="[{ $lang->tplTitle }]"><br />
                       [{/foreach}]
                     </span>
                   </td>
@@ -316,10 +316,10 @@
               </table>
             </fieldset>
             <br />
-            [{ if $start_setup }]
-              <input type="submit" name="save" value="[{ oxmultilang ident="START_SETUP" }]" [{ $readonly}]>
+            [{if $start_setup }]
+              <input type="submit" name="save" value="[{oxmultilang ident="START_SETUP" }]" [{ $readonly}]>
             [{else}]
-              <input type="submit" name="save" value="[{ oxmultilang ident="UPDATE_SETUP" }]" [{ $readonly}]>
+              <input type="submit" name="save" value="[{oxmultilang ident="UPDATE_SETUP" }]" [{ $readonly}]>
 
               [{*if $oView->mo_ogone__hasRegisteredTemplateBlocks()}]
               <input type="button" value="[{ oxmultilang ident="MO_OGONE__UNINSTALL_TPL_BLOCKS" }]" [{ $readonly}] onclick="window.location.href='[{$oViewConf->getSelfLink()}]cl=mo_ogone__setup&fnc=mo_ogone__fncUninstallTemplateBlocks';" />

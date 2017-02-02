@@ -3,7 +3,7 @@
 class mo_ogone__alias_param_builder extends mo_ogone__request_param_builder
 {
     
-    protected $oxidSessionParamsForRemoteCalls = null;
+    protected $oxidSessionParamsForRemoteCalls;
 
     public function build($paymentId)
     {

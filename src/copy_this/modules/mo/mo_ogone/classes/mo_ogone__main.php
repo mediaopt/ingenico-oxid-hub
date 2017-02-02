@@ -13,7 +13,7 @@ class mo_ogone__main
 
     static public function getInstance()
     {
-        if (!isset(self::$instance)) {
+        if (null === self::$instance) {
             self::$instance = new self;
         }
         return self::$instance;
@@ -26,8 +26,8 @@ class mo_ogone__main
 
     public function getOgoneConfig()
     {
-        if (!isset($this->ogoneConfig)) {
-            $configFile = realpath(dirname(__FILE__) . '/..') . '/config.php';
+        if (null === $this->ogoneConfig) {
+            $configFile = realpath(__DIR__ . '/..') . '/config.php';
             $this->ogoneConfig = new mo_ogone__config($configFile, Main::getInstance()->getLogger());
         }
         return $this->ogoneConfig;

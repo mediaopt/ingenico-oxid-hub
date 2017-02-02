@@ -22,7 +22,7 @@
  * @version 1.3
  * $Id: mo_ogone__lang.php 25 2013-05-24 15:26:26Z martin $
  */
-$sLangName = "English";
+$sLangName = 'English';
 
 // -------------------------------
 // RESOURCE IDENTITFIER = STRING
@@ -153,11 +153,11 @@ URL.',
     'OGONE_ALIAS_OPERATION_DESCRIPTION'            => 'Configure how the Alias will be created.<br />' .
     'Or let your Payment Service Provider create the Alias automatically<br />',
     'OGONE_ALIAS_FORMAT'                           => 'Alias Format',
-    'OGONE_ALIAS_FORMAT_DESCRIPTION'               => "Specify the following alias parameters:<br />" .
+    'OGONE_ALIAS_FORMAT_DESCRIPTION'               => 'Specify the following alias parameters:<br />' .
     "{shopname} = Your shop's name<br />" .
     "{firstname} = Customer's first name<br />" .
     "{lastname} = Customer's last name<br />" .
-    "{customersid} = Customer ID<br />",
+        '{customersid} = Customer ID<br />',
     'OGONE_ALIAS_USAGE'                            => 'Alias description',
     'OGONE_ALIAS_USAGE_DESCRIPTION'                => 'Short explanation for the customer on why you suggest the creation of an alias.',
     'MO_OGONE__CAPTURE_CREDITCARD'                 => 'Capture credit card transaction',

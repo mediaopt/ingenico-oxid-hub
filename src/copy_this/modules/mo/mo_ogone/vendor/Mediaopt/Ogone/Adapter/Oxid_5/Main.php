@@ -22,17 +22,17 @@ class Main
     /**
      * @var \oxConfig
      */
-    protected $oxConfig = null;
+    protected $oxConfig;
 
     /**
      * @var \oxLang
      */
-    protected $oxLang = null;
+    protected $oxLang;
 
     /**
      * @var \oxSession
      */
-    protected $oxSession = null;
+    protected $oxSession;
 
     /**
      *
@@ -70,7 +70,7 @@ class Main
         return $this->oxConfig = \oxRegistry::get('oxConfig');
     }
 
-    function getOxLang()
+    public function getOxLang()
     {
         if ($this->oxLang !== null) {
             return $this->oxLang;
@@ -78,7 +78,7 @@ class Main
         return $this->oxLang = \oxRegistry::getLang();
     }
 
-    function getOxSession()
+    public function getOxSession()
     {
         if ($this->oxSession !== null) {
             return $this->oxSession;
@@ -86,12 +86,12 @@ class Main
         return $this->oxSession = \oxRegistry::getSession();
     }
 
-    function setOxSession(\oxSession $oxSession)
+    public function setOxSession(\oxSession $oxSession)
     {
         $this->oxSession = $oxSession;
     }
 
-    function setOxLang(\oxLang $oxLang)
+    public function setOxLang(\oxLang $oxLang)
     {
         $this->oxLang = $oxLang;
     }
@@ -116,7 +116,7 @@ class Main
 
     /**
      * return factory
-     * 
+     *
      * @param string $type
      * @return AbstractFactory
      */

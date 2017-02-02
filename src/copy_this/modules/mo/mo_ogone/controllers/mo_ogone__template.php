@@ -35,7 +35,7 @@ class mo_ogone__template extends oxUBase
     {
 
         $activetheme = oxRegistry::getConfig()->getConfigParam('sTheme');
-        if (!activetheme == "azure") {
+        if (!$activetheme === 'azure') {
             $this->_sThisTemplate = 'dynamic_mobile.tpl';
         }
 

@@ -8,15 +8,15 @@ use Mediaopt\Ogone\Sdk\Service\AbstractService;
 class Main
 {
     
-    static protected $instance = null;
+    static protected $instance;
     
-    protected $adapter = null;
+    protected $adapter;
 
     /**
      *
      * @var \Psr\Log\LoggerInterface
      */
-    protected $logger = null;
+    protected $logger;
     
     /**
      * 

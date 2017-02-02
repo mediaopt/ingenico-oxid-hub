@@ -22,7 +22,7 @@
  * @version 1.3
  * $Id: mo_ogone__lang.php 25 2013-05-24 15:26:26Z martin $
  */
-$sLangName = "Deutsch";
+$sLangName = 'Deutsch';
 
 // -------------------------------
 // RESOURCE IDENTITFIER = STRING

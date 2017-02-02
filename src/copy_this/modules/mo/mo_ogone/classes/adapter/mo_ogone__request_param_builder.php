@@ -8,16 +8,16 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
 
     // mbe: @TODO direkten Zugriff auf oxDB entfernen
 
-    protected $oxidSessionParamsForRemoteCalls = null;
+    protected $oxidSessionParamsForRemoteCalls;
 
     protected function getShaSignForParams($params)
     {
         /** @var SignatureBuilder $signatureBuilder */
-        $signatureBuilder = Main::getInstance()->getService("SignatureBuilder");
+        $signatureBuilder = Main::getInstance()->getService('SignatureBuilder');
         $signatureBuilder->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         return $signatureBuilder->hash(
-                        $signatureBuilder->build(
-                                $params, SignatureBuilder::MODE_IN));
+            $signatureBuilder->build(
+                $params, SignatureBuilder::MODE_IN));
     }
 
     protected function getOxidSessionParamsForRemoteCalls()
@@ -31,7 +31,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
             $this->oxidSessionParamsForRemoteCalls['rtoken'] = $this->getOxSession()->getRemoteAccessToken(true);
             $this->oxidSessionParamsForRemoteCalls['shopid'] = $this->getOxConfig()->getShopId();
             $this->oxidSessionParamsForRemoteCalls['sDeliveryAddressMD5'] = $this->getOxSession()->getUser()->getEncodedDeliveryAddress();
-            if($oDelAddress = $this->getDelAddressInfo()){
+            if ($oDelAddress = $this->getDelAddressInfo()) {
                 $this->oxidSessionParamsForRemoteCalls['sDeliveryAddressMD5'] .= $oDelAddress->getEncodedDeliveryAddress();
             }
         }
@@ -42,26 +42,26 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
      * Loads and returns delivery address object or null
      * if deladrid is not configured, or object was not loaded
      *
-     * @return  object
+     * @return  oxAddress
      */
     protected function getDelAddressInfo()
     {
         $oDelAdress = null;
-        if (! ($soxAddressId = $this->getOxConfig()->getRequestParameter( 'deladrid' ) ) ) {
-            $soxAddressId = $this->getOxSession()->getVariable( 'deladrid' );
+        if (!($soxAddressId = $this->getOxConfig()->getRequestParameter('deladrid'))) {
+            $soxAddressId = $this->getOxSession()->getVariable('deladrid');
         }
-        if ( $soxAddressId ) {
-            $oDelAdress = oxNew( 'oxaddress' );
-            $oDelAdress->load( $soxAddressId );
+        if ($soxAddressId) {
+            $oDelAdress = oxNew('oxaddress');
+            $oDelAdress->load($soxAddressId);
         }
         return $oDelAdress;
     }
 
     /**
      * handle utf8 options
-     * 
+     *
      * @param array $params
-     * @return array 
+     * @return array
      */
     protected function handleUtf8Options($params)
     {
@@ -97,14 +97,14 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
      */
     protected function createTransID()
     {
-        return uniqid("mo_ogone_", true);
+        return uniqid('mo_ogone_', true);
     }
 
     protected function getFormatedOrderAmount()
     {
         $dAmount = $this->getOxSession()->getBasket()->getPrice()->getBruttoPrice();
         $dAmount = number_format($dAmount, 2, '.', '');
-        $dAmount = $dAmount * 100;
+        $dAmount *= 100;
         $dAmount = round($dAmount, 0);
         $dAmount = substr($dAmount, 0, 15);
         return $dAmount;
@@ -112,10 +112,10 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
 
     protected function getBillProperty($param)
     {
-        if ($param === "email") {
-            $field = "oxuser__oxusername";
+        if ($param === 'email') {
+            $field = 'oxuser__oxusername';
         } else {
-            $field = "oxuser__ox" . $param;
+            $field = 'oxuser__ox' . $param;
         }
         return $this->getOxUser()->$field->value;
     }
@@ -124,7 +124,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
     {
         $user = $this->getOxUser();
         if ($user->getSelectedAddressId()) {
-            $field = "oxaddress__ox" . $param;
+            $field = 'oxaddress__ox' . $param;
             $deliveryAddress = $user->getSelectedAddress();
             return $deliveryAddress->$field->value;
         }
@@ -141,12 +141,12 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
             'currency' => mo_ogone__main::getInstance()->getOgoneConfig()->getOgoneCurrencyCode($this->getOxConfig()->getActShopCurrencyObject()->name),
             'operation' => $this->getCreditCardOperation(),
             'language' => $this->getLanguageCountryCode(),
-            'cn' => substr($this->getBillProperty("fname") . ' ' . $this->getBillProperty("lname"), 0, 35),
-            'email' => substr($this->getBillProperty("email"), 0, 50),
-            'ownerzip' => substr($this->getBillProperty("zip"), 0, 10),
-            'owneraddress' => substr($this->getBillProperty("street") . " " . $this->getBillProperty("streetnr"), 0, 35),
-            'ownercty' => oxDb::getDB()->getone("select oxisoalpha2 from oxcountry where oxid = '" . $this->getBillProperty("countryid") . "'"),
-            'ownertown' => substr($this->getBillProperty("city"), 0, 25),
+            'cn' => substr($this->getBillProperty('fname') . ' ' . $this->getBillProperty('lname'), 0, 35),
+            'email' => substr($this->getBillProperty('email'), 0, 50),
+            'ownerzip' => substr($this->getBillProperty('zip'), 0, 10),
+            'owneraddress' => substr($this->getBillProperty('street') . ' ' . $this->getBillProperty('streetnr'), 0, 35),
+            'ownercty' => oxDb::getDb()->getOne("select oxisoalpha2 from oxcountry where oxid = '" . $this->getBillProperty('countryid') . '\''),
+            'ownertown' => substr($this->getBillProperty('city'), 0, 25),
             'orig' => mo_ogone__main::getInstance()->getOgoneConfig()->applicationId,
             'paramplus' => substr(http_build_query($this->getOxidSessionParamsForRemoteCalls()), 0, 1000)
         );

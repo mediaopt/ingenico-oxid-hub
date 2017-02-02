@@ -20,7 +20,7 @@ abstract class mo_ogone__abstract_factory
      * @var \oxLang
      */
     protected $oxLang;
-    
+
     /**
      *
      * @var \oxSession
@@ -48,7 +48,7 @@ abstract class mo_ogone__abstract_factory
         return sdkMain::getInstance();
     }
 
-    function getOxLang()
+    public function getOxLang()
     {
         if ($this->oxLang !== null) {
             return $this->oxLang;
@@ -56,7 +56,7 @@ abstract class mo_ogone__abstract_factory
         return $this->oxLang = oxRegistry::getLang();
     }
 
-    function getOxSession()
+    public function getOxSession()
     {
         if ($this->oxSession !== null) {
             return $this->oxSession;
@@ -68,7 +68,7 @@ abstract class mo_ogone__abstract_factory
      * get current user
      * @return \oxUser
      */
-    protected function getOxUser()
+    public function getOxUser()
     {
         return $this->getOxConfig()->getUser();
     }
@@ -77,18 +77,18 @@ abstract class mo_ogone__abstract_factory
      * get adapter main
      * @return \Mediaopt\Ogone\Adapter\Oxid_5\Main
      */
-    protected function getAdapterMain()
+    public function getAdapterMain()
     {
         return $this->getSdkMain()->getAdapter();
     }
 
     /**
      * return iso-code for country
-     * 
+     *
      * @param string $oxCountryId
-     * @return string 
+     * @return string
      */
-    protected function getCountryCode($oxCountryId)
+    public function getCountryCode($oxCountryId)
     {
         $country = oxNew('oxcountry');
         if ($country->load($oxCountryId)) {

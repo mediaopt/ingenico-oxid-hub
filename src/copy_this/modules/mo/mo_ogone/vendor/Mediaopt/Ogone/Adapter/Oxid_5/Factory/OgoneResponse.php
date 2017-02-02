@@ -27,7 +27,7 @@ class OgoneResponse extends AbstractFactory
     
     /**
      * populate OgoneResponse model
-     * @param type $params a params array
+     * @param array $params a params array
      * @return Mediaopt\Ogone\Sdk\Model\OgoneResponse
      */
     public function buildFromData($params)
@@ -41,7 +41,7 @@ class OgoneResponse extends AbstractFactory
             $model->setOrderId(null);
         }
         if (isset($params['SHOPID'])) {
-            $model->setShopId(intval($params['SHOPID']));
+            $model->setShopId((int)$params['SHOPID']);
         } else {
             $model->setShopId(null);
         }
@@ -50,7 +50,7 @@ class OgoneResponse extends AbstractFactory
         } else {
             $statusCode = StatusType::INCOMPLETE_OR_INVALID;
         }
-        $model->setStatus(Main::getInstance()->getService("Status")->usingStatusCode($statusCode));
+        $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($statusCode));
         $error = null;
         if (!empty($params['NCERRORCARDNO']) && $params['NCERRORCARDNO'] != '0') {
             $error = $params['NCERRORCARDNO'];
@@ -62,7 +62,7 @@ class OgoneResponse extends AbstractFactory
             $error = $params['NCERROR'];
         }
         if ($error !== null) {
-            $model->setError(Main::getInstance()->getService("Status")->usingStatusCode($error));
+            $model->setError(Main::getInstance()->getService('Status')->usingStatusCode($error));
         } else {
             $model->setError(null);
         }
@@ -82,10 +82,11 @@ class OgoneResponse extends AbstractFactory
             $model->setSessionChallenge(null);
         }
         if (!empty($params['AMOUNT'])) {
-            $model->setAmount(intval(strval(floatval($params['AMOUNT'])*100)));
+            $model->setAmount((int)(string)(float)$params['AMOUNT']*100);
         } else {
             $model->setAmount(null);
         }
+
         return $model;
     }
 }

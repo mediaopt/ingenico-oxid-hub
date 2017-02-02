@@ -6,7 +6,7 @@ use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_builder
 {
 
-    protected $oxidSessionParamsForRemoteCalls = null;
+    protected $oxidSessionParamsForRemoteCalls;
     protected $billpay_itemNumber = 0;
 
     // used for redirect payments
@@ -17,8 +17,8 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
 
         // redirect urls
         $redirectUrl = $this->checkUrlLength(
-                $this->getOxConfig()->getSslShopUrl() .
-                'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
+            $this->getOxConfig()->getSslShopUrl() .
+            'index.php?cl=order&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['accepturl'] = $redirectUrl;
         $params['declineurl'] = $redirectUrl;
         $params['exceptionurl'] = $redirectUrl;
@@ -30,14 +30,14 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         }
 
         $params['pm'] = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'pm');
-        
+
         // if credit card is used and is using redirect (hidden auth is disabled), use the brand that was submitted
         if ($this->getOxSession()->getBasket()->getPaymentId() == 'ogone_credit_card') {
             $dynvalues = $this->getOxSession()->getVariable('dynvalue');
             $params['brand'] = $dynvalues['mo_ogone']['cc']['brand'];
         } else {
             $brand = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($this->getOxSession()->getBasket()->getPaymentId(), 'brand');
-            $params['brand'] = is_array($brand)?$brand[0]:$brand;
+            $params['brand'] = is_array($brand) ? $brand[0] : $brand;
         }
         // shop logo
         if ($this->getOxConfig()->getConfigParam('ogone_sTplLogo') != '') {
@@ -73,7 +73,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         $params = $this->handleUtf8Options($params);
         // generates sha signature of request parameter before send
         $params['shasign'] = $this->getShaSignForParams($params);
-        
+
         $this->getLogger()->logExecution($params);
 
         /* @var $model RequestParameters */
@@ -121,13 +121,12 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         $params['ordershiptax'] = number_format($deliveryPrice->getVatValue() * 100, 4); // N shipment tax amount multiplied by 100
         $params['ordershiptaxcode'] = $deliveryPrice->getVat(); // N shipment tax code
 
-        $params['civility'] = $this->getOxLang()->translateString($this->getBillProperty("sal"));
-
+        $params['civility'] = $this->getOxLang()->translateString($this->getBillProperty('sal'));
 
 
         //bill parameters
-        $params['ecom_billto_postal_name_first'] = substr($this->getBillProperty("fname"), 0, 50);
-        $params['ecom_billto_postal_name_last'] = substr($this->getBillProperty("lname"), 0, 50);
+        $params['ecom_billto_postal_name_first'] = substr($this->getBillProperty('fname'), 0, 50);
+        $params['ecom_billto_postal_name_last'] = substr($this->getBillProperty('lname'), 0, 50);
 
         //dateformat dd/mm/YYYY
         $date = explode('-', $dynvalues['mo_ogone']['invoice']['birthdate']);
@@ -143,9 +142,10 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         $params = $this->billpay_addWrapping($params);
 
         $string = "";
-        foreach ($params as $key => $val)
-            $string = $string . $key . " => " . $val . "\n";
-        $this->getLogger()->info("OrderRedirectParams: " . $string);
+        foreach ($params as $key => $val) {
+            $string = $string . $key . ' => ' . $val . "\n";
+        }
+        $this->getLogger()->info('OrderRedirectParams: ' . $string);
 
         return $params;
     }
@@ -192,7 +192,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
             }
 
             $price = $wrapping->getWrappingPrice();
-            $name = "Wrapping " . $item->getTitle();
+            $name = 'Wrapping ' . $item->getTitle();
             $amount = $item->getAmount();
             $params = array_merge($params, $this->billpay_getItem($name, $price, $amount));
         }
@@ -207,11 +207,10 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         }
 
         $price = $card->getWrappingPrice();
-        $name = "Card";
+        $name = 'Card';
         $amount = 1;
 
-        $params = array_merge($params, $this->billpay_getItem($name, $price, $amount));
-        return $params;
+        return array_merge($params, $this->billpay_getItem($name, $price, $amount));
     }
 
     protected function billpay_getItem($name, $price, $amount)
@@ -222,7 +221,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         $params['itemname' . $this->billpay_itemNumber] = substr(trim($name), 0, 40);
         $params['itemprice' . $this->billpay_itemNumber] = number_format($price->getNettoPrice(), 2);
         $params['itemquant' . $this->billpay_itemNumber] = $amount;
-        $params['itemvatcode' . $this->billpay_itemNumber] = $price->getVat() . "%";
+        $params['itemvatcode' . $this->billpay_itemNumber] = $price->getVat() . '%';
         $params['facexcl' . $this->billpay_itemNumber] = number_format($price->getNettoPrice() * $amount, 4);
         $params['factotal' . $this->billpay_itemNumber] = number_format($price->getBruttoPrice() * $amount, 4);
         $params['taxincluded' . $this->billpay_itemNumber] = 1;
@@ -231,7 +230,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
 
     protected function getBillPayDeliveryCountryCode()
     {
-        $countryid = $this->getShippingProperty("countryid");
+        $countryid = $this->getShippingProperty('countryid');
         $country = oxNew('oxcountry');
         $country->load($countryid);
         return $country->oxcountry__oxisoalpha2->value;

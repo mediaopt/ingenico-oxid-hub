@@ -21,7 +21,7 @@ abstract class AbstractFactory
      * @var \oxLang
      */
     protected $oxLang;
-    
+
     /**
      *
      * @var \oxSession
@@ -38,6 +38,8 @@ abstract class AbstractFactory
      * constructor
      * @param sdkMain $sdkMain
      * @param \oxConfig $oxConfig
+     * @param \oxLang $oxLang
+     * @param \oxSession $oxSession
      */
     public function __construct(sdkMain $sdkMain, \oxConfig $oxConfig, \oxLang $oxLang, \oxSession $oxSession)
     {
@@ -65,21 +67,22 @@ abstract class AbstractFactory
         return $this->sdkMain;
     }
 
-    function getOxLang()
+    public function getOxLang()
     {
         return $this->oxLang;
     }
-    function getOxSession()
+
+    public function getOxSession()
     {
         return $this->oxSession;
     }
 
-    function setOxSession(\oxSession $oxSession)
+    public function setOxSession(\oxSession $oxSession)
     {
         $this->oxSession = $oxSession;
     }
 
-        function setOxLang(\oxLang $oxLang)
+    public function setOxLang(\oxLang $oxLang)
     {
         $this->oxLang = $oxLang;
     }
@@ -106,7 +109,7 @@ abstract class AbstractFactory
      * get current user
      * @return \oxUser
      */
-    protected function getOxUser()
+    public function getOxUser()
     {
         return $this->getOxConfig()->getUser();
     }
@@ -115,18 +118,18 @@ abstract class AbstractFactory
      * get adapter main
      * @return \Mediaopt\Ogone\Adapter\Oxid_5\Main
      */
-    protected function getAdapterMain()
+    public function getAdapterMain()
     {
         return $this->getSdkMain()->getAdapter();
     }
 
     /**
      * return iso-code for country
-     * 
+     *
      * @param string $oxCountryId
-     * @return string 
+     * @return string
      */
-    protected function getCountryCode($oxCountryId)
+    public function getCountryCode($oxCountryId)
     {
         $country = oxNew('oxcountry');
         if ($country->load($oxCountryId)) {

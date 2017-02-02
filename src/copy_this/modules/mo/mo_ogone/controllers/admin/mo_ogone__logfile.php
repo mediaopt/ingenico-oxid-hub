@@ -17,7 +17,7 @@ use Mediaopt\Ogone\Sdk\Main;
  *
  * You should have received a copy of the GNU General Public License
  * along with Ogone Payment Solutions payment interface.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * @link http://www.ogone.com
  * @package admin
  * @copyright (C) Ogone 2009, 2010
@@ -34,55 +34,47 @@ use Mediaopt\Ogone\Sdk\Main;
 class mo_ogone__logfile extends oxAdminView
 {
 
-  /**
-   * Current Version String.
-   * @var string
-   */
-  protected $_sVersion      = 'Ogone Payment Module Version: 2.2.1';
+    /**
+     * Current class template.
+     * @var string
+     */
+    protected $_sThisTemplate = 'mo_ogone__logfile.tpl';
 
-  /**
-   * Current class template.
-   * @var string
-   */
-  protected $_sThisTemplate = 'mo_ogone__logfile.tpl';
-
-  public function render()
-  {
-    $myConfig = $this->getConfig();
-
-    parent::render();
-
-    $sCurrentAdminShop = oxRegistry::getSession()->getVariable("currentadminshop");
-
-    if (!$sCurrentAdminShop)
+    public function render()
     {
-      if (oxRegistry::getSession()->getVariable("malladmin"))
-        $sCurrentAdminShop = "oxbaseshop";
-      else
-        $sCurrentAdminShop = oxRegistry::getSession()->getVariable("actshop");
+        parent::render();
+
+        $sCurrentAdminShop = oxRegistry::getSession()->getVariable('currentadminshop');
+
+        if (!$sCurrentAdminShop) {
+            if (oxRegistry::getSession()->getVariable('malladmin')) {
+                $sCurrentAdminShop = 'oxbaseshop';
+            } else {
+                $sCurrentAdminShop = oxRegistry::getSession()->getVariable('actshop');
+            }
+        }
+
+        $LogFile = Main::getInstance()->getAdapter()->getLogFilePath();
+
+        $fLog = fopen($LogFile, 'rb');
+        while (!feof($fLog)) {
+            $sLog .= trim(fgets($fLog, 4096)) . "\n";
+        }
+        fclose($fLog);
+
+        $this->_aViewData['logfile'] = $sLog;
+        $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
+        oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
+
+        if ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode')) {
+            $this->_aViewData['bottom_buttons'] = 'prod';
+        } else {
+            $this->_aViewData['bottom_buttons'] = 'test';
+        }
+
+        $this->_aViewData['version'] = $this->_sVersion;
+
+        return $this->_sThisTemplate;
     }
-
-    $LogFile = Main::getInstance()->getAdapter()->getLogFilePath();
-
-    $fLog = fopen($LogFile, "r");
-    while (!feof($fLog))
-    {
-      $sLog .= trim(fgets($fLog, 4096)) . "\n";
-    }
-    fclose($fLog);
-
-    $this->_aViewData["logfile"] = $sLog;
-    $this->_aViewData["currentadminshop"] = $sCurrentAdminShop;
-    oxRegistry::getSession()->setVariable("currentadminshop", $sCurrentAdminShop);
-
-    if ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode'))
-      $this->_aViewData['bottom_buttons'] = 'prod';
-    else
-      $this->_aViewData['bottom_buttons'] = 'test';
-
-    $this->_aViewData['version'] = $this->_sVersion;
-
-    return $this->_sThisTemplate;
-  }
 
 }

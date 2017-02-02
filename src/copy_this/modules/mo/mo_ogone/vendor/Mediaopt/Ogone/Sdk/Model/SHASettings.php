@@ -12,32 +12,32 @@ class SHASettings
      * @var string
      */
     private $SHAInKey;
-    
+
     /**
      *
      * @var string
      */
     private $SHAOutKey;
-    
+
     /**
      *
      * @var string
      */
     private $SHAAlgorithm;
-    
+
     /**
      *
      * @var array
      */
     private $SHAOutParameters;
-    
-        /**
+
+    /**
      *
      * @var array
      */
     private $SHAOutParametersAliasGateway;
-    
-        /**
+
+    /**
      *
      * @var array
      */
@@ -59,62 +59,62 @@ class SHASettings
         $this->isLiveMode = $isLiveMode;
     }
 
-    function getSHAInKey()
+    public function getSHAInKey()
     {
         return $this->SHAInKey;
     }
 
-    function getSHAOutKey()
+    public function getSHAOutKey()
     {
         return $this->SHAOutKey;
     }
 
-    function getSHAAlgorithm()
+    public function getSHAAlgorithm()
     {
         return $this->SHAAlgorithm;
     }
 
-    function getSHAOutParameters()
+    public function getSHAOutParameters()
     {
         return $this->SHAOutParameters;
     }
 
-    function setSHAInKey($SHAInKey)
+    public function setSHAInKey($SHAInKey)
     {
         $this->SHAInKey = $SHAInKey;
     }
 
-    function setSHAOutKey($SHAOutKey)
+    public function setSHAOutKey($SHAOutKey)
     {
         $this->SHAOutKey = $SHAOutKey;
     }
 
-    function setSHAAlgorithm($SHAAlgorithm)
+    public function setSHAAlgorithm($SHAAlgorithm)
     {
         $this->SHAAlgorithm = $SHAAlgorithm;
     }
 
-    function setSHAOutParameters($SHAOutParameters)
+    public function setSHAOutParameters($SHAOutParameters)
     {
         $this->SHAOutParameters = $SHAOutParameters;
     }
 
-    function getSHAOutParametersAliasGateway()
+    public function getSHAOutParametersAliasGateway()
     {
         return $this->SHAOutParametersAliasGateway;
     }
 
-    function getSHAOutParametersHostedTokenizationPage()
+    public function getSHAOutParametersHostedTokenizationPage()
     {
         return $this->SHAOutParametersHostedTokenizationPage;
     }
 
-    function setSHAOutParametersAliasGateway($SHAOutParametersAliasGateway)
+    public function setSHAOutParametersAliasGateway($SHAOutParametersAliasGateway)
     {
         $this->SHAOutParametersAliasGateway = $SHAOutParametersAliasGateway;
     }
 
-    function setSHAOutParametersHostedTokenizationPage($SHAOutParametersHostedTokenizationPage)
+    public function setSHAOutParametersHostedTokenizationPage($SHAOutParametersHostedTokenizationPage)
     {
         $this->SHAOutParametersHostedTokenizationPage = $SHAOutParametersHostedTokenizationPage;
     }

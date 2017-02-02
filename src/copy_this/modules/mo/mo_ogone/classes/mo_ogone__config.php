@@ -9,6 +9,7 @@ class mo_ogone__config
   {
     $this->logger = $logger;
 
+    //@todo refactor
     include $configFile;
 
   }

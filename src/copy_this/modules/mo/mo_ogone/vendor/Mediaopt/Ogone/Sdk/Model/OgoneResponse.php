@@ -40,95 +40,97 @@ class OgoneResponse extends AbstractModel
         $this->sessionChallenge = $sessionChallenge;
     }
 
-    function getShopId() {
+    public function getShopId()
+    {
         return $this->shopId;
     }
 
-    function setShopId($shopId) {
+    public function setShopId($shopId)
+    {
         $this->shopId = $shopId;
     }
 
-    function getAmount()
+    public function getAmount()
     {
         return $this->amount;
     }
-    
-    function getPayId()
+
+    public function getPayId()
     {
         return $this->payId;
     }
-    
-    function setPayId($payId)
+
+    public function setPayId($payId)
     {
         $this->payId = $payId;
     }
-    
-    function setAmount($amount)
+
+    public function setAmount($amount)
     {
         $this->amount = $amount;
     }
-    
-    function getAllParams()
+
+    public function getAllParams()
     {
         return $this->allParams;
     }
 
-    function getStatusCode()
+    public function getStatusCode()
     {
         return $this->statusCode;
     }
 
-    function getOrderId()
+    public function getOrderId()
     {
         return $this->orderId;
     }
 
-    function setAllParams($allParams)
+    public function setAllParams($allParams)
     {
         $this->allParams = $allParams;
     }
 
-    function setStatusCode($statusCode)
+    public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
     }
 
-    function setOrderId($orderId)
+    public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
-    function getStatus()
+    public function getStatus()
     {
         return $this->status;
     }
 
-    function setStatus(Status $status)
+    public function setStatus(Status $status)
     {
         $this->status = $status;
     }
 
-    function getError()
+    public function getError()
     {
         return $this->error;
     }
 
-    function setError($error)
+    public function setError($error)
     {
         $this->error = $error;
     }
 
-    function hasError()
+    public function hasError()
     {
         return $this->error !== null;
     }
 
-    function getAlias()
+    public function getAlias()
     {
         return $this->alias;
     }
 
-    function setAlias($alias)
+    public function setAlias($alias)
     {
         $this->alias = $alias;
     }

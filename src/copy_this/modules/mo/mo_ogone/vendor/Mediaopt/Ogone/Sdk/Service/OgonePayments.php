@@ -5,6 +5,10 @@ namespace Mediaopt\Ogone\Sdk\Service;
 class OgonePayments extends AbstractService
 {
 
+    /**
+     * @todo check if this property is better handled as static prop
+     * @var array
+     */
     protected $ogonePaymentsByShopPaymentId = array(
         // credit card payments (one page)
         'ogone_credit_card' => array(

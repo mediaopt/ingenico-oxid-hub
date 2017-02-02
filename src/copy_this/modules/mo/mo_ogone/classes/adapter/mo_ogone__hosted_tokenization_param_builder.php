@@ -1,16 +1,14 @@
 <?php
 
-use Mediaopt\Ogone\Sdk\Main;
 
 class mo_ogone__hosted_tokenization_param_builder extends mo_ogone__request_param_builder
 {
     
-    protected $oxidSessionParamsForRemoteCalls = null;
+    protected $oxidSessionParamsForRemoteCalls;
 
     public function build($paymentId)
     {
         $gatewayParams = array();
-        $oxViewConf = $this->getOxConfig()->getActiveView()->getViewConfig();
 
         //build for each paymentoption
         $paymentOptions = $this->getSdkMain()->getService('OgonePayments')->getOgonePaymentByShopPaymentId($paymentId);

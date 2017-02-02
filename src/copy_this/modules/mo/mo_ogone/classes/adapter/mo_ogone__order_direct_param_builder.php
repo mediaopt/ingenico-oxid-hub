@@ -10,17 +10,17 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
      */
     public function getUrl()
     {
+        $part1 = 'test';
         if ($this->getOxConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
             $part1 = 'prod';
-        } else {
-            $part1 = 'test';
         }
+
         $part2 = '';
         if ($this->getOxConfig()->getShopConfVar('mo_ogone__use_utf8')) {
             $part2 = '_utf8';
         }
 
-        return 'https://secure.ogone.com/ncol/'. $part1 .'/orderdirect'. $part2 .'.asp';
+        return 'https://secure.ogone.com/ncol/' . $part1 . '/orderdirect' . $part2 . '.asp';
     }
 
     public function build()
@@ -43,11 +43,11 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
 
         // redirect urls
         $params['accepturl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
-                '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
+            '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['declineurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
-                '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
+            '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['exceptionurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
-                '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
+            '&fnc=mo_ogone__fncHandleOgoneRedirect', 200);
         $params['homeurl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl(), 200);
         $params['complus'] = '';
 
@@ -58,16 +58,16 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
         $model = new RequestParameters();
         $model->setParams($params);
         $string = "";
-        foreach ($params as $key => $val)
-            $string = $string . $key . " => " . $val . "\n";
-        $this->getLogger()->info("OrderdirectParams: " . $string);
+        foreach ($params as $key => $val) {
+            $string = $string . $key . ' => ' . $val . "\n";
+        }
+        $this->getLogger()->info('OrderdirectParams: ' . $string);
         return $model;
     }
 
     protected function getApiUserPass()
     {
-        $pass = $this->getOxConfig()->getConfigParam('mo_ogone__api_userpass');
-        return $pass;
+        return $this->getOxConfig()->getConfigParam('mo_ogone__api_userpass');
     }
 
 }

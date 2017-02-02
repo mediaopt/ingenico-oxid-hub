@@ -3,6 +3,10 @@
 class mo_ogone__transaction_logger
 {
 
+    /**
+     * @param array $requestParams
+     * @param string $orderId
+     */
     static public function storeTransaction($requestParams, $orderId = "")
     {
         $sanitizedParams = array();

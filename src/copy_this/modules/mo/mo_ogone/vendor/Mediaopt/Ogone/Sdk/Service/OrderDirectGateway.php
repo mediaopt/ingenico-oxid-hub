@@ -25,14 +25,14 @@ class OrderDirectGateway extends AbstractService
         $response = Main::getInstance()->getModel('OgoneResponse');
         if (empty($xml)) {
             $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
-            $status = Main::getInstance()->getService("Status")
+            $status = Main::getInstance()->getService('Status')
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);
             return $response;
         }
         //convert to array
         $response = $this->getResponse($xml);
-        $this->getAdapter()->getLogger()->info("handleOrderDirectResponse: " . var_export($response->getAllParams(), true));
+        $this->getAdapter()->getLogger()->info('handleOrderDirectResponse: ' . var_export($response->getAllParams(), true));
         
         $statusDebugInfo = 'Ogone-Status: ' .
                 $response->getStatus()->getStatusTextForCode() . ' (' . $response->getStatus()->getStatusCode() . ')';
@@ -54,7 +54,8 @@ class OrderDirectGateway extends AbstractService
     }
 
     /**
-     * 
+     *
+     * @param $xml
      * @return \Mediaopt\Ogone\Sdk\Model\OgoneResponse
      */
     public function getResponse($xml)
@@ -64,7 +65,7 @@ class OrderDirectGateway extends AbstractService
             $data[strtoupper($key)] = (string) $value;
         }
         $this->getAdapter()->getLogger()->info('DirectGateway Parsed Response: ' . json_encode($data));
-        return $this->getAdapter()->getFactory("OgoneResponse")->buildFromData($data);
+        return $this->getAdapter()->getFactory('OgoneResponse')->buildFromData($data);
     }
     
 }

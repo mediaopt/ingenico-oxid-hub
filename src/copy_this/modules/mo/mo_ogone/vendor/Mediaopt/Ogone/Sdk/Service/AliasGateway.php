@@ -13,19 +13,20 @@ class AliasGateway extends AbstractService
 {
 
     /**
-     * 
+     *
+     * @param Authenticator $authenticator
      * @return Status An ErrorStateObject if there is an error, null otherwise
      */
     public function handleResponse(Authenticator $authenticator)
     {
         /* @var $response OgoneResponse */
-        $response = $this->getAdapter()->getFactory("OgoneResponse")->build();
-        $this->getAdapter()->getLogger()->info("handleAliasResponse: " . var_export($response->getAllParams(), true));
+        $response = $this->getAdapter()->getFactory('OgoneResponse')->build();
+        $this->getAdapter()->getLogger()->info('handleAliasResponse: ' . var_export($response->getAllParams(), true));
         
-        if (!$authenticator->authenticateRequest("AliasGateway")) {
+        if (!$authenticator->authenticateRequest('AliasGateway')) {
             // no authentication, kick back to payment methods
-            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
-            $status = Main::getInstance()->getService("Status")
+            $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch: ' . var_export($response->getAllParams(), true));
+            $status = Main::getInstance()->getService('Status')
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);
             $response->setError($status);

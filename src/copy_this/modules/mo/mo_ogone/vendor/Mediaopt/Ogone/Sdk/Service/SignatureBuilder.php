@@ -23,13 +23,15 @@ class SignatureBuilder extends AbstractService
     }
 
     /**
+     * @param $params
+     * @param string $type
      * @return array with filtered params and uppercased keys
      */
     public function filterResponseParams($params, $type = "")
     {
-        if ($type === "AliasGateway") {
+        if ($type === 'AliasGateway') {
             $shaOutParameters = $this->shaSettings->getSHAOutParametersAliasGateway();
-        } elseif ($type === "HostedTokenizationPage") {
+        } elseif ($type === 'HostedTokenizationPage') {
             $shaOutParameters = $this->shaSettings->getSHAOutParametersHostedTokenizationPage();
         } else {
             $shaOutParameters = $this->shaSettings->getSHAOutParameters();
@@ -46,13 +48,18 @@ class SignatureBuilder extends AbstractService
             if (!isset($params[$paramName]) || $params[$paramName] === '') {
                 continue;
             }
-            $newParamName = str_replace("ALIAS_", "ALIAS.", $paramName);
-            $newParamName = str_replace("CARD_", "CARD.", $newParamName);
+            $newParamName = str_replace('ALIAS_', 'ALIAS.', $paramName);
+            $newParamName = str_replace('CARD_', 'CARD.', $newParamName);
             $shaParams[$newParamName] = $params[$paramName];
         }
         return $shaParams;
     }
 
+    /**
+     * @param array $shaParams
+     * @param int $mode
+     * @return string
+     */
     public function build($shaParams, $mode)
     {
         if (empty($shaParams)) {
@@ -62,12 +69,12 @@ class SignatureBuilder extends AbstractService
         $passPhrase = $mode === self::MODE_IN ? $this->shaSettings->getSHAInKey() : $this->shaSettings->getSHAOutKey();
 
         // sort parameters alphabetically
-        uksort($shaParams, "strnatcasecmp");
+        uksort($shaParams, 'strnatcasecmp');
 
         // generate parameter signature before hashing
         $signature = '';
         foreach ($shaParams as $parameter => $value) {
-            if (is_null($value) || $value === '') {
+            if ($value === '' || null === $value) {
                 continue;
             }
             $signature .= strtoupper($parameter) . '=' . $value . $passPhrase;
@@ -80,8 +87,7 @@ class SignatureBuilder extends AbstractService
     {
         $hashingAlgorithm = $this->shaSettings->getSHAAlgorithm();
         $algo = str_replace('-', '', strtolower($hashingAlgorithm));
-        $result = strtoupper(hash($algo, $signature));
-        return $result;
+        return strtoupper(hash($algo, $signature));
     }
 
 }
