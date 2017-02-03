@@ -1,4 +1,5 @@
 [{if $sPaymentID == 'ogone_credit_card'}]
+  [{* ToDo check for theme! *}]
   [{include file="mo_ogone__payment_creditcard.tpl"}]
 [{elseif $sPaymentID == 'ogone_open_invoice_de'}]
   [{include file="mo_ogone__payment_invoice.tpl"}]

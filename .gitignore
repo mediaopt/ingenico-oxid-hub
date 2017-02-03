@@ -15,3 +15,4 @@ src/copy_this/modules/mo/mo_ogone/vendor/autoload.php
 /genericBundler/
 /shops/
 /.idea/
+/.phpstorm-oxid.meta.php
