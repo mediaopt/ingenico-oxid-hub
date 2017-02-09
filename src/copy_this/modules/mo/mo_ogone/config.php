@@ -14,9 +14,9 @@ $this->debug = false;
 
 /**
  * ogone application id (Branding Param)
- * 
+ *
  * identify what version of the Oxid plugin the merchant is using
- *  This field can receive up to 10 characters, and should be formatted as followed : 2 characters for the Payment Service Provider (“OG” for Ogone, “CC” for Concardis) 
+ *  This field can receive up to 10 characters, and should be formatted as followed : 2 characters for the Payment Service Provider (“OG” for Ogone, “CC” for Concardis)
  * + 2 characters for the shopping cart (I suggest “OX” for Oxid) + 6 characters for the date of the release in format yymmdd
  *  For example, for a version of the plugin release on 26/01/2013, the ORIG for the Ogone version would be “OGOX130126” and for Concardis : “CCOX130126”
  */
@@ -48,6 +48,17 @@ $this->shaOutParameters = array(
     'CREDITDEBIT',
     'CURRENCY',
     'CVCCHECK',
+    'DCC_COMMPERCENTAGE',
+    'DCC_CONVAMOUNT',
+    'DCC_CONVCCY',
+    'DCC_EXCHRATE',
+    'DCC_EXCHRATESOURCE',
+    'DCC_EXCHRATETS',
+    'DCC_INDICATOR',
+    'DCC_MARGINPERCENTAGE',
+    'DCC_VALIDHOURS',
+    'DEVICEID',
+    'DIGESTCARDNO',
     'ECI',
     'ED',
     'EMAIL',
@@ -57,16 +68,18 @@ $this->shaOutParameters = array(
     'IPCTY',
     'MANDATEID',
     'MOBILEMODE',
+    'NBREMAILUSAGE',
+    'NBRIPUSAGE',
+    'NBRIPUSAGE_ALLTX',
+    'NBRUSAGE',
     'NCERROR',
     'ORDERID',
     'PAYID',
     'PAYIDSUB',
-    'PAYLIBIDREQUEST',
-    'PAYLIBTRANSID',
     'PAYMENT_REFERENCE',
     'PM',
-    'SCO_CATEGORY',
     'SCORING',
+    'SCO_CATEGORY',
     'SEQUENCETYPE',
     'SIGNDATE',
     'STATUS',
@@ -169,7 +182,7 @@ $this->rtimeout = 15;
 
 //@todo move to setup
 $this->logTableCreateSql =
-        "CREATE TABLE `mo_ogone__payment_logs` (
+    "CREATE TABLE `mo_ogone__payment_logs` (
     `OXID` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
     `id` int NOT NULL auto_increment,
 

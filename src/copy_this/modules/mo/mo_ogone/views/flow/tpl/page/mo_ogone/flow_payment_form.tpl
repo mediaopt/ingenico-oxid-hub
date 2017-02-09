@@ -54,4 +54,4 @@
     [{insert name="oxid_tracker" title=$template_title}]
     [{/capture}]
 
-[{include file="layout/page.tpl" sidebar=false}]
+[{include file="layout/page.tpl" sidebar=false blHideBreadcrumb=true}]

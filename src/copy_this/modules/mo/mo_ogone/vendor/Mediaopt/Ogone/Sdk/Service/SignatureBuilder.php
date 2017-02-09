@@ -1,10 +1,11 @@
 <?php
 
 namespace Mediaopt\Ogone\Sdk\Service;
+
 use Mediaopt\Ogone\Sdk\Model\SHASettings;
 
 /**
- * $Id: SignatureBuilder.php 6 2015-02-23 15:50:57Z mbe $ 
+ * $Id: SignatureBuilder.php 6 2015-02-23 15:50:57Z mbe $
  */
 class SignatureBuilder extends AbstractService
 {
@@ -36,7 +37,7 @@ class SignatureBuilder extends AbstractService
         } else {
             $shaOutParameters = $this->shaSettings->getSHAOutParameters();
         }
-        
+
         // convert input param-keys to upercase
         $params = array_change_key_case($params, CASE_UPPER);
 
@@ -56,6 +57,9 @@ class SignatureBuilder extends AbstractService
     }
 
     /**
+     * special handling for params SCO_CATEGORY and SCORING needed
+     * psp sorting differs from strnatcasecmp
+     *
      * @param array $shaParams
      * @param int $mode
      * @return string
@@ -71,12 +75,29 @@ class SignatureBuilder extends AbstractService
         // sort parameters alphabetically
         uksort($shaParams, 'strnatcasecmp');
 
+        $switchScoringParameter = false;
+
+        if (array_key_exists('SCORING', $shaParams) && array_key_exists('SCO_CATEGORY', $shaParams)) {
+            $switchScoringParameter = true;
+        }
+
         // generate parameter signature before hashing
         $signature = '';
         foreach ($shaParams as $parameter => $value) {
             if ($value === '' || null === $value) {
                 continue;
             }
+
+            if ($switchScoringParameter && $parameter === 'SCORING') {
+                $signature .= strtoupper('SCO_CATEGORY') . '=' . $shaParams['SCO_CATEGORY'] . $passPhrase;
+                continue;
+
+            }
+            if ($switchScoringParameter && $parameter === 'SCO_CATEGORY') {
+                $signature .= strtoupper('SCORING') . '=' . $shaParams['SCORING'] . $passPhrase;
+                continue;
+            }
+
             $signature .= strtoupper($parameter) . '=' . $value . $passPhrase;
         }
 
