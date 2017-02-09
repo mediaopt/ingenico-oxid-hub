@@ -7,14 +7,14 @@
     <ul class="form">
       <li>
         [{assign var="mo_ogone__dynvalue" value=$oView->getDynValue()}]
-        <label>[{ oxmultilang ident="BIRTHDATE" }]</label>
+        <label>[{oxmultilang ident="BIRTHDATE" }]</label>
         <input type="text" class="textbox" size="20" maxlength="64" name="dynvalue[mo_ogone][invoice][birthdate]" value="[{$mo_ogone__dynvalue.mo_ogone.invoice.birthdate}]">
         <div class="note">(dd.mm.YYYY)</div>
       </li>
       <li>
-        <label>[{ oxmultilang ident="MO_OGONE__I_HAVE" }]
-          <a style="text-decoration: underline;" target="_blank" href="https://www.billpay.de/kunden/agb">[{ oxmultilang ident="MO_OGONE__BILLPAY_TERMS" }]</a>
-          [{ oxmultilang ident="MO_OGONE__READ_AND_ACCEPTED" }]</label>
+        <label>[{oxmultilang ident="MO_OGONE__I_HAVE" }]
+          <a style="text-decoration: underline;" target="_blank" href="https://www.billpay.de/kunden/agb">[{oxmultilang ident="MO_OGONE__BILLPAY_TERMS" }]</a>
+          [{oxmultilang ident="MO_OGONE__READ_AND_ACCEPTED" }]</label>
         <input type="hidden" name="dynvalue[mo_ogone][invoice][agb]" value="0">
         <input type="checkbox" 
                class="textbox" 

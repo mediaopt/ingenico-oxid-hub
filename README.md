@@ -20,3 +20,4 @@ Container starten: docker run --name ogone1 -v $PWD/shops:/var/www/html/ -t -p 8
 - Fehlerhandling, was tun bei sha-mismatch?
 - Feedback Betrugserkennung verarbeiten
 - doku im wiki checken, ob aktuell
+- order error page auf bestehende seite integrieren?!

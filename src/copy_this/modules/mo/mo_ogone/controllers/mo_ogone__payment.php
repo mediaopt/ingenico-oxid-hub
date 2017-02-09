@@ -99,8 +99,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             //fetch necessary auth params and build sha-signature
             $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
-            $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
-            return;
+            return $this->getNonJsTemplateName();
         }
 
         // error will be displayed
@@ -288,6 +287,22 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
 
         return 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
+    }
+
+    /**
+     * return tpl for payment without Javascript enabled
+     *
+     * @deprecated  azure theme switch will be removed soon
+     * @return string
+     */
+    protected function getNonJsTemplateName()
+    {
+        if($this->getViewConfig()->getActiveTheme() === 'azure')
+        {
+            return 'mo_ogone__payment_one_page.tpl';
+        }
+
+        return 'mo_ogone__flow_payment_one_page.tpl';
     }
 
 

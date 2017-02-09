@@ -40,7 +40,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
             $params['brand'] = is_array($brand) ? $brand[0] : $brand;
         }
         // shop logo
-        if ($this->getOxConfig()->getConfigParam('ogone_sTplLogo') != '') {
+        if ($this->getOxConfig()->getConfigParam('ogone_sTplLogo') !== '') {
             $params['logo'] = $this->getOxConfig()->getConfigParam('ogone_sTplLogo');
         }
 

@@ -2,17 +2,35 @@
 
 
 /**
- * $Id: mo_ogone__payment_form.php 55 2014-12-01 10:28:24Z martin $
+ * custom payment form page, embedds link to psp payment page
+ * Step 4.5
  */
-// Step 4.5
 class mo_ogone__payment_form extends oxUBase
 {
 
-    protected $_sThisTemplate = 'payment_form.tpl';
+    /**
+     * tpl file for payment form controller
+     *
+     * @var string
+     */
+    protected $_sThisTemplate = 'flow_payment_form.tpl';
 
+    /**
+     * tpl file for payment form controller azure style
+     *
+     * @deprecated will be removed with next major release
+     * @var string
+     */
+    protected $_sThisTemplateAzure = 'payment_form.tpl';
+
+    /**
+     * prepare parameters and redirect link
+     *
+     * @return string
+     * @extends render
+     */
     public function render()
     {
-
         // prevent basketitem isBuyable validation
         // use of basket between order and thankyou views causes errors, when buying last item in stock
         oxRegistry::getConfig()->setConfigParam('mo_ogone__prevent_recalculate', true);
@@ -24,20 +42,30 @@ class mo_ogone__payment_form extends oxUBase
         $this->_aViewData['mo_ogone__hidden_fields'] = oxNew('mo_ogone__order_redirect_param_builder')->build()->getParams();
         $this->_aViewData['mo_ogone__debug'] = mo_ogone__main::getInstance()->getOgoneConfig()->debug;
 
+        if($this->getViewConfig()->getActiveTheme() === 'azure')
+        {
+            return $this->_sThisTemplateAzure;
+        }
+
         return $this->_sThisTemplate;
     }
 
+    /**
+     * prepare redirect link according to config
+     *
+     * @return string
+     */
     protected function getRedirectUrl()
     {
-        $part1 = 'test';
+        $mode = 'test';
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
-            $part1 = 'prod';
+            $mode = 'prod';
         }
-        $part2 = '';
+        $encoding = '';
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_utf8')) {
-            $part2 = '_utf8';
+            $encoding = '_utf8';
         }
-        return 'https://secure.ogone.com/ncol/' . $part1 . '/orderstandard' . $part2 . '.asp';
+        return 'https://secure.ogone.com/ncol/' . $mode . '/orderstandard' . $encoding . '.asp';
     }
 
 }

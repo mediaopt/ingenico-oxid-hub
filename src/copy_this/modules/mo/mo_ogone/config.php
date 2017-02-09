@@ -1,7 +1,7 @@
 <?php
 
 /**
- * $Id: config.php 57 2015-02-18 08:22:58Z mbe $ 
+ * internal configuration
  */
 
 define('MO_OGONE__PAYMENTTYPE_REDIRECT', 1);
@@ -9,6 +9,7 @@ define('MO_OGONE__PAYMENTTYPE_ONE_PAGE', 2);
 
 // If set to true:
 //  - hidden form fields are displayed as text-fields
+//@todo move to module config
 $this->debug = false;
 
 /**
@@ -163,8 +164,10 @@ $this->oxidLangCodeToOgoneLanguageCountryCode = array(
 //From docs:
 //Zeitüberschreitung für die Transaktion (in Sekunden, Wert zwischen 30 und 90).
 //WICHTIG: Der hier angegebene Wert muss kleiner als der Zeitüberschreitungswert in Ihrem System sein!
+//@todo move to module config
 $this->rtimeout = 15;
 
+//@todo move to setup
 $this->logTableCreateSql =
         "CREATE TABLE `mo_ogone__payment_logs` (
     `OXID` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',

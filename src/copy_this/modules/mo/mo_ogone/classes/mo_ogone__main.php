@@ -27,7 +27,7 @@ class mo_ogone__main
     public function getOgoneConfig()
     {
         if (null === $this->ogoneConfig) {
-            $configFile = realpath(__DIR__ . '/..') . '/config.php';
+            $configFile = __DIR__ . '/../config.php';
             $this->ogoneConfig = new mo_ogone__config($configFile, Main::getInstance()->getLogger());
         }
         return $this->ogoneConfig;

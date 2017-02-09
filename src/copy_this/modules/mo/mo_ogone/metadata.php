@@ -82,33 +82,25 @@ $aModule = array(
         'mo_ogone__interface.tpl'                      => 'mo/mo_ogone/views/admin/tpl/mo_ogone__interface.tpl',
         'mo_ogone__logfile.tpl'                        => 'mo/mo_ogone/views/admin/tpl/mo_ogone__logfile.tpl',
         'mo_ogone__setup.tpl'                          => 'mo/mo_ogone/views/admin/tpl/mo_ogone__setup.tpl',
+
         //azure templates
-//        'mo_ogone__payment_creditcard.tpl'             => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard.tpl',
-//        'mo_ogone__payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard_form_fields.tpl',
-//        'mo_ogone__payment_invoice.tpl'                => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_invoice.tpl',
-//        'mo_ogone__payment_one_page.tpl'               => 'mo/mo_ogone/views/azure/tpl/page/checkout/mo_ogone__payment_one_page.tpl',
-//        'dynamic.tpl'                                  => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic.tpl',
-        'dynamic_mobile.tpl'                           => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic_mobile.tpl',
-//        'order_error.tpl'                              => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/order_error.tpl',
-//        'payment_form.tpl'                             => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
-        //flow templates dev @todo remove
-        'mo_ogone__payment_creditcard.tpl'             => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard.tpl',
-        'mo_ogone__payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard_form_fields.tpl',
-        'mo_ogone__payment_invoice.tpl'                => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_invoice.tpl',
-        'mo_ogone__payment_one_page.tpl'               => 'mo/mo_ogone/views/flow/tpl/page/checkout/mo_ogone__flow_payment_one_page.tpl',
-        'dynamic.tpl'                                  => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_dynamic.tpl',
-//        'dynamic_mobile.tpl'                           => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/dynamic_mobile.tpl',
-        'order_error.tpl'                              => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_order_error.tpl',
-        'payment_form.tpl'
+        'mo_ogone__payment_creditcard.tpl'             => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard.tpl',
+        'mo_ogone__payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard_form_fields.tpl',
+        'mo_ogone__payment_invoice.tpl'                => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_invoice.tpl',
+        'mo_ogone__payment_one_page.tpl'               => 'mo/mo_ogone/views/azure/tpl/page/checkout/mo_ogone__payment_one_page.tpl',
+        'payment_form.tpl'                             => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
+
         //flow templates
-//        'mo_ogone__flow_payment_creditcard.tpl'             => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard.tpl',
-//        'mo_ogone__flow_payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard_form_fields.tpl',
-//        'mo_ogone__flow_payment_invoice.tpl'                => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_invoice.tpl',
-//        'mo_ogone__flow_payment_one_page.tpl'               => 'mo/mo_ogone/views/flow/tpl/page/checkout/mo_ogone__flow_payment_one_page.tpl',
-//        'flow_dynamic.tpl'                                  => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_dynamic.tpl',
-////        'dynamic_mobile.tpl'                           => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/dynamic_mobile.tpl',
-//        'flow_order_error.tpl'                              => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_order_error.tpl',
-//        'flow_payment_form.tpl'                             => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_payment_form.tpl',
+        'mo_ogone__flow_payment_creditcard.tpl'             => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard.tpl',
+        'mo_ogone__flow_payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard_form_fields.tpl',
+        'mo_ogone__flow_payment_invoice.tpl'                => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_invoice.tpl',
+        'mo_ogone__flow_payment_one_page.tpl'               => 'mo/mo_ogone/views/flow/tpl/page/checkout/mo_ogone__flow_payment_one_page.tpl',
+        'flow_payment_form.tpl'                             => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_payment_form.tpl',
+
+        //common templates
+        'dynamic.tpl'                                  => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic.tpl',
+        'dynamic_mobile.tpl'                           => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic_mobile.tpl',
+        'order_error.tpl'                              => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/order_error.tpl',
 
     ),
     'events'      => array(

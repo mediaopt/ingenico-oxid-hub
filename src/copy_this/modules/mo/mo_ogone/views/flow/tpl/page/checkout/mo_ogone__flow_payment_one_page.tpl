@@ -14,12 +14,15 @@
       [{/foreach}]
 
       [{if $mo_ogone__currentPaymentId == 'ogone_credit_card'}]
-        [{include file="mo_ogone__payment_creditcard_form_fields.tpl" mo_ogone__brand=$formParams.BRAND}]
+        [{include file="mo_ogone__flow_payment_creditcard_form_fields.tpl" mo_ogone__brand=$formParams.BRAND}]
       [{/if}]
 
-      <input type="submit" />
+      <div class="form-group">
+        <div class="col-lg-9 col-lg-offset-3">
+          <button class="submitButton btn btn-primary" type="submit">[{oxmultilang ident="SEND"}]</button>
+        </div>
+      </div>
     </form>
-    <hr />
   [{/foreach}]
 
   [{insert name="oxid_tracker" title=$template_title }]

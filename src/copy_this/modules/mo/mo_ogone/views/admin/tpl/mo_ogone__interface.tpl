@@ -106,7 +106,7 @@
           <td class="listheader">[{oxmultilang ident="OGONE_TRANSID" }]</td>
           <td class="listheader">[{oxmultilang ident="OGONE_CUSTOMER_NAME" }]</td>
           <td class="listheader">[{oxmultilang ident="OGONE_AMOUNT" }]</td>
-          <!--<td class="listheader">[{ oxmultilang ident="OGONE_PM" }]</td>-->
+          <!--<td class="listheader">[{oxmultilang ident="OGONE_PM" }]</td>-->
           <td class="listheader">[{oxmultilang ident="OGONE_ACCEPTANCE" }]</td>
           <td class="listheader">[{oxmultilang ident="OGONE_STATUS" }]</td>
           <td class="listheader">[{oxmultilang ident="OGONE_CARDNO" }]</td>
