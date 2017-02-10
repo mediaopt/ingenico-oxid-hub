@@ -13,8 +13,9 @@ class OgoneResponse extends AbstractFactory
 
     /**
      * populate OgoneResponse model
+     *
      * @param bool $raw Specifies whether the data should be raw or escaped
-     * @return Mediaopt\Ogone\Sdk\Model\OgoneResponse
+     * @return \Mediaopt\Ogone\Sdk\Model\OgoneResponse
      */
     public function build($raw = false)
     {
@@ -27,8 +28,9 @@ class OgoneResponse extends AbstractFactory
     
     /**
      * populate OgoneResponse model
+     *
      * @param array $params a params array
-     * @return Mediaopt\Ogone\Sdk\Model\OgoneResponse
+     * @return \Mediaopt\Ogone\Sdk\Model\OgoneResponse
      */
     public function buildFromData($params)
     {
@@ -82,7 +84,7 @@ class OgoneResponse extends AbstractFactory
             $model->setSessionChallenge(null);
         }
         if (!empty($params['AMOUNT'])) {
-            $model->setAmount((int)(string)(float)$params['AMOUNT']*100);
+            $model->setAmount((int)((string)(float)$params['AMOUNT']*100));
         } else {
             $model->setAmount(null);
         }
