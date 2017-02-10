@@ -22,3 +22,5 @@ Container starten: docker run --name ogone1 -v $PWD/shops:/var/www/html/ -t -p 8
 - doku im wiki checken, ob aktuell
 - order error page auf bestehende seite integrieren?!
 - im backend besser sichtbar machen ob live oder testmodus aktiv
+- weiterleitung nach amount mismatch auf paymentseite wirklich sinnvoll?
+- fehlermeldung scheint nicht abgeräumt zu werden
