@@ -74,6 +74,7 @@ $aLang = array(
     'MO_OGONE__I_HAVE'            => 'Ich habe die',
     'MO_OGONE__BILLPAY_TERMS'     => 'Billpay Nutzungsbedingungen',
     'MO_OGONE__READ_AND_ACCEPTED' => 'gelesen und akzeptiere sie.',
+    'MO_OGONE__BILLPAY_BIRTHDATE_HELP' => '(dd.mm.YYYY)',
 # NCERROR
     'MO_OGONE__PAYMENT_STATUS_0020001001' => 'Genehmigung fehlgeschlagen, bitte probieren Sie es erneut.',
     'MO_OGONE__PAYMENT_STATUS_0020001002' => 'Genehmigung fehlgeschlagen, bitte probieren Sie es erneut.',
