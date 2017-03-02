@@ -176,7 +176,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
     protected function billpay_addArticles($params)
     {
         foreach ($this->getOxSession()->getBasket()->getContents() as $item) {
-            $price = $item->getPrice();
+            $price = $item->getUnitPrice();
             $name = $item->getTitle();
             $amount = $item->getAmount();
             $params = array_merge($params, $this->billpay_getItem($name, $price, $amount));

@@ -29,7 +29,6 @@
                            href="https://www.billpay.de/kunden/agb">[{oxmultilang ident="MO_OGONE__BILLPAY_TERMS" }]</a>
                         [{oxmultilang ident="MO_OGONE__READ_AND_ACCEPTED" }]
                     </label>
-                    <input type="hidden" name="dynvalue[mo_ogone][invoice][agb]" value="0">
                 </div>
             </div>
         </div>
