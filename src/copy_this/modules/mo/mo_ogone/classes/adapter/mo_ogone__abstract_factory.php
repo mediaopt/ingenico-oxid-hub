@@ -99,7 +99,8 @@ abstract class mo_ogone__abstract_factory
 
     /**
      * get logger
-     * @return LoggerInterface
+     * @return \Psr\Log\LoggerInterface;
+     * @throws \InvalidArgumentException
      */
     public function getLogger()
     {
@@ -116,7 +117,7 @@ abstract class mo_ogone__abstract_factory
 
     /**
      * build log file path
-     * @return type
+     * @return string
      */
     public function getLogFilePath()
     {

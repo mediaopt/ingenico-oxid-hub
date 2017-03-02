@@ -86,12 +86,13 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         $sSelect = $this->buildSelectString(array($this->getViewName() . '.oxtransid' => $orderNr));
         return $this->_isLoaded = $this->assignRecord($sSelect);
     }
-    
-     /**
+
+    /**
      * Updates order transaction id.
      * @todo add try catch to db call
      *
-     * @param type $orderID order transaction id
+     * @param string $orderID order transaction id
+     * @throws \oxConnectionException
      */
     public function mo_ogone__setTransID($orderID)
     {

@@ -44,7 +44,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         if (!$this->_validateTermsAndConditions() && method_exists(oxNew('oxorder'), '_validateTermsAndConditions')) {
                 $this->_blConfirmAGBError = 1;
                 return;
-        } elseif (method_exists(oxConfig, 'getParameter') && !oxConfig::getParameter( 'ord_agb' ) && $this->getConfig()->getConfigParam( 'blConfirmAGB' )) {
+        } elseif (method_exists('oxConfig', 'getParameter') && !oxConfig::getParameter( 'ord_agb' ) && $this->getConfig()->getConfigParam( 'blConfirmAGB' )) {
             $this->_blConfirmAGBError = 1;
             return;
         }

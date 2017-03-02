@@ -18,7 +18,7 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
      * @param oxUser $oUser
      * @param float $dBasketPrice
      * @param string $sShipSetId
-     * @return type
+     * @return bool
      */
     public function isValidPayment($aDynvalue, $sShopId, $oUser, $dBasketPrice, $sShipSetId)
     {
@@ -59,7 +59,7 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
      * validate & format birthdate parameter
      *
      * @param array $dynvalues
-     * @return type
+     * @return bool
      */
     protected function mo_ogone__validateInvoice($dynvalues)
     {

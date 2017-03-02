@@ -73,6 +73,7 @@ class mo_ogone__setup extends Shop_Config
      * @todo add try catch to db call
      *
      * @return string
+     * @throws \oxConnectionException
      */
     public function render()
     {
@@ -207,6 +208,7 @@ class mo_ogone__setup extends Shop_Config
      * Update Payment Log Table
      * @todo mysql_real_escape_string is deprecated and not working with php7
      * @todo add try catch to db call
+     * @throws \oxConnectionException
      */
     protected function mo_ogone__update_payment_log_table()
     {
@@ -223,6 +225,7 @@ class mo_ogone__setup extends Shop_Config
      * Install new tables, update fields and clear cache
      * @todo mysql_real_escape_string is deprecated and not working with php7
      * @todo add try catch to db call
+     * @throws \oxConnectionException
      */
     protected function mo_ogone__install_payment_log_table()
     {
@@ -249,6 +252,7 @@ class mo_ogone__setup extends Shop_Config
 
     /**
      * @todo mysql_real_escape_string is deprecated and not working with php7
+     * @throws \oxConnectionException
      */
     protected function mo_ogone_installOrderReservationTable()
     {
@@ -360,6 +364,7 @@ class mo_ogone__setup extends Shop_Config
     /**
      * @todo check if still needed
      * @param string $oxidPaymentId
+     * @throws \oxConnectionException
      */
     protected function mo_ogone__delete_payment_associations($oxidPaymentId)
     {
@@ -385,6 +390,7 @@ class mo_ogone__setup extends Shop_Config
     /**
      * @todo check if still needed
      * @param string $oxidPaymentId
+     * @throws \oxConnectionException
      */
     protected function mo_ogone__create_payment_associations($oxidPaymentId)
     {

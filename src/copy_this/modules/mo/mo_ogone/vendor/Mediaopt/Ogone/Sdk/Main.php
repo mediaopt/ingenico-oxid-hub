@@ -44,7 +44,7 @@ class Main
     /**
      * get adapter name from environment constant
      *
-     * @return name 
+     * @return string
      */
     protected function getAdapterEnvironment()
     {

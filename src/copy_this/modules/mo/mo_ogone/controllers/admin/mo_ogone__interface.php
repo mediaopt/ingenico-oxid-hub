@@ -185,10 +185,11 @@ class mo_ogone__interface extends oxAdminList
         $this->_aViewData['sHelpURL'] = false;
         $this->_aViewData['oxid'] = $myConfig->getShopId();
 
-        if ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode'))
+        if ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode')) {
             $this->_aViewData['bottom_buttons'] = 'prod';
-        else
+        } else {
             $this->_aViewData['bottom_buttons'] = 'test';
+        }
 
         $this->_aViewData['version'] = $this->_sVersion;
 

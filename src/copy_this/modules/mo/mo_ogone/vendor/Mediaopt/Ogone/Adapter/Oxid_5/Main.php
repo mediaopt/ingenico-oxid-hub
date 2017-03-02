@@ -15,7 +15,7 @@ class Main
 
     /**
      * SDK-container
-     * @var Sdk\Main;
+     * @var sdkMain;
      */
     protected $sdkMain;
 
@@ -129,6 +129,7 @@ class Main
     /**
      * get logger
      * @return LoggerInterface
+     * @throws \InvalidArgumentException
      */
     public function getLogger()
     {
@@ -154,7 +155,7 @@ class Main
 
     /**
      * build log file path
-     * @return type
+     * @return string
      */
     public function getLogFilePath()
     {
