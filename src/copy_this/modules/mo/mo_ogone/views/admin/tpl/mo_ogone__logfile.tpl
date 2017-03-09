@@ -1,6 +1,6 @@
 [{include file="headitem.tpl" title="OGONE_ADMIN_TITLE"|oxmultilangassign}]
 
-[{ if $readonly}]
+[{if $readonly}]
   [{assign var="readonly" value="readonly disabled"}]
 [{else}]
   [{assign var="readonly" value=""}]

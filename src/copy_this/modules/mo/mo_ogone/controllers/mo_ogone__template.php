@@ -31,11 +31,13 @@ class mo_ogone__template extends oxUBase
 
     protected $_sThisTemplate = 'dynamic.tpl';
 
+    /**
+     * @todo check function, maybe useless?
+     */
     public function init()
     {
-
         $activetheme = oxRegistry::getConfig()->getConfigParam('sTheme');
-        if (!activetheme == "azure") {
+        if ($activetheme !== 'azure') {
             $this->_sThisTemplate = 'dynamic_mobile.tpl';
         }
 

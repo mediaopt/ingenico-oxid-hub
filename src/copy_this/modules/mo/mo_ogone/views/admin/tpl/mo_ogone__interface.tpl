@@ -25,7 +25,7 @@
   //-->
 </script>
 
-[{ if $readonly}]
+[{if $readonly}]
   [{assign var="readonly" value="readonly disabled"}]
 [{else}]
   [{assign var="readonly" value=""}]
@@ -41,7 +41,7 @@
   <input type="hidden" name="editlanguage" value="[{ $editlanguage }]">
 </form>
 
-<form name="myedit" id="myedit" action="[{ $oViewConf->getSelfLink() }]" method="post">
+<form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink() }]" method="post">
   [{ $oViewConf->getHiddenSid() }]
   <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">
   <input type="hidden" name="fnc" value="">
@@ -101,20 +101,20 @@
                 <input type="submit" class="edittext" value="Filter" style="width: 140px"></div></div></td>
         </tr>
         <tr>
-          <td class="listheader">[{ oxmultilang ident="OGONE_DATE" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_ORDERID" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_TRANSID" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_CUSTOMER_NAME" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_AMOUNT" }]</td>
-          <!--<td class="listheader">[{ oxmultilang ident="OGONE_PM" }]</td>-->
-          <td class="listheader">[{ oxmultilang ident="OGONE_ACCEPTANCE" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_STATUS" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_CARDNO" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_BRAND" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_ED" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_PAYID" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_NCERROR" }]</td>
-          <td class="listheader">[{ oxmultilang ident="OGONE_TRXDATE" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_DATE" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_ORDERID" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_TRANSID" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_CUSTOMER_NAME" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_AMOUNT" }]</td>
+          <!--<td class="listheader">[{oxmultilang ident="OGONE_PM" }]</td>-->
+          <td class="listheader">[{oxmultilang ident="OGONE_ACCEPTANCE" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_STATUS" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_CARDNO" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_BRAND" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_ED" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_PAYID" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_NCERROR" }]</td>
+          <td class="listheader">[{oxmultilang ident="OGONE_TRXDATE" }]</td>
           <td class="listheader">&nbsp;</td>
         </tr>
 
@@ -125,7 +125,7 @@
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__date->value|date_format:"%d.%m.%y&nbsp;%H:%M:%S"}]</td>
             <td class="[{ $listclass}]" nowrap=""><div class="listitemfloating">[{$oItem->mo_ogone__payment_logs__orderid->value}]</div></td>
             <td class="[{ $listclass}]" nowrap=""><div class="listitemfloating">[{$oItem->mo_ogone__payment_logs__transid->value}]</div></td>
-            <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__customer_name->value}]</a>&nbsp;</td>
+            <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__customer_name->value}]</td>
             <td class="[{ $listclass}]" nowrap="" style="text-align:right">[{$oItem->mo_ogone__payment_logs__amount->value|string_format:"%.2f"}] [{$oItem->mo_ogone__payment_logs__currency->value}]</td>
             <!--<td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__pm->value}]&nbsp;</td>-->
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__acceptance->value}]&nbsp;</td>
@@ -138,10 +138,10 @@
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ogone__payment_logs__trxdate->value}]&nbsp;</td>
             <td class="[{ $listclass}]">&nbsp;</td>
           </tr>
+
+        [{assign var="blWhite" value="2"}]
           [{if $blWhite == "2"}]
             [{assign var="blWhite" value=""}]
-          [{else}]
-            [{assign var="blWhite" value="2"}]
           [{/if}]
         [{/foreach}]
       </table>

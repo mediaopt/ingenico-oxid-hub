@@ -3,8 +3,6 @@
 namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Client;
-use Mediaopt\Ogone\Sdk\Helper;
-use Mediaopt\Ogone\Sdk\Config;
 
 abstract class AbstractService
 {
@@ -16,18 +14,11 @@ abstract class AbstractService
      * @var Client
      */
     protected $client;
-    
-    /**
-     *
-     * @var Helper
-     */
-    protected $helper;
-    
-    public function __construct($adapter, Client $client, Helper $helper)
+
+    public function __construct($adapter, Client $client)
     {
         $this->adapter = $adapter;
         $this->client = $client;
-        $this->helper = $helper;
     }
     
     public function getAdapter()
@@ -40,15 +31,6 @@ abstract class AbstractService
         return $this->client;
     }
 
-     /**
-     * 
-     * @return Config
-     */
-    protected function getConfig()
-    {
-        return $this->getAdapter()->getFactory('Config')->build();
-    }
-    
     public function setAdapter($adapter)
     {
         $this->adapter = $adapter;
@@ -58,14 +40,5 @@ abstract class AbstractService
     {
         $this->client = $client;
     }
-    
-    protected function getApiHostUrl()
-    {
-        return $this->getConfig()->getIsLiveMode() ? self::API_HOST_URL__PROD : self::API_HOST_URL__DEV;
-    }
-    
-    public function getHelper()
-    {
-        return $this->helper;
-    }
+
 }

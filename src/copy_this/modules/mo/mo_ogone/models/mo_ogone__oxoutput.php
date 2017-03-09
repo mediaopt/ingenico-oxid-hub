@@ -10,7 +10,7 @@ class mo_ogone__oxoutput extends mo_ogone__oxoutput_parent
   {
     $parentResult = parent::process($value, $viewClassName);
 
-    if ($viewClassName != 'mo_ogone__template')
+    if ($viewClassName !== 'mo_ogone__template')
     {
       return $parentResult;
     }

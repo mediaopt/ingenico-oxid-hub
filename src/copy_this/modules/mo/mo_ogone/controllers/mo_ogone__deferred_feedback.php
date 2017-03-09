@@ -8,22 +8,27 @@ use Mediaopt\Ogone\Sdk\Main;
 class mo_ogone__deferred_feedback extends oxUBase
 {
 
+    /**
+     * simplify $order->isLoadedCheck and handling
+     */
     public function render()
     {
         // process deferred feedback
+        $authenticator = Main::getInstance()->getService('Authenticator');
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         /* @var $response Mediaopt\Ogone\Sdk\Model\OgoneResponse */
-        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse();
+        $response = Main::getInstance()->getService('DeferredFeedback')->handleResponse($authenticator);
         if ($response !== null) {
             $order = oxNew('oxorder');
 
             if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__transid_param') === 'PAYID') {
                 $order->mo_ogone__loadByNumber($response->getPayId());
                 if (!$order->isLoaded()) {
-                    Main::getInstance()->getLogger()->error("Could not load order: " . $response->getPayId());
+                    Main::getInstance()->getLogger()->error('Could not load order: ' . $response->getPayId());
                     $order->mo_ogone__loadByNumber($response->getOrderId());
                     if (!$order->isLoaded()) {
-                        Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
-                        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
+                        Main::getInstance()->getLogger()->error('Could not load order: ' . $response->getOrderId());
+                        oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams());
                         return;
                     }
                 }
@@ -31,17 +36,17 @@ class mo_ogone__deferred_feedback extends oxUBase
             } else {
                 $order->mo_ogone__loadByNumber($response->getOrderId());
                 if (!$order->isLoaded()) {
-                    Main::getInstance()->getLogger()->error("Could not load order: " . $response->getOrderId());
+                    Main::getInstance()->getLogger()->error('Could not load order: ' . $response->getOrderId());
                     $order->mo_ogone__loadByNumber($response->getPayId());
                     if (!$order->isLoaded()) {
-                        Main::getInstance()->getLogger()->error("Could not load order: " . $response->getPayId());
-                        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams());
+                        Main::getInstance()->getLogger()->error('Could not load order: ' . $response->getPayId());
+                        oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams());
                         return;
                     }
                 }
             }
-            
-            Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+
+            oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
             $order->mo_ogone__updateOrderStatus($response->getStatus());
         }
         // offline request from ogone, no further processing needed

@@ -5,7 +5,7 @@
 
   [{* This VIEW is only used if the customer has Javscript is disabled *}]
   [{foreach from=$oView->mo_ogone__getAliasGatewayParamsSet() item="formParams"}]
-    <form action="[{ $oView->mo_ogone__getPaymentGatewayUrl() }]" 
+    <form action="[{$oView->mo_ogone__getPaymentGatewayUrl() }]"
           class="oxValidate" 
           method="post">
 

@@ -4,7 +4,6 @@ namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Main;
 use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
-use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 use Mediaopt\Ogone\Sdk\Model\StatusType;
 
 /**
@@ -14,31 +13,20 @@ class AliasGateway extends AbstractService
 {
 
     /**
-     * 
-     * @param type $paymentId
-     * @return RequestParameters The Parameters for Calling the AliasGateway
-     */
-    public function buildParams($paymentId)
-    {
-        /* @var $model RequestParameters */
-        $model = $this->getAdapter()->getFactory("AliasParamBuilder")->build($paymentId);
-        return $model->getParams();
-    }
-    
-    /**
-     * 
+     *
+     * @param Authenticator $authenticator
      * @return Status An ErrorStateObject if there is an error, null otherwise
      */
-    public function handleResponse()
+    public function handleResponse(Authenticator $authenticator)
     {
         /* @var $response OgoneResponse */
-        $response = $this->getAdapter()->getFactory("OgoneResponse")->build();
-        $this->getAdapter()->getLogger()->info("handleAliasResponse: " . var_export($response->getAllParams(), true));
+        $response = $this->getAdapter()->getFactory('OgoneResponse')->build();
+        $this->getAdapter()->getLogger()->info('handleAliasResponse: ' . var_export($response->getAllParams(), true));
         
-        if (!Main::getInstance()->getService("Authenticator")->authenticateRequest("AliasGateway")) {
+        if (!$authenticator->authenticateRequest('AliasGateway')) {
             // no authentication, kick back to payment methods
-            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
-            $status = Main::getInstance()->getService("Status")
+            $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch: ' . var_export($response->getAllParams(), true));
+            $status = Main::getInstance()->getService('Status')
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);
             $response->setError($status);

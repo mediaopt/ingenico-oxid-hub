@@ -11,10 +11,10 @@ $sMetadataVersion = '1.1';
 $aModule = array(
     'id'          => 'mo_ogone',
     'title'       => 'Ogone',
-    'description' => 'Ogone Payment ##revision##<br /><br />'
-                   . 'Die Dokumentation <a target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">finden Sie hier</a>',
+    'description' => 'Ogone Payment<br /><br />'
+                   . 'Die Dokumentation finden Sie <a style="text-decoration: underline;" target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">hier</a>',
     'thumbnail'   => 'logo.png',
-    'version'     => '3.3.0',
+    'version'     => '4.0.0',
     'author'      => '<a href="http://www.mediaopt.de" target="_blank">mediaopt.</a>',
     'url'         => 'http://www.mediaopt.de',
     'email'       => 'support@mediaopt.de',
@@ -44,9 +44,21 @@ $aModule = array(
         //models
         'mo_ogone__order_number_reservation' => 'mo/mo_ogone/models/mo_ogone__order_number_reservation.php',
         'mo_ogone__payment_log'              => 'mo/mo_ogone/models/mo_ogone__payment_log.php',
+        //adapter
+        'mo_ogone__abstract_factory'                  => 'mo/mo_ogone/classes/adapter/mo_ogone__abstract_factory.php',
+        'mo_ogone__sha_settings'                      => 'mo/mo_ogone/classes/adapter/mo_ogone__sha_settings.php',
+        'mo_ogone__request_param_builder'             => 'mo/mo_ogone/classes/adapter/mo_ogone__request_param_builder.php',
+        'mo_ogone__alias_param_builder'               => 'mo/mo_ogone/classes/adapter/mo_ogone__alias_param_builder.php',
+        'mo_ogone__order_redirect_param_builder'      => 'mo/mo_ogone/classes/adapter/mo_ogone__order_redirect_param_builder.php',
+        'mo_ogone__order_direct_param_builder'        => 'mo/mo_ogone/classes/adapter/mo_ogone__order_direct_param_builder.php',
+        'mo_ogone__hosted_tokenization_param_builder' => 'mo/mo_ogone/classes/adapter/mo_ogone__hosted_tokenization_param_builder.php',
         //core
         'mo_ogone__config'                   => 'mo/mo_ogone/classes/mo_ogone__config.php',
         'mo_ogone__main'                     => 'mo/mo_ogone/classes/mo_ogone__main.php',
+        'mo_ogone__helper'                   => 'mo/mo_ogone/classes/mo_ogone__helper.php',
+        'mo_ogone__logger'                   => 'mo/mo_ogone/classes/mo_ogone__logger.php',
+        'mo_ogone__transaction_logger'       => 'mo/mo_ogone/classes/mo_ogone__transaction_logger.php',
+        'mo_ogone__events'                   => 'mo/mo_ogone/classes/mo_ogone__events.php',
     ),
     'blocks'      => array(
         array(
@@ -66,17 +78,33 @@ $aModule = array(
         ),
     ),
     'templates'   => array(
+        //admin templates
         'mo_ogone__interface.tpl'                      => 'mo/mo_ogone/views/admin/tpl/mo_ogone__interface.tpl',
         'mo_ogone__logfile.tpl'                        => 'mo/mo_ogone/views/admin/tpl/mo_ogone__logfile.tpl',
         'mo_ogone__setup.tpl'                          => 'mo/mo_ogone/views/admin/tpl/mo_ogone__setup.tpl',
+
+        //azure templates
         'mo_ogone__payment_creditcard.tpl'             => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard.tpl',
         'mo_ogone__payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard_form_fields.tpl',
         'mo_ogone__payment_invoice.tpl'                => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_invoice.tpl',
         'mo_ogone__payment_one_page.tpl'               => 'mo/mo_ogone/views/azure/tpl/page/checkout/mo_ogone__payment_one_page.tpl',
+        'payment_form.tpl'                             => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
+
+        //flow templates
+        'mo_ogone__flow_payment_creditcard.tpl'             => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard.tpl',
+        'mo_ogone__flow_payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard_form_fields.tpl',
+        'mo_ogone__flow_payment_invoice.tpl'                => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_invoice.tpl',
+        'mo_ogone__flow_payment_one_page.tpl'               => 'mo/mo_ogone/views/flow/tpl/page/checkout/mo_ogone__flow_payment_one_page.tpl',
+        'flow_payment_form.tpl'                             => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_payment_form.tpl',
+
+        //common templates
         'dynamic.tpl'                                  => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic.tpl',
         'dynamic_mobile.tpl'                           => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic_mobile.tpl',
         'order_error.tpl'                              => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/order_error.tpl',
-        'payment_form.tpl'                             => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
 
+    ),
+    'events'      => array(
+        'onActivate'   => 'mo_ogone__events::onActivate',
+        'onDeactivate' => 'mo_ogone__events::onDeactivate',
     ),
 );

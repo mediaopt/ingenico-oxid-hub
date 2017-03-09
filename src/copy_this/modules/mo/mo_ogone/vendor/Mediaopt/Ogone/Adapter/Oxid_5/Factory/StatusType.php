@@ -8,15 +8,16 @@ namespace Mediaopt\Ogone\Adapter\Oxid_5\Factory;
  */
 class StatusType extends AbstractFactory
 {
-    
+
     /**
      * populate StatusType model
+     * @param $code
      * @return StatusType
      */
     public function build($code)
     {
         /* @var $model \Mediaopt\Ogone\Sdk\Model\StatusType */
-        $model = $this->getSdkMain()->getModel("StatusType");
+        $model = $this->getSdkMain()->getModel('StatusType');
         switch ($code) {
             case \Mediaopt\Ogone\Sdk\Model\StatusType::ORDER_STORED:            // 4
             case \Mediaopt\Ogone\Sdk\Model\StatusType::PAYMENT_REQUESTED:       // 9

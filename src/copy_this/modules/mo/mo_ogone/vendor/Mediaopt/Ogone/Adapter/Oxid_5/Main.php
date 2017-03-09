@@ -15,36 +15,30 @@ class Main
 
     /**
      * SDK-container
-     * @var Sdk\Main;
+     * @var sdkMain;
      */
     protected $sdkMain;
 
     /**
      * @var \oxConfig
      */
-    protected $oxConfig = null;
+    protected $oxConfig;
 
     /**
      * @var \oxLang
      */
-    protected $oxLang = null;
+    protected $oxLang;
 
     /**
      * @var \oxSession
      */
-    protected $oxSession = null;
+    protected $oxSession;
 
     /**
      *
      * @var LoggerInterface
      */
     protected $logger;
-    
-    /**
-     *
-     * @var Utils
-     */
-    protected $utils;
 
     /**
      * constructor
@@ -76,7 +70,7 @@ class Main
         return $this->oxConfig = \oxRegistry::get('oxConfig');
     }
 
-    function getOxLang()
+    public function getOxLang()
     {
         if ($this->oxLang !== null) {
             return $this->oxLang;
@@ -84,7 +78,7 @@ class Main
         return $this->oxLang = \oxRegistry::getLang();
     }
 
-    function getOxSession()
+    public function getOxSession()
     {
         if ($this->oxSession !== null) {
             return $this->oxSession;
@@ -92,12 +86,12 @@ class Main
         return $this->oxSession = \oxRegistry::getSession();
     }
 
-    function setOxSession(\oxSession $oxSession)
+    public function setOxSession(\oxSession $oxSession)
     {
         $this->oxSession = $oxSession;
     }
 
-    function setOxLang(\oxLang $oxLang)
+    public function setOxLang(\oxLang $oxLang)
     {
         $this->oxLang = $oxLang;
     }
@@ -122,7 +116,7 @@ class Main
 
     /**
      * return factory
-     * 
+     *
      * @param string $type
      * @return AbstractFactory
      */
@@ -135,6 +129,7 @@ class Main
     /**
      * get logger
      * @return LoggerInterface
+     * @throws \InvalidArgumentException
      */
     public function getLogger()
     {
@@ -150,19 +145,6 @@ class Main
     }
 
     /**
-     * get utils
-     * @return Utils
-     */
-    public function getUtils()
-    {
-        if ($this->utils !== null) {
-            //update processors
-            return $this->utils;
-        }
-        return $this->utils = new Utils();
-    }
-    
-    /**
      * set logger
      * @param LoggerInterface $logger
      */
@@ -173,7 +155,7 @@ class Main
 
     /**
      * build log file path
-     * @return type
+     * @return string
      */
     public function getLogFilePath()
     {

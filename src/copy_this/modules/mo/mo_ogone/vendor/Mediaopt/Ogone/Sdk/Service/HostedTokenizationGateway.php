@@ -4,7 +4,6 @@ namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Main;
 use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
-use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 use Mediaopt\Ogone\Sdk\Model\StatusType;
 
 /**
@@ -14,30 +13,19 @@ class HostedTokenizationGateway extends AbstractService
 {
 
     /**
-     * 
-     * @param type $paymentId
-     * @return RequestParameters The Parameters for Calling the AliasGateway
+     * @param Authenticator $authenticator
+     * @return OgoneResponse
      */
-    public function buildParams($paymentId)
-    {
-        /* @var $model RequestParameters */
-        $model = $this->getAdapter()->getFactory("HostedTokenizationParamBuilder")->build($paymentId);
-        return $model->getParams();
-    }
-    
-    /**
-     * 
-     */
-    public function handleResponse()
+    public function handleResponse(Authenticator $authenticator)
     {
         /* @var $response OgoneResponse */
-        $response = $this->getAdapter()->getFactory("OgoneResponse")->build();
-        $this->getAdapter()->getLogger()->info("handleHostedTokenizationResponse: " . var_export($response->getAllParams(), true));
+        $response = $this->getAdapter()->getFactory('OgoneResponse')->build();
+        $this->getAdapter()->getLogger()->info('handleHostedTokenizationResponse: ' . var_export($response->getAllParams(), true));
         
-        if (!Main::getInstance()->getService("Authenticator")->authenticateRequest("HostedTokenizationPage")) {
+        if (!$authenticator->authenticateRequest('HostedTokenizationPage')) {
             // no authentication, kick back to payment methods
-            $this->getAdapter()->getLogger()->error("SHA-OUT-Mismatch: " . var_export($response->getAllParams(), true));
-            $status = Main::getInstance()->getService("Status")
+            $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch: ' . var_export($response->getAllParams(), true));
+            $status = Main::getInstance()->getService('Status')
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);
             $response->setError($status);

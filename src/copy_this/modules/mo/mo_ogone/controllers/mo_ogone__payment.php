@@ -4,29 +4,36 @@ use Mediaopt\Ogone\Sdk\Main;
 use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
 
 /**
- * $Id: mo_ogone__payment.php 44 2014-02-06 13:20:24Z martin $ 
+ * $Id: mo_ogone__payment.php 44 2014-02-06 13:20:24Z martin $
  */
 class mo_ogone__payment extends mo_ogone__payment_parent
 {
 
-    protected $mo_ogone__currentPaymentConfig = null;
-    protected $mo_ogone__aliasGatewayParamsSet = null;
+    /**
+     * @var array
+     */
+    protected $mo_ogone__currentPaymentConfig = [];
+
+    /**
+     * @var array
+     */
+    protected $mo_ogone__aliasGatewayParamsSet = [];
 
     /**
      * @overload oxid fnc (called from payment page, returns: 'order' on success)
-     * If: 
+     * If:
      *  - client has JS disabled and
      *  - is ogone payment and
      *  - is one-page-payment
-     * Then: 
-     *  - show checkout step 3.5 
+     * Then:
+     *  - show checkout step 3.5
      *
      */
     public function validatePayment()
     {
         Main::getInstance()->getLogger()->logExecution($_REQUEST);
         /* @var $oxpayment oxpayment */
-        $oxpayment = oxNew("oxpayment");
+        $oxpayment = oxNew('oxpayment');
         $oxpayment->load(oxRegistry::getConfig()->getRequestParameter('paymentid'));
         $parentResult = parent::validatePayment();
 
@@ -38,12 +45,10 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
 
         //standard procedure with redirect payments
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
+        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
             return $parentResult;
-        } elseif ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
-            return $this->mo_ogone__handleHiddenAuthorizationResponse();
         } else {
-            Main::getInstance()->getLogger()->error('Unknown payment type: ' . $paymentType);
+            return $this->mo_ogone__handleHiddenAuthorizationResponse();
         }
     }
 
@@ -52,15 +57,16 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__handleHostedTokenizationErrorResponse()
     {
+        $authenticator = Main::getInstance()->getService('Authenticator');
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         // check for error
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse();
+        $response = Main::getInstance()->getService('HostedTokenizationGateway')->handleResponse($authenticator);
         // error will be displayed
         if ($response->hasError()) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
-        }
-        elseif ($response->getStatus()->getStatusCode() == 3 || $response->getStatus()->getStatusCode() == 1) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getStatus()->getTranslatedStatusMessage());
+            oxRegistry::get('oxUtilsView')->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
+        } elseif ($response->getStatus()->getStatusCode() == 3 || $response->getStatus()->getStatusCode() == 1) {
+            oxRegistry::get('oxUtilsView')->addErrorToDisplay($response->getStatus()->getTranslatedStatusMessage());
         }
         return 'payment';
     }
@@ -70,34 +76,35 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function mo_ogone__handleHiddenAuthorizationResponse()
     {
+        $authenticator = Main::getInstance()->getService('Authenticator');
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         // check for error
         /* @var $response OgoneResponse */
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-            $response = Main::getInstance()->getService("HostedTokenizationGateway")->handleResponse();
+            $response = Main::getInstance()->getService('HostedTokenizationGateway')->handleResponse($authenticator);
         } else {
-            $response = Main::getInstance()->getService("AliasGateway")->handleResponse();
+            $response = Main::getInstance()->getService('AliasGateway')->handleResponse($authenticator);
         }
         // check if we got the alias
         $alias = $response->getAlias();
-        if (!$response->hasError() && $alias !== null) {
+        if ($alias !== null && !$response->hasError()) {
             // store alias
             oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $alias);
             return 'order';
         }
-        
+
         // check if js is disabled for Alias Gateway
-        if (!oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe') && !strstr(oxRegistry::getConfig()->getRequestParameter('PARAMVAR'),'JS_ENABLED')) {
+        if (!oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe') && !strstr(oxRegistry::getConfig()->getRequestParameter('PARAMVAR'), 'JS_ENABLED')) {
             Main::getInstance()->getLogger()->error('JS is not enabled');
             //fetch necessary auth params and build sha-signature
             $this->mo_ogone__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
-            $this->_sThisTemplate = 'mo_ogone__payment_one_page.tpl';
-            return;
+            return $this->getNonJsTemplateName();
         }
-        
+
         // error will be displayed
         if ($response->hasError()) {
-            oxRegistry::get("oxUtilsView")->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
+            oxRegistry::get('oxUtilsView')->addErrorToDisplay($response->getError()->getTranslatedStatusMessage());
         }
 
         return 'payment';
@@ -105,16 +112,16 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
     /**
      * template method
+     * @param $paymentId
      */
     public function mo_ogone__loadRequestParams($paymentId)
     {
-        $aliasService;
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-            $aliasService = Main::getInstance()->getService("HostedTokenizationGateway");
+            $aliasService = oxNew('mo_ogone__hosted_tokenization_param_builder');
         } else {
-            $aliasService = Main::getInstance()->getService("AliasGateway");
+            $aliasService = oxNew('mo_ogone__alias_param_builder');
         }
-        $this->mo_ogone__aliasGatewayParamsSet = $aliasService->buildParams($paymentId);
+        $this->mo_ogone__aliasGatewayParamsSet = $aliasService->build($paymentId)->getParams();
     }
 
     /**
@@ -126,8 +133,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
             return array();
         }
         $params = $this->mo_ogone__aliasGatewayParamsSet[0];
-        unset($params['SHASIGN']);
-        unset($params['BRAND']);
+        unset($params['SHASIGN'], $params['BRAND']);
         return $params;
     }
 
@@ -167,20 +173,19 @@ class mo_ogone__payment extends mo_ogone__payment_parent
     public function mo_ogone__getPaymentGatewayUrl()
     {
         /* @var $oxpayment oxpayment */
-        $oxpayment = oxNew("oxpayment");
+        $oxpayment = oxNew('oxpayment');
         $oxpayment->load($this->getCheckedPaymentId());
 
         if ($oxpayment->mo_ogone__isOgonePayment()) {
             $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
-            switch ($paymentType) {
-                case MO_OGONE__PAYMENTTYPE_ONE_PAGE:
-                    if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
-                        return $this->getHostedTokenUrl();
-                    } else {
-                        return $this->getAliasUrl();
-                    }
-                default:
-                    return $this->getViewConfig()->getSslSelfLink();
+            if ($paymentType == MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
+                return $this->getViewConfig()->getSslSelfLink();
+            }
+            // one page
+            if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_iframe')) {
+                return $this->getHostedTokenUrl();
+            } else {
+                return $this->getAliasUrl();
             }
         }
     }
@@ -193,14 +198,22 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if (!$paymentId) {
             $paymentId = $this->getCheckedPaymentId();
         }
-        return $this->mo_ogone__currentPaymentConfig = Main::getInstance()->getService('OgonePayments')->
-                getOgonePaymentByShopPaymentId($paymentId);
+        $options = Main::getInstance()->getService('OgonePayments')->
+        getOgonePaymentByShopPaymentId($paymentId);
+        if (is_array($options['brand'])) {
+            foreach ($options['brand'] as $key => $brand) {
+                if (!oxNew('mo_ogone__helper')->mo_ogone__isBrandActive($paymentId, $brand)) {
+                    unset($options['brand'][$key]);
+                }
+            }
+        }
+        return $this->mo_ogone__currentPaymentConfig = $options;
     }
 
     /**
      * check paymentlist for BillPay availability
      * @extend getPaymentList
-     * @return oxList 
+     * @return oxList
      */
     public function getPaymentList()
     {
@@ -218,8 +231,8 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
     /**
      * check if basket contains vouchers or discounts
-     * @param type $list
-     * @return type 
+     * @param array $list
+     * @return array
      */
     protected function mo_ogone__checkBillpayAvailability($list)
     {
@@ -238,6 +251,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         //discounts
         $amount = 0;
         if ($discounts = $oxBasket->getDiscounts()) {
+            /** @var array $discounts */
             foreach ($discounts as $discount) {
                 $amount += $discount->dDiscount;
             }
@@ -250,30 +264,46 @@ class mo_ogone__payment extends mo_ogone__payment_parent
 
         return $list;
     }
-    
-    public function getAliasUrl() {
-        $part1 = '';
+
+    public function getAliasUrl()
+    {
+        $part1 = 'test';
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
             $part1 = 'prod';
-        } else {
-            $part1 = 'test';
         }
+
         $part2 = '';
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_utf8')) {
             $part2 = '_utf8';
         }
-        return 'https://secure.ogone.com/ncol/'. $part1 .'/alias_gateway'. $part2 .'.asp';
+
+        return 'https://secure.ogone.com/ncol/' . $part1 . '/alias_gateway' . $part2 . '.asp';
     }
-    
-    protected function getHostedTokenUrl() {
-        $part1 = '';
+
+    protected function getHostedTokenUrl()
+    {
         if (oxRegistry::getConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
             return 'https://secure.ogone.com/Tokenization/HostedPage';
-        } else {
-            return 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
         }
+
+        return 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
     }
-    
-    
+
+    /**
+     * return tpl for payment without Javascript enabled
+     *
+     * @deprecated  azure theme switch will be removed soon
+     * @return string
+     */
+    protected function getNonJsTemplateName()
+    {
+        if($this->getViewConfig()->getActiveTheme() === 'azure')
+        {
+            return 'mo_ogone__payment_one_page.tpl';
+        }
+
+        return 'mo_ogone__flow_payment_one_page.tpl';
+    }
+
 
 }

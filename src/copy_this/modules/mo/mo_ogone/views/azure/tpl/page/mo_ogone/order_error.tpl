@@ -1,6 +1,6 @@
 [{assign var=template_title value="MO_OGONE__ORDER_ERROR_TEMPLATE_TITLE"|oxmultilangassign}]
 
-[{oxstyle include="css/mo_ogone.css"}]
+[{oxstyle include=$oViewConf->getModuleUrl('mo_ogone','out/src/css/mo_ogone.css')}]
 
 [{capture append="oxidBlock_content"}]
 

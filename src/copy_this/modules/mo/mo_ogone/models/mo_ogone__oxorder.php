@@ -48,6 +48,7 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         $this->_loadFromBasket($oBasket);
 
         // payment information
+        //@todo check if still needed
         $oUserPayment = $this->_setPayment($oBasket->getPaymentId());
 
         // set folder information, if order is new
@@ -69,13 +70,13 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
 
     public function mo_ogone__isOgoneOrder()
     {
-        return stristr($this->oxorder__oxpaymenttype->value, 'ogone') !== false;
+        return false !== stristr($this->oxorder__oxpaymenttype->value, 'ogone');
     }
 
     public function mo_ogone__isPaymentDone()
     {
         /* @var $status Status */
-        $status = Main::getInstance()->getService("Status")
+        $status = Main::getInstance()->getService('Status')
                 ->usingStatusCode($this->oxorder__mo_ogone__status->value);
         return $status->isThankyouStatus();
     }
@@ -85,11 +86,13 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         $sSelect = $this->buildSelectString(array($this->getViewName() . '.oxtransid' => $orderNr));
         return $this->_isLoaded = $this->assignRecord($sSelect);
     }
-    
-     /**
+
+    /**
      * Updates order transaction id.
+     * @todo add try catch to db call
      *
-     * @param type $orderID order transaction id
+     * @param string $orderID order transaction id
+     * @throws \oxConnectionException
      */
     public function mo_ogone__setTransID($orderID)
     {
@@ -103,20 +106,21 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
     /**
      * Updates oxtransstatus and mo_ogone__status property on order object and save the order object
      * if the order is cancelled by client the order will canceled (storno)
+     * @param $ogoneStatus
      */
     public function mo_ogone__updateOrderStatus($ogoneStatus)
     {
         if ($ogoneStatus->isOkStatus() || $this->_checkOrderExist($this->getId())){
             $oxidStatus = $ogoneStatus->isOkStatus() ? 'OK' : 'ERROR';
             if ($ogoneStatus->isOkStatus() && oxRegistry::getConfig()->getShopConfVar('mo_ogone__set_oxpaid')) {
-                $sDate = date('Y-m-d H:i:s', oxRegistry::get("oxUtilsDate")->getTime());
+                $sDate = date('Y-m-d H:i:s', oxRegistry::get('oxUtilsDate')->getTime());
                 $this->oxorder__oxpaid = new oxField($sDate, oxField::T_RAW);
             }
             $this->oxorder__oxtransstatus = new oxField($oxidStatus);
             $this->oxorder__mo_ogone__status = new oxField($ogoneStatus->getStatusCode());
 
             $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
-            if ($ogoneStatus->isThankyouStatus() && $activeView == 'order') {
+            if ($activeView === 'order' && $ogoneStatus->isThankyouStatus()) {
                 $this->mo_ogone__sendEmails();
             }
             if ($ogoneStatus->isStornoStatus()) {
@@ -129,6 +133,9 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
 
     /**
      * @overload
+     * @param $sMaxField
+     * @param null $aWhere
+     * @param int $iMaxTryCnt
      */
     protected function _setRecordNumber($sMaxField, $aWhere = null, $iMaxTryCnt = 5)
     {
@@ -175,4 +182,8 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
         }
     }
 
+    public function mo_ogone__getStatusText()
+    {
+        return \Mediaopt\Ogone\Sdk\Main::getInstance()->getService('Status')->usingStatusCode($this->oxorder__mo_ogone__status->value)->getTranslatedStatusMessage();
+    }
 }

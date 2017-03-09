@@ -8,7 +8,7 @@
     "pathToModule": "copy_this/modules/mo/mo_ogone",
     "compatibility": {
         "minimumVersion": "4.7/5.0",
-        "maximumVersion": "4.9.7/5.2.7",
+        "maximumVersion": "4.10.3/5.3.3",
         "blacklist": [
         ]
     }

@@ -2,15 +2,17 @@
 
 namespace Mediaopt\Ogone\Sdk;
 
+use Psr\Log\LoggerInterface;
+
 class Client
 {
     /**
      *
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $logger;
     
-    public function __construct(\Psr\Log\LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }

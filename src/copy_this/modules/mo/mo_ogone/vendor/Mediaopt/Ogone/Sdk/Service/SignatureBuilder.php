@@ -2,25 +2,42 @@
 
 namespace Mediaopt\Ogone\Sdk\Service;
 
+use Mediaopt\Ogone\Sdk\Model\SHASettings;
+
 /**
- * $Id: SignatureBuilder.php 6 2015-02-23 15:50:57Z mbe $ 
+ * $Id: SignatureBuilder.php 6 2015-02-23 15:50:57Z mbe $
  */
 class SignatureBuilder extends AbstractService
 {
+
+    const MODE_IN = 0;
+    const MODE_OUT = 1;
+
     /**
+     * @var SHASettings
+     */
+    protected $shaSettings;
+
+    public function setShaSettings(SHASettings $shaSettings)
+    {
+        $this->shaSettings = $shaSettings;
+    }
+
+    /**
+     * @param $params
+     * @param string $type
      * @return array with filtered params and uppercased keys
      */
     public function filterResponseParams($params, $type = "")
     {
-        $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
-        if ($type === "AliasGateway") {
-            $shaOutParameters = $shaSettings->getSHAOutParametersAliasGateway();
-        } elseif ($type === "HostedTokenizationPage") {
-            $shaOutParameters = $shaSettings->getSHAOutParametersHostedTokenizationPage();
+        if ($type === 'AliasGateway') {
+            $shaOutParameters = $this->shaSettings->getSHAOutParametersAliasGateway();
+        } elseif ($type === 'HostedTokenizationPage') {
+            $shaOutParameters = $this->shaSettings->getSHAOutParametersHostedTokenizationPage();
         } else {
-            $shaOutParameters = $shaSettings->getSHAOutParameters();
+            $shaOutParameters = $this->shaSettings->getSHAOutParameters();
         }
-        
+
         // convert input param-keys to upercase
         $params = array_change_key_case($params, CASE_UPPER);
 
@@ -32,28 +49,55 @@ class SignatureBuilder extends AbstractService
             if (!isset($params[$paramName]) || $params[$paramName] === '') {
                 continue;
             }
-            $newParamName = str_replace("ALIAS_", "ALIAS.", $paramName);
-            $newParamName = str_replace("CARD_", "CARD.", $newParamName);
+            $newParamName = str_replace('ALIAS_', 'ALIAS.', $paramName);
+            $newParamName = str_replace('CARD_', 'CARD.', $newParamName);
             $shaParams[$newParamName] = $params[$paramName];
         }
         return $shaParams;
     }
 
-    public function build($shaParams, $passPhrase)
+    /**
+     * special handling for params SCO_CATEGORY and SCORING needed
+     * psp sorting differs from strnatcasecmp
+     *
+     * @param array $shaParams
+     * @param int $mode
+     * @return string
+     */
+    public function build($shaParams, $mode)
     {
         if (empty($shaParams)) {
             return '';
         }
 
+        $passPhrase = $mode === self::MODE_IN ? $this->shaSettings->getSHAInKey() : $this->shaSettings->getSHAOutKey();
+
         // sort parameters alphabetically
-        uksort($shaParams, "strnatcasecmp");
+        uksort($shaParams, 'strnatcasecmp');
+
+        $switchScoringParameter = false;
+
+        if (array_key_exists('SCORING', $shaParams) && array_key_exists('SCO_CATEGORY', $shaParams)) {
+            $switchScoringParameter = true;
+        }
 
         // generate parameter signature before hashing
         $signature = '';
         foreach ($shaParams as $parameter => $value) {
-            if (is_null($value) || $value === '') {
+            if ($value === '' || null === $value) {
                 continue;
             }
+
+            if ($switchScoringParameter && $parameter === 'SCORING') {
+                $signature .= strtoupper('SCO_CATEGORY') . '=' . $shaParams['SCO_CATEGORY'] . $passPhrase;
+                continue;
+
+            }
+            if ($switchScoringParameter && $parameter === 'SCO_CATEGORY') {
+                $signature .= strtoupper('SCORING') . '=' . $shaParams['SCORING'] . $passPhrase;
+                continue;
+            }
+
             $signature .= strtoupper($parameter) . '=' . $value . $passPhrase;
         }
 
@@ -62,11 +106,9 @@ class SignatureBuilder extends AbstractService
 
     public function hash($signature)
     {
-        $shaSettings = $this->getAdapter()->getFactory("SHASettings")->build();
-        $hashingAlgorithm = $shaSettings->getSHAAlgorithm();
+        $hashingAlgorithm = $this->shaSettings->getSHAAlgorithm();
         $algo = str_replace('-', '', strtolower($hashingAlgorithm));
-        $result = strtoupper(hash($algo, $signature));
-        return $result;
+        return strtoupper(hash($algo, $signature));
     }
 
 }

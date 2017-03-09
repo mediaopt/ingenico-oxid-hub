@@ -31,21 +31,20 @@ class mo_ogone__order extends mo_ogone__order_parent
 
     /**
      * redirect - if necessary - to payment gateway
-     * 
+     * @todo refactor config usage
+     *
      * @extend execute
      */
     public function execute()
     {
-        $oxConfig = $this->getConfig();
-
         if (!$this->mo_ogone__isOgoneOrder()) {
             return parent::execute();
         }
 
-        if (method_exists(oxNew('oxorder'), '_validateTermsAndConditions') && !$this->_validateTermsAndConditions()) {
+        if (!$this->_validateTermsAndConditions() && method_exists(oxNew('oxorder'), '_validateTermsAndConditions')) {
                 $this->_blConfirmAGBError = 1;
                 return;
-        } elseif (method_exists(oxConfig, 'getParameter') && !oxConfig::getParameter( 'ord_agb' ) && $this->getConfig()->getConfigParam( 'blConfirmAGB' )) {
+        } elseif (method_exists('oxConfig', 'getParameter') && !oxConfig::getParameter( 'ord_agb' ) && $this->getConfig()->getConfigParam( 'blConfirmAGB' )) {
             $this->_blConfirmAGBError = 1;
             return;
         }
@@ -59,18 +58,18 @@ class mo_ogone__order extends mo_ogone__order_parent
         $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($paymentId, 'paymenttype');
 
         //redirect
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT) {
-            return "mo_ogone__payment_form";
-        }
-
-        //one page
-        if ($paymentType === MO_OGONE__PAYMENTTYPE_ONE_PAGE) {
+        if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
+            return 'mo_ogone__payment_form';
+        } else {
+            // one page
             // server to server communication
-            $response = Main::getInstance()->getService("OrderDirectGateway")->call();
+            $paramBuilder = oxNew('mo_ogone__order_direct_param_builder');
+            $params = $paramBuilder->build();
+            $response = Main::getInstance()->getService('OrderDirectGateway')->call($paramBuilder->getUrl(), $params);
             $xml = simplexml_load_string($response);
 
             /* @var $response OgoneResponse */
-            $response = Main::getInstance()->getService("OrderDirectGateway")->handleResponse($xml);
+            $response = Main::getInstance()->getService('OrderDirectGateway')->handleResponse($xml);
 
             if ($response->getStatus()->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
                 return parent::_getNextStep($response->getStatus()->getTranslatedStatusMessage());
@@ -100,10 +99,12 @@ class mo_ogone__order extends mo_ogone__order_parent
         // use of basket between order and thankyou views causes errors, when buying last item in stock
         oxRegistry::getConfig()->setConfigParam('mo_ogone__prevent_recalculate', true);
         oxRegistry::getSession()->getBasket()->afterUpdate();
+        $authenticator = Main::getInstance()->getService('Authenticator');
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService("OrderRedirectGateway")->handleResponse();
+        $response = Main::getInstance()->getService('OrderRedirectGateway')->handleResponse($authenticator);
         if ($order = $this->mo_ogone__loadOrder($response)) {
-            Main::getInstance()->getLogger()->info("OgoneRedirect: Order already exists. Redirect to thankyou page for TransId ".$response->getOrderId());
+            Main::getInstance()->getLogger()->info('OgoneRedirect: Order already exists. Redirect to thankyou page for TransId ' .$response->getOrderId());
             return 'thankyou';
         }
         return $this->mo_ogone__createOrder($response);
@@ -111,7 +112,7 @@ class mo_ogone__order extends mo_ogone__order_parent
 
     protected function mo_ogone__getOrderStateWithMailError($orderState)
     {
-        if ($orderState == 'thankyou') {
+        if ($orderState === 'thankyou') {
             // check for mail error in session
             if (oxRegistry::getSession()->getVariable('mo_ogone__mailError')) {
                 $orderState = $this->_getNextStep(oxOrder::ORDER_STATE_MAILINGERROR);
@@ -125,7 +126,7 @@ class mo_ogone__order extends mo_ogone__order_parent
     {
         $dAmount = oxRegistry::getSession()->getBasket()->getPrice()->getBruttoPrice();
         $dAmount = number_format($dAmount, 2, '.', '');
-        $dAmount = $dAmount * 100;
+        $dAmount *= 100;
         $dAmount = round($dAmount, 0);
         $dAmount = substr($dAmount, 0, 15);
         return $dAmount;
@@ -134,23 +135,24 @@ class mo_ogone__order extends mo_ogone__order_parent
     /**
      * 
      * @param OgoneResponse $response the response of Ogone
-     * @return type The next step to perform (show error or go to thankyou page)
+     * @return string The next step to perform (show error or go to thankyou page)
      */
     protected function mo_ogone__createOrder($response)
     {
         if (!$response->hasError() && $response->getStatus()->isThankyouStatus()) {
             $basketAmount = $this->mo_ogone__getFormatedOrderAmount();
-            if (intval($basketAmount) !== intval($response->getAmount())) {
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__DIVERGENT_AMOUNT') . $response->getOrderId());
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
-                Main::getInstance()->getLogger()->error('Paid Amount ('. intval($response->getAmount()) .') and Basket Amount ('.intval($basketAmount) .') are not equal. TransId: '.$response->getOrderId());
+            if ((int)$basketAmount !== (int)$response->getAmount()) {
+                oxRegistry::get('oxUtilsView')->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__DIVERGENT_AMOUNT') . $response->getOrderId());
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
+                Main::getInstance()->getLogger()->error('Paid Amount ('. (int)$response->getAmount() .') and Basket Amount ('.(int)$basketAmount .') are not equal. TransId: '.$response->getOrderId());
                 return 'payment';
             }
-            if ($response->getShopId() !== NULL && $response->getShopId() !== intval(oxRegistry::getConfig()->getShopId())) {
-                Main::getInstance()->getLogger()->info('Changing shopId from '.intval(oxRegistry::getConfig()->getShopId())." to ".$response->getShopId(). " for Order Creation of TransId ".$response->getOrderId());
+            //@todo check conditions
+            if ($response->getShopId() !== NULL && $response->getShopId() !== (int)oxRegistry::getConfig()->getShopId()) {
+                Main::getInstance()->getLogger()->info('Changing shopId from '.(int)oxRegistry::getConfig()->getShopId(). ' to ' .$response->getShopId(). ' for Order Creation of TransId ' .$response->getOrderId());
                 oxRegistry::getConfig()->setShopId($response->getShopId());
             } else {
-                Main::getInstance()->getLogger()->info('ShopId is correct ('.oxRegistry::getConfig()->getShopId(). ") for Order Creation of TransId ".$response->getOrderId());
+                Main::getInstance()->getLogger()->info('ShopId is correct ('.oxRegistry::getConfig()->getShopId(). ') for Order Creation of TransId ' .$response->getOrderId());
             }
             oxRegistry::getSession()->setVariable('mo_ogone__mailError', true);
             $parentState = parent::execute();
@@ -159,11 +161,11 @@ class mo_ogone__order extends mo_ogone__order_parent
                 $parentState = oxOrder::ORDER_STATE_OK;
             }
             /* @var $oxOrder oxOrder */
-            $oxOrder = oxNew("oxOrder");
+            $oxOrder = oxNew('oxOrder');
             $oxOrder->load($this->getBasket()->getOrderId());
             if (!$oxOrder) {
-                oxRegistry::get("oxUtilsView")->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ORDER_NOT_CREATED') . $response->getOrderId());
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+                oxRegistry::get('oxUtilsView')->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ORDER_NOT_CREATED') . $response->getOrderId());
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
                 Main::getInstance()->getLogger()->error('The order could not be created. TransId: '.$response->getOrderId());
                 return 'payment';
             }
@@ -174,19 +176,19 @@ class mo_ogone__order extends mo_ogone__order_parent
                 $id = $response->getOrderId();
             }
             $oxOrder->mo_ogone__setTransID($id);
-            Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
+            oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
             $parentState = $this->mo_ogone__getOrderStateWithMailError($parentState);
-            Main::getInstance()->getLogger()->debug("OgoneRedirect: Will now redirect to ".$parentState." for TransId ".$response->getOrderId());
+            Main::getInstance()->getLogger()->debug('OgoneRedirect: Will now redirect to ' .$parentState. ' for TransId ' .$response->getOrderId());
             return $parentState;
         }
-        Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), "");
+        oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
         if ($response->hasError()) {
             $errorMessage = $response->getError()->getTranslatedStatusMessage();
         } else {
             $errorMessage = $response->getStatus()->getTranslatedStatusMessage();
         }
         $nextStep = parent::_getNextStep($errorMessage);
-        Main::getInstance()->getLogger()->debug("OgoneRedirect: Will now redirect to ".$nextStep." for TransId ".$response->getOrderId());
+        Main::getInstance()->getLogger()->debug('OgoneRedirect: Will now redirect to ' .$nextStep. ' for TransId ' .$response->getOrderId());
         return $nextStep;
     }
 
@@ -212,24 +214,26 @@ class mo_ogone__order extends mo_ogone__order_parent
      */
     public function mo_ogone__fncHandleDeferredFeedback()
     {
+        $authenticator = Main::getInstance()->getService('Authenticator');
+        $authenticator->setShaSettings(oxNew('mo_ogone__sha_settings')->build());
         // process deferred feedback
         /* @var $response Mediaopt\Ogone\Sdk\Model\OgoneResponse */
-        $response = Main::getInstance()->getService("DeferredFeedback")->handleResponse();
+        $response = Main::getInstance()->getService('DeferredFeedback')->handleResponse($authenticator);
         if ($response !== null) {
             if ($order = $this->mo_ogone__loadOrder($response)) {
-                Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+                Main::getInstance()->getLogger()->info('DeferredFeedback: Order already exists (' .$order->getId(). '). Updating status');
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
                 $order->mo_ogone__updateOrderStatus($response->getStatus());
                 exit;
             }
-            Main::getInstance()->getLogger()->info("DeferredFeedback: Order does not exist yet (".$response->getOrderId()."). Will wait 15 seconds");
+            Main::getInstance()->getLogger()->info('DeferredFeedback: Order does not exist yet (' .$response->getOrderId(). '). Will wait 15 seconds');
             sleep(15);
             if ($order = $this->mo_ogone__loadOrder($response)) {
-                Main::getInstance()->getLogger()->info("DeferredFeedback: Order already exists (".$order->getId()."). Updating status");
-                Main::getInstance()->getService('StoreTransactionFeedback')->store($response->getAllParams(), $order->oxorder__oxordernr->value);
+                Main::getInstance()->getLogger()->info('DeferredFeedback: Order already exists (' .$order->getId(). '). Updating status');
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
                 $order->mo_ogone__updateOrderStatus($response->getStatus());
             } else {
-                Main::getInstance()->getLogger()->warning("DeferredFeedback: Could not load order by OrderId: " . $response->getOrderId()." or PAYID ".$response->getPayId());
+                Main::getInstance()->getLogger()->warning('DeferredFeedback: Could not load order by OrderId: ' . $response->getOrderId(). ' or PAYID ' .$response->getPayId());
                 $this->mo_ogone__createOrder($response);
             }
         }

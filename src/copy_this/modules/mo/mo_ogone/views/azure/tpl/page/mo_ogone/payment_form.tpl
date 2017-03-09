@@ -1,6 +1,6 @@
 [{assign var=template_title value=mo_ogone__payment_form}]
 
-[{oxstyle include="css/mo_ogone.css"}]
+[{oxstyle include=$oViewConf->getModuleUrl('mo_ogone','out/src/css/mo_ogone.css')}]
 
 [{capture append="oxidBlock_content"}]
 
@@ -9,8 +9,8 @@
 
   <form id="mo_ogone__form" action="[{$mo_ogone__form_action}]" method="post">
     <p>
-      [{ oxmultilang ident="MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT"}]<br />
-      <button class="submitButton largeButton" type="submit">[{ oxmultilang ident="MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON"}]</button>
+      [{oxmultilang ident="MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT"}]<br />
+      <button class="submitButton largeButton" type="submit">[{oxmultilang ident="MO_OGONE__PAGE_PAYMENT_FORM_REDIRECT_BUTTON"}]</button>
     </p>
 
     [{if $mo_ogone__debug}]
