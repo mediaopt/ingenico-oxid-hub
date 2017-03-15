@@ -33,7 +33,7 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
         $sAliasUsage = '&nbsp;';
         $params['alias'] = $this->getOxSession()->getVariable('mo_ogone__order_alias');
         $params['aliasusage'] = $sAliasUsage;
-        $params['rtimeout'] = \mo_ogone__main::getInstance()->getOgoneConfig()->rtimeout;
+        $params['rtimeout'] = $this->getOxConfig()->getConfigParam('mo_ogone__timeout');
 
         //3D Secure
         $params['flag3d'] = 'Y';

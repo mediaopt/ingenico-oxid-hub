@@ -10,15 +10,16 @@
 class mo_ogone__oxbasketitem extends mo_ogone__oxbasketitem_parent
 {
 
-  /**
-   * prevent basketitem isBuyable validation
-   * use of basket between order and thankyou views causes errors, when buying last item in stock
-   * 
-   * @param bool $blCheckProduct
-   * @param string $sProductId
-   * @param bool $blDisableLazyLoading
-   * @return parent call 
-   */
+    /**
+     * prevent basketitem isBuyable validation
+     * use of basket between order and thankyou views causes errors, when buying last item in stock
+     *
+     * @param bool $blCheckProduct
+     * @param string $sProductId
+     * @param bool $blDisableLazyLoading
+     * @return parent call
+     * @throws \oxArticleException
+     */
   public function getArticle($blCheckProduct = true, $sProductId = null, $blDisableLazyLoading = false)
   {
     if (!oxRegistry::getConfig()->getConfigParam('mo_ogone__prevent_recalculate'))

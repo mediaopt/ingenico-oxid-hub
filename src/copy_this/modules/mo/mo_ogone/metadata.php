@@ -69,7 +69,8 @@ $aModule = array(
         'mo_ogone__helper' => 'mo/mo_ogone/classes/mo_ogone__helper.php',
         'mo_ogone__logger' => 'mo/mo_ogone/classes/mo_ogone__logger.php',
         'mo_ogone__transaction_logger' => 'mo/mo_ogone/classes/mo_ogone__transaction_logger.php',
-        'mo_ogone__events' => 'mo/mo_ogone/classes/mo_ogone__events.php',
+        //events
+        'mo_ogone__events' => 'mo/mo_ogone/setup/mo_ogone__events.php',
     ),
     'blocks' => array(
         array(
@@ -113,6 +114,180 @@ $aModule = array(
         'dynamic_mobile.tpl' => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/dynamic_mobile.tpl',
         'order_error.tpl' => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/order_error.tpl',
 
+    ),
+    'settings'    => array(
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__isLiveMode',
+            'type'  => 'bool',
+            'value' => '0'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__logLevel',
+            'type' => 'select',
+            'constrains' => 'DEBUG|INFO|ERROR',
+            'value' => 'ERROR',
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__capture_creditcard',
+            'type'  => 'bool',
+            'value' => '1'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__use_utf8',
+            'type'  => 'bool',
+            'value' => '1'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__set_oxpaid',
+            'type'  => 'bool',
+            'value' => '1'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__use_hidden_auth',
+            'type'  => 'bool',
+            'value' => '1'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__use_iframe',
+            'type'  => 'bool',
+            'value' => '1'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__transid_param',
+            'type' => 'select',
+            'constrains' => 'ORDERID|PAYID',
+            'value' => 'PAYID',
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'ogone_sPSPID',
+            'type'  => 'str',
+            'value' => ''
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__api_userid',
+            'type'  => 'str',
+            'value' => ''
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__api_userpass',
+            'type'  => 'str',
+            'value' => ''
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'ogone_sHashingAlgorithm',
+            'type' => 'select',
+            'constrains' => 'SHA-1|SHA-256|SHA-512',
+            'value' => 'SHA-512',
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'ogone_sSecureKeyIn',
+            'type'  => 'str',
+            'value' => ''
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'ogone_sSecureKeyOut',
+            'type'  => 'str',
+            'value' => ''
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__timeout',
+            'type'  => 'str',
+            'value' => '15'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__debug_mode',
+            'type'  => 'bool',
+            'value' => '0'
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTemplate',
+            'type' => 'bool',
+            'value' => '1',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplPMListStyle',
+            'type' => 'select',
+            'constrains' => '0|1|2',
+            'value' => '0',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_blBackButton',
+            'type' => 'bool',
+            'value' => '1',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_blTplTitle',
+            'type' => 'bool',
+            'value' => '0',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplBGColor',
+            'type' => 'str',
+            'value' => 'white',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplFontColor',
+            'type' => 'str',
+            'value' => 'black',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplTableBGColor',
+            'type' => 'str',
+            'value' => 'white',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplTbFontColor',
+            'type' => 'str',
+            'value' => 'black',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplBtnBGColor',
+            'type' => 'str',
+            'value' => '',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplBtnFontColor',
+            'type' => 'str',
+            'value' => 'black',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplFontFamily',
+            'type' => 'str',
+            'value' => 'verdana',
+        ),
+        array(
+            'group' => 'moOgoneLayoutPaymentPage',
+            'name'  => 'ogone_sTplLogo',
+            'type' => 'str',
+            'value' => '',
+        ),
     ),
     'events' => array(
         'onActivate' => 'mo_ogone__events::onActivate',

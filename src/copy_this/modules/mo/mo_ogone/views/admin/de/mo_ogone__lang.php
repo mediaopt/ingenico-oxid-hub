@@ -29,6 +29,88 @@ $sLangName = 'Deutsch';
 // -------------------------------
 $aLang = array(
     'charset' => 'UTF-8',
+
+    //API config
+    'SHOP_MODULE_GROUP_moOgoneApiConfiguration' => 'API Konfiguration',
+    'SHOP_MODULE_mo_ogone__isLiveMode' => 'Live Modus',
+    'HELP_SHOP_MODULE_mo_ogone__isLiveMode' => 'Zum Testen sollte die Option deaktiviert sein. '
+        . 'Für den Produktivbetrieb aktivieren Sie die Option.',
+    'SHOP_MODULE_mo_ogone__logLevel' => 'Log Level',
+    'HELP_SHOP_MODULE_mo_ogone__logLevel' => 'Konfigurieren Sie hier in welchem Umfang Logeinträge geschrieben werden',
+    'SHOP_MODULE_mo_ogone__logLevel_DEBUG' => 'Debug',
+    'SHOP_MODULE_mo_ogone__logLevel_INFO' => 'Info',
+    'SHOP_MODULE_mo_ogone__logLevel_ERROR' => 'Error',
+    'SHOP_MODULE_mo_ogone__capture_creditcard' => 'Kreditkartentransaktionen reservieren',
+    'HELP_SHOP_MODULE_mo_ogone__capture_creditcard' => 'Ist die Option deaktiviert, werden die Beträge sofort eingezogen.',
+    'SHOP_MODULE_mo_ogone__use_utf8' => 'UTF-8 encode',
+    'HELP_SHOP_MODULE_mo_ogone__use_utf8' => 'Daten UTF8-kodiert an übertragen. Die Einstellung muss mit der Konfiguration im Ogone Backend übereinstimmen. Konfiguration -> Technische Informationen -> Globale Sicherheitsparameter',
+    'SHOP_MODULE_mo_ogone__set_oxpaid' => 'Bezahldatum setzen',
+    'HELP_SHOP_MODULE_mo_ogone__set_oxpaid' => 'Setzt das Bezahldatum, wenn vom PSP ein OK-Status zurück kommt.<br />' .
+        'ACHTUNG: Dieser Status bedeutet nicht, dass das Geld bei Ihrem Shop eingegangen ist.',
+    'SHOP_MODULE_mo_ogone__use_hidden_auth' => 'Hidden Authorization',
+    'HELP_SHOP_MODULE_mo_ogone__use_hidden_auth' => 'Bei der Verwendung von Hidden Authorization verlässt der Nutzer die Shopseite bei eintragen seiner Zahlungsinformationen nicht',
+    'SHOP_MODULE_mo_ogone__use_iframe' => 'via iFrame',
+    'HELP_SHOP_MODULE_mo_ogone__use_iframe' => '' .
+        'Hat keinen Effekt, wenn Hidden Authorization deaktiviert ist<br />' .
+        'Wahr: Zur Hidden Authorization wird ein iFrame des PSP verwendet (PCI konform)</br>' .
+        'Falsch: Die Daten werden in einem Formular der Shopseite eingetragen, aber direkt an den PSP gesendet (nicht PCI konform, PCI-Zertifikat notwendig)',
+    'SHOP_MODULE_mo_ogone__transid_param' => 'In Order zu speichernde TransID',
+    'HELP_SHOP_MODULE_mo_ogone__transid_param' => '' .
+        'Gibt an, welcher Wert als OXTRANSID in der Tabelle OXORDER gespeichert werden soll:<br />' .
+        'ORDERID: die vom Modul erstellte ID (z.b.: mo_ogone_123456)<br />' .
+        'PAYID: die von Ogone erstellte ID',
+    'SHOP_MODULE_mo_ogone__transid_param_ORDERID' => 'ORDERID',
+    'SHOP_MODULE_mo_ogone__transid_param_PAYID' => 'PAYID',
+    'SHOP_MODULE_ogone_sPSPID' => 'Ihre PSPID',
+    'HELP_SHOP_MODULE_ogone_sPSPID' => 'Tragen Sie hier Ihre (Test)-PSPID ein, die Sie vom Payment Service Provider erhalten haben.',
+    'SHOP_MODULE_mo_ogone__api_userid' => 'User-ID des Ogone API-Nutzers',
+    'HELP_SHOP_MODULE_mo_ogone__api_userid' => 'Die API Nuzer können im Ogone Backend verwaltet werden. Konfiguration -> Benutzerverwaltung.',
+    'SHOP_MODULE_mo_ogone__api_userpass' => 'Passwort des Ogone API-Nutzers',
+    'HELP_SHOP_MODULE_mo_ogone__api_userpass' => 'Die Passwörter für API Nuzer können im Ogone Backend verwaltet werden. Konfiguration -> Benutzerverwaltung.',
+    'SHOP_MODULE_ogone_sHashingAlgorithm' => 'SHA Hashing',
+    'HELP_SHOP_MODULE_ogone_sHashingAlgorithm' => 'Mit welchem Algorithmus wird der SHA Wert berechnet. Die Einstellung muss mit der Konfiguration im Ogone Backend übereinstimmen. Konfiguration -> Technische Informationen -> Globale Sicherheitsparameter',
+    'SHOP_MODULE_ogone_sHashingAlgorithm_SHA-1' => 'SHA-1',
+    'SHOP_MODULE_ogone_sHashingAlgorithm_SHA-256' => 'SHA-256',
+    'SHOP_MODULE_ogone_sHashingAlgorithm_SHA-512' => 'SHA-512',
+    'SHOP_MODULE_ogone_sSecureKeyIn' => 'SHA-In Signatur',
+    'HELP_SHOP_MODULE_ogone_sSecureKeyIn' => 'Schlüssel für die Berechnung des SHA Wertes für ausgehende Anfragen. Die Einstellung muss mit der Konfiguration im Ogone Backend übereinstimmen. Konfiguration -> Technische Informationen -> Daten- und Ursprungsüberprüfung',
+    'SHOP_MODULE_ogone_sSecureKeyOut' => 'SHA-Out Signatur',
+    'HELP_SHOP_MODULE_ogone_sSecureKeyOut' => 'Schlüssel für die Berechnung des SHA Wertes für eingehende Anfragen. Die Einstellung muss mit der Konfiguration im Ogone Backend übereinstimmen. Konfiguration -> Technische Informationen -> Transaktions-Feedback',
+    'SHOP_MODULE_mo_ogone__timeout' => 'Timout für die API Kommunikation',
+    'HELP_SHOP_MODULE_mo_ogone__timeout' => 'Zeitüberschreitung für die Transaktion in Sekunden. WICHTIG: Der hier angegebene Wert sollte nicht größer als der Zeitüberschreitungswert in Ihrem System sein!',
+    'SHOP_MODULE_mo_ogone__debug_mode' => 'Debug Modus',
+    'HELP_SHOP_MODULE_mo_ogone__debug_mode' => 'Wenn aktiviert, werden zusätzliche Informationen im Frontend ausgegeben. Im Produktivbetrieb unbedingt deaktivieren',
+
+    //payment page layout config
+    'SHOP_MODULE_GROUP_moOgoneLayoutPaymentPage' => 'Layout der Zahlungsseite',
+    'SHOP_MODULE_ogone_sTemplate' => 'Dynamische Vorlage verwenden',
+    'HELP_SHOP_MODULE_ogone_sTemplate' => 'Ist die Option deaktiviert, wird eine statische Vorlage verwendet.',
+    'SHOP_MODULE_ogone_sTplPMListStyle' => 'Layout der Zahlungsmethoden',
+    'HELP_SHOP_MODULE_ogone_sTplPMListStyle' => 'Die Liste der Zahlungsmethoden auf der Zahlungsseite gestalten',
+    'SHOP_MODULE_ogone_sTplPMListStyle_0' => 'Horizontal gruppierte Logos mit dem Gruppennamen links davon',
+    'SHOP_MODULE_ogone_sTplPMListStyle_1' => 'Horizontal gruppierte Logos ohne Gruppennamen',
+    'SHOP_MODULE_ogone_sTplPMListStyle_2' => 'Vertikale Liste von Logos mit Name',
+    'SHOP_MODULE_ogone_blBackButton' => 'Zurück Schaltfläche',
+    'HELP_SHOP_MODULE_ogone_blBackButton' => 'Soll ein "Zurück" Button eingeblendet werden?',
+    'SHOP_MODULE_ogone_blTplTitle' => 'Titel und Kopfzeile der Zahlungseite',
+    'HELP_SHOP_MODULE_ogone_blTplTitle' => 'Ist diese Option aktiv, wird der Inhalt des CMS Snippets "mo_ogone_tplTitle" als Titel der Zahlungsseite verwendet.',
+    'SHOP_MODULE_ogone_sTplBGColor' => 'Hintergrundfarbe',
+    'HELP_SHOP_MODULE_ogone_sTplBGColor' => 'Voreingestellter Wert: white',
+    'SHOP_MODULE_ogone_sTplFontColor' => 'Textfarbe',
+    'HELP_SHOP_MODULE_ogone_sTplFontColor' => 'Voreingestellter Wert: black',
+    'SHOP_MODULE_ogone_sTplTableBGColor' => 'Farbe des Tabellenhintergrundes',
+    'HELP_SHOP_MODULE_ogone_sTplTableBGColor' => 'Voreingestellter Wert: white',
+    'SHOP_MODULE_ogone_sTplTbFontColor' => 'Farbe des Tabellentextes',
+    'HELP_SHOP_MODULE_ogone_sTplTbFontColor' => 'Voreingestellter Wert: black',
+    'SHOP_MODULE_ogone_sTplBtnBGColor' => 'Hintergrundfarbe von Schaltflächen',
+    'HELP_SHOP_MODULE_ogone_sTplBtnBGColor' => 'Voreingestellter Wert: -',
+    'SHOP_MODULE_ogone_sTplBtnFontColor' => 'Textfarbe von Schaltflächen',
+    'HELP_SHOP_MODULE_ogone_sTplBtnFontColor' => 'Voreingestellter Wert: black',
+    'SHOP_MODULE_ogone_sTplFontFamily' => 'Schriftart',
+    'HELP_SHOP_MODULE_ogone_sTplFontFamily' => 'Voreingestellter Wert: Verdana',
+    'SHOP_MODULE_ogone_sTplLogo' => 'Ihr Logo',
+    'HELP_SHOP_MODULE_ogone_sTplLogo' => 'URL/Dateiname des Logos, welches oben auf der Zahlungsseite neben dem Titel erscheinen soll. Die URL muss absolut sein. Das Logo muss auf einem sicheren Server gespeichert sein (https://www.ihrShop.de). Wenn Sie über keine sichere Umgebung zur Speicherung des Bildes verfügen, können Sie eine JPG- oder GIF-Datei (und Ihre PSPID) an support@ogone.com senden. Dies ist nur für reguläre Produktiv-Konten möglich, weil kostenpflichtig. Bevor Sie uns das Logo schicken, aktivieren Sie bitte die Option "Logo Hosting" in Ihrem Produktiv-Konto unter Konfiguration > Konto >Ihre Optionen. Wenn das Logo auf unserem Server gespeichert ist, müssen Sie nur den Dateinamen angeben, nicht die komplette URL.',
+
 // Admin Menu
     'mo_ogone' => 'Ogone',
     'mo_ogone__setup' => 'Einstellungen',

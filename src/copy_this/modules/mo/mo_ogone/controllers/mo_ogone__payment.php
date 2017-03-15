@@ -190,6 +190,10 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
     }
 
+    /**
+     * @param null|string $paymentId
+     * @return array
+     */
     public function mo_ogone__getCurrentPaymentConfig($paymentId = null)
     {
         if (!$this->mo_ogone__currentPaymentConfig === null) {
