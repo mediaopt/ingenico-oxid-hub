@@ -36,26 +36,37 @@ class mo_ogone__interface extends oxAdminList
      * @var string
      */
     protected $_sThisTemplate = 'mo_ogone__interface.tpl';
+
+    /**
+     * number of displayed log entries
+     *
+     * @var int
+     */
     protected $iAdminListSize = 50;
 
+    /**
+     * prepare log list parameters
+     *
+     * @extends init
+     */
     public function init()
     {
-        $myConfig = $this->getConfig();
-
-        $myConfig->iAdminListSize = $this->iAdminListSize;
-        $ret = parent::init();
+        $oxConfig = $this->getConfig();
+        $oxConfig->iAdminListSize = $this->iAdminListSize;
 
         $this->_setCurrentListPosition(oxRegistry::getConfig()->getRequestParameter('jumppage'));
 
-        return $ret;
+        return parent::init();
     }
 
+    /**
+     * @return null
+     */
     public function render()
     {
         $sReturn = parent::render();
 
-
-        $myConfig = $this->getConfig();
+        $oxConfig = $this->getConfig();
 
         $this->oList = oxNew('oxlist');
         $this->oList->init('oxbase', 'mo_ogone__payment_logs');
@@ -64,10 +75,12 @@ class mo_ogone__interface extends oxAdminList
 
         $sCountSelect = 'select count(*) from mo_ogone__payment_logs ';
 
+        $groupByStatement = ' GROUP BY CONCAT(transID, "-", STATUS) ';
+
         $sWhere = '';
 
         if ($this->blfiltering) {
-            $aFilter = $myConfig->getRequestParameter('ogonelogfilter');
+            $aFilter = $oxConfig->getRequestParameter('ogonelogfilter');
             if (is_array($aFilter)) {
                 foreach ($aFilter as $sKey => $sValue) {
                     if ($sValue !== '') {
@@ -97,7 +110,7 @@ class mo_ogone__interface extends oxAdminList
             }
         }
 
-        $sSelect .= $sWhere;
+        $sSelect .= $sWhere . $groupByStatement;
         $sCountSelect .= $sWhere;
 
         $this->iListSize = oxDb::getDb()->getOne($sCountSelect);
@@ -105,14 +118,14 @@ class mo_ogone__interface extends oxAdminList
             $this->iCurrListPos = 1;
         }
 
-        $iAdminListSize = $myConfig->getConfigParam('iAdminListSize');
+        $iAdminListSize = $oxConfig->getConfigParam('iAdminListSize');
 
         $this->_setCurrentListPosition(oxRegistry::getConfig()->getRequestParameter('jumppage'));
         $sSelect .= 'order by mo_ogone__payment_logs.date desc';
-        $this->oList->iSQLRecords = $myConfig->getConfigParam('iAdminListSize');
+        $this->oList->iSQLRecords = $oxConfig->getConfigParam('iAdminListSize');
         $this->oList->iSQLStart = $this->iCurrListPos;
 
-        $this->oList->setSqlLimit($this->iCurrListPos, $myConfig->getConfigParam('iAdminListSize'));
+        $this->oList->setSqlLimit($this->iCurrListPos, $oxConfig->getConfigParam('iAdminListSize'));
 
         if ($this->oList->iSQLStart > $this->iListSize) {
             $this->oList->iSQLStart = 0;
@@ -183,7 +196,7 @@ class mo_ogone__interface extends oxAdminList
 
         // hidden default bottom custom navi
         $this->_aViewData['sHelpURL'] = false;
-        $this->_aViewData['oxid'] = $myConfig->getShopId();
+        $this->_aViewData['oxid'] = $oxConfig->getShopId();
 
         if ($this->getConfig()->getConfigParam('mo_ogone__isLiveMode')) {
             $this->_aViewData['bottom_buttons'] = 'prod';
@@ -196,6 +209,9 @@ class mo_ogone__interface extends oxAdminList
         return $sReturn;
     }
 
+    /**
+     * enable filter
+     */
     protected function setFilter()
     {
         $this->blfiltering = true;
