@@ -54,27 +54,24 @@
                         </tr>
                         <!--
         <tr>
-          <td valign="top" class="edittext" width="250" nowrap="">[{oxmultilang ident="OGONE_ALIAS" }]</td>
+          <td valign="top" class="edittext" width="250" nowrap="">[{*oxmultilang ident="OGONE_ALIAS" *}]</td>
           <td valign="top" class="edittext" nowrap="">
             <fieldset id="ogonetemplate">
               <legend>
                 <input type=hidden name=confbools[ogone_blAlias] value=false>
-                <input type="checkbox" name=confbools[ogone_blAlias] value="true"[{if $confbools.ogone_blAlias == true }] checked=""[{/if}] onchange="Javascript:templateAlias(this);" [{ $readonly }]>
+                <input type="checkbox" name=confbools[ogone_blAlias] value="true"[{*if $confbools.ogone_blAlias == true }] checked=""[{/if*}] onchange="Javascript:templateAlias(this);" [{ $readonly }]>
               </legend>
-        [{oxmultilang ident="OGONE_ALIAS_USAGE" }]<br />
+        [{*oxmultilang ident="OGONE_ALIAS_USAGE" *}]<br />
         <span id="alias_usage" style="display:inline;">
-        [{foreach from=$languages item=lang}]
+        [{*foreach from=$languages item=lang}]
           [{ $lang->name }] <input type=text class="editinput" style="width:410px;" name=confstrs[ogone_sAliasUsage[{ $lang->id }]] value="[{ $lang->aliasUsage }]"><br />
-        [{/foreach}]
+        [{/foreach*}]
         </span>
       </fieldset>
     </td>
   </tr>
         -->
                         <tr>
-                            <td valign="top" class="edittext" width="250" nowrap="">
-                                [{oxmultilang ident="OGONE_TEMPLATE" }]
-                            </td>
                             <td valign="top" class="edittext">
                                 [{if $start_setup }]
                             <input type="submit" name="save" value="[{oxmultilang ident="START_SETUP" }]" [{
