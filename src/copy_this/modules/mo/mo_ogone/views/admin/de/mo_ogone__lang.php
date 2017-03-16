@@ -111,6 +111,14 @@ $aLang = array(
     'SHOP_MODULE_ogone_sTplLogo' => 'Ihr Logo',
     'HELP_SHOP_MODULE_ogone_sTplLogo' => 'URL/Dateiname des Logos, welches oben auf der Zahlungsseite neben dem Titel erscheinen soll. Die URL muss absolut sein. Das Logo muss auf einem sicheren Server gespeichert sein (https://www.ihrShop.de). Wenn Sie über keine sichere Umgebung zur Speicherung des Bildes verfügen, können Sie eine JPG- oder GIF-Datei (und Ihre PSPID) an support@ogone.com senden. Dies ist nur für reguläre Produktiv-Konten möglich, weil kostenpflichtig. Bevor Sie uns das Logo schicken, aktivieren Sie bitte die Option "Logo Hosting" in Ihrem Produktiv-Konto unter Konfiguration > Konto >Ihre Optionen. Wenn das Logo auf unserem Server gespeichert ist, müssen Sie nur den Dateinamen angeben, nicht die komplette URL.',
 
+    //interface
+    'SHOP_MODULE_GROUP_moOgoneInterface' => 'Statusmeldungen',
+    'SHOP_MODULE_mo_ogone__useGroupBy' => 'Identische Einträge nur einmal anzeigen',
+    'HELP_SHOP_MODULE_mo_ogone__useGroupBy' => 'Wenn deferred Feedback aktiviert ist, kann es sein dass zu einer' .
+        ' Transaktion 2 mal ein identischer Eintrag gespeichert wird. Allerdings sind die Quellen für deas Feedback '
+        . 'verschieden (Benutzer und deferred Feedback). Um die Übersicht zu verbessern,'
+        . ' können die doppelten Einträge ausgeblendet werden.',
+
 // Admin Menu
     'mo_ogone' => 'Ogone',
     'mo_ogone__setup' => 'Einstellungen',

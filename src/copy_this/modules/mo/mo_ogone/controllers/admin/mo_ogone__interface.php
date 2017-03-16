@@ -75,7 +75,10 @@ class mo_ogone__interface extends oxAdminList
 
         $sCountSelect = 'select count(*) from mo_ogone__payment_logs ';
 
-        $groupByStatement = ' GROUP BY CONCAT(transID, "-", STATUS) ';
+        $groupByStatement = '';
+        if($oxConfig->getConfigParam('mo_ogone__useGroupBy')) {
+            $groupByStatement = ' GROUP BY CONCAT(transID, "-", STATUS) ';
+        }
 
         $sWhere = '';
 

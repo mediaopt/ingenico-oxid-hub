@@ -115,6 +115,14 @@ $aLang = array(
     . 'accounts since this is a paying option! Please activate the Logo Hosting option in your Account > Options page before sending us'
     . 'your logo). If the logo is stored on our servers, you only need to enter the filename, not the whole URL.',
 
+    //interface
+    'SHOP_MODULE_GROUP_moOgoneInterface' => 'Status overview',
+    'SHOP_MODULE_mo_ogone__useGroupBy' => 'Display identical entries only once',
+    'HELP_SHOP_MODULE_mo_ogone__useGroupBy' => 'If deferred feedback is activated, it may occur that for a' .
+        ' transaction 2 identical log entries are saved. There are coming from different sources '
+        . '(customer and deferred feedback). To improve the usability,'
+        . ' identical entries are only displayed once.',
+
 // Admin Menu
     'mo_ogone'                                     => 'Ogone',
     'mo_ogone__setup'                              => 'Settings',

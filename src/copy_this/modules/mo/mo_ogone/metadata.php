@@ -288,6 +288,12 @@ $aModule = array(
             'type' => 'str',
             'value' => '',
         ),
+        array(
+            'group' => 'moOgoneInterface',
+            'name'  => 'mo_ogone__useGroupBy',
+            'type' => 'bool',
+            'value' => '1',
+        ),
     ),
     'events' => array(
         'onActivate' => 'mo_ogone__events::onActivate',
