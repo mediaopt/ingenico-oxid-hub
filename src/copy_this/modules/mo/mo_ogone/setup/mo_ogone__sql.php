@@ -70,7 +70,7 @@ class mo_ogone__sql
      */
     public static function getAliasTableCreateSql()
     {
-        return 'CREATE TABLE IF NOT EXISTS `mo_paysolution__card` (
+        return 'CREATE TABLE IF NOT EXISTS `mo_ogone__card` (
             `OXID` CHAR( 32 ) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL ,
             `MASKED_NO` VARCHAR( 16 ) NOT NULL ,
             `HOLDER` VARCHAR( 255 ) NOT NULL ,

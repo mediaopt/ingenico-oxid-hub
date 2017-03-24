@@ -85,6 +85,7 @@ class mo_ogone__events
         self::mo_ogone__addOgoneStatusColumnInOrderTable();
         self::mo_ogone__installOrderReservationTable();
         self::mo_ogone__addPaymentPageDynamicTitleSnippet();
+        self::mo_ogone__installAliasTable();
 
         /** @var oxDbMetaDataHandler $oDbHandler */
         $oDbHandler = oxNew('oxDbMetaDataHandler');
@@ -238,6 +239,29 @@ class mo_ogone__events
         // apply new language
         $oxContent->setLanguage(1);
         $oxContent->save();
+    }
+
+    /**
+     * install alias storage if not exists
+     *
+     * @throws \oxConnectionException
+     * @throws \Exception
+     */
+    private static function mo_ogone__installAliasTable()
+    {
+        $config = oxRegistry::getConfig();
+        $dbName = $config->getConfigParam('dbName');
+
+        if (!self::tableExists($dbName, 'mo_ogone__card')) {
+            $charset = ' TYPE=MyISAM';
+            if ($config->isUtf()) {
+                $charset = ' ENGINE=MyISAM DEFAULT CHARSET=utf8';
+            }
+
+            $query = mo_ogone__sql::getAliasTableCreateSql() . $charset;
+            self::mo_ogone__executeSql($query);
+        }
+
     }
 
 
