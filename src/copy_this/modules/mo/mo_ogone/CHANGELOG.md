@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.1]
+### Changed
+- don't send order mails when handling deferred feedback
+
 ## [4.0.0]
 ### Added
 - changelog
