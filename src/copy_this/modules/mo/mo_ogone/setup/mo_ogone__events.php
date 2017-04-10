@@ -82,7 +82,6 @@ class mo_ogone__events
     private static function updateDatabase()
     {
         self::mo_ogone__installPaymentLogTable();
-        self::mo_ogone__installAliasTable();
         self::mo_ogone__addOgoneStatusColumnInOrderTable();
         self::mo_ogone__installOrderReservationTable();
         self::mo_ogone__addPaymentPageDynamicTitleSnippet();
@@ -258,29 +257,5 @@ class mo_ogone__events
         $oxContent->setLanguage(1);
         $oxContent->save();
     }
-
-    /**
-     * install alias storage if not exists
-     *
-     * @throws \oxConnectionException
-     * @throws \Exception
-     */
-    private static function mo_ogone__installAliasTable()
-    {
-        $config = oxRegistry::getConfig();
-        $dbName = $config->getConfigParam('dbName');
-
-        if (!self::tableExists($dbName, 'mo_ogone__card')) {
-            $charset = ' TYPE=MyISAM';
-            if ($config->isUtf()) {
-                $charset = ' ENGINE=MyISAM DEFAULT CHARSET=utf8';
-            }
-
-            $query = mo_ogone__sql::getAliasTableCreateSql() . $charset;
-            self::mo_ogone__executeSql($query);
-        }
-
-    }
-
 
 }
