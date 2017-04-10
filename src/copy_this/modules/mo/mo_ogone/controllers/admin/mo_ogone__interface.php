@@ -97,14 +97,14 @@ class mo_ogone__interface extends oxAdminList
                             $sWhere .= '(';
                             $sWhere .= "mo_ogone__payment_logs.billfname like '%" . $sValue . "%' ";
                             $sWhere .= ' or ';
-                            $sWhere .= "mo_ogone__payment_logs.billfname like '%" . $sValue . "%' ";
+                            $sWhere .= "mo_ogone__payment_logs.billlname like '%" . $sValue . "%' ";
                             $sWhere .= ')';
-                        } elseif ($sKey === 'acceptance' || $sKey == 'cn') {
-                            $sWhere = "mo_ogone__payment_logs.$sKey like '%" . $sValue . "%' ";
+                        } elseif (in_array($sKey, ['acceptance', 'cn', 'transid','payid','ncerror'])) {
+                            $sWhere .= "mo_ogone__payment_logs.$sKey like '%" . $sValue . "%' ";
                         } elseif ($sKey === 'orderid') {
-                            $sWhere = "mo_ogone__payment_logs.$sKey like '" . $sValue . "%' ";
+                            $sWhere .= "mo_ogone__payment_logs.$sKey like '" . $sValue . "%' ";
                         } else {
-                            $sWhere = "where mo_ogone__payment_logs.$sKey = '" . $sValue . '\' ';
+                            $sWhere .= "mo_ogone__payment_logs.$sKey = '" . $sValue . '\' ';
                         }
 
                         $this->_aViewData['ogonelogfilter'][$sKey] = $sValue;
@@ -215,7 +215,7 @@ class mo_ogone__interface extends oxAdminList
     /**
      * enable filter
      */
-    protected function setFilter()
+    public function setFilter()
     {
         $this->blfiltering = true;
     }

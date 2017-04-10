@@ -59,10 +59,15 @@
 
       <table>
         <tr class="listitem">
-          <td class="listfilter" align="center" style="width:180px"><div class="r1"><div class="b1">Filter</div></div></td>
+          <td class="listfilter">
+            <div class="r1"><div class="b1">
+                <input type="submit" class="edittext" value="Filter" style="width: 140px"></div></div></td>
           <td class="listfilter">
             <div class="r1"><div class="b1">
                 <input name="ogonelogfilter[orderid]" value="[{$ogonelogfilter.orderid}]" type="text" class="edittext" style="width: 50px"></div></div></td>
+          <td class="listfilter">
+            <div class="r1"><div class="b1">
+                <input name="ogonelogfilter[transid]" value="[{$ogonelogfilter.transid}]" type="text" class="edittext" style="width: 90px"></div></div></td>
           <td class="listfilter">
             <div class="r1"><div class="b1">
                 <input name="ogonelogfilter[customer_name]" value="[{$ogonelogfilter.customer_name}]" type="text" class="edittext" style="width: 90px"></div></div></td>
@@ -96,10 +101,7 @@
           <td class="listfilter">
             <div class="r1"><div class="b1">
                 <input name="ogonelogfilter[trxdate]" value="[{$ogonelogfilter.trxdate}]" type="text" class="edittext" style="width: 90px"></div></div></td>
-          <td class="listfilter">
-            <div class="r1"><div class="b1">
-                <input type="submit" class="edittext" value="Filter" style="width: 140px"></div></div></td>
-        </tr>
+          </tr>
         <tr>
           <td class="listheader">[{oxmultilang ident="OGONE_DATE" }]</td>
           <td class="listheader">[{oxmultilang ident="OGONE_ORDERID" }]</td>
