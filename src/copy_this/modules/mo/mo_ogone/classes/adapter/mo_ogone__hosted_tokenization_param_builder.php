@@ -29,6 +29,7 @@ class mo_ogone__hosted_tokenization_param_builder extends mo_ogone__request_para
             } else {
                 $params['CARD.BRAND'] = $brand;
             }
+            $params['ALIAS.STOREPERMANENTLY'] = 'Y';
             $params['ACCOUNT.PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
             $params['PARAMETERS.PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;
 

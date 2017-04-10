@@ -117,7 +117,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
         } else {
             $field = 'oxuser__ox' . $param;
         }
-        return $this->getOxUser()->$field->value;
+        return htmlspecialchars($this->getOxUser()->$field->value, ENT_QUOTES);
     }
 
     protected function getDelProperty($param)
@@ -126,7 +126,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
         if ($user->getSelectedAddressId()) {
             $field = 'oxaddress__ox' . $param;
             $deliveryAddress = $user->getSelectedAddress();
-            return $deliveryAddress->$field->value;
+            return htmlspecialchars($deliveryAddress->$field->value, ENT_QUOTES);
         }
         return null;
     }

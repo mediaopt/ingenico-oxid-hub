@@ -54,6 +54,9 @@ $aLang = array(
         'Hat keinen Effekt, wenn Hidden Authorization deaktiviert ist<br />' .
         'Wahr: Zur Hidden Authorization wird ein iFrame des PSP verwendet (PCI konform)</br>' .
         'Falsch: Die Daten werden in einem Formular der Shopseite eingetragen, aber direkt an den PSP gesendet (nicht PCI konform, PCI-Zertifikat notwendig)',
+    'SHOP_MODULE_mo_ogone__use_alias_manager' => 'Alias Manager verwenden',
+    'HELP_SHOP_MODULE_mo_ogone__use_alias_manager' => '' .
+        'Ermöglicht dem Nutzer Kreditkarten bei der nächsten Bestellung erneut zu verwenden',
     'SHOP_MODULE_mo_ogone__transid_param' => 'In Order zu speichernde TransID',
     'HELP_SHOP_MODULE_mo_ogone__transid_param' => '' .
         'Gibt an, welcher Wert als OXTRANSID in der Tabelle OXORDER gespeichert werden soll:<br />' .

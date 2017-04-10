@@ -72,6 +72,18 @@ $aLang = array(
     'MO_OGONE__BILLPAY_TERMS' => 'Billpay Terms and Conditions',
     'MO_OGONE__READ_AND_ACCEPTED' => 'and accept them.',
     'MO_OGONE__BILLPAY_BIRTHDATE_HELP' => '(dd.mm.YYYY)',
+# ALIAS
+    'MO_OGONE__REGISTER_ALIAS_DESC' => "Qui è possibile gestire i dati della carta di credito.",
+    'MO_OGONE__MANAGE_ALIAS_HEADER' => "Gestire le carte di credito",
+    'MO_OGONE__MANAGE_ALIAS_LINK' => "Gestire le carte di credito",
+    'MO_OGONE__NO_CARD' => "Non si accettano carte di credito archiviati",
+    'MO_OGONE__YOUR_CARD' => "La seguente carta di credito viene memorizzato nel sistema",
+    'MO_OGONE__MASKED_NO' => "carta di credito",
+    'MO_OGONE__BRAND' => "tipo di carta di credito",
+    'MO_OGONE__EXP_DATE' => "valido fino a",
+    'MO_OGONE__HOLDER' => "Titolare",
+    'MO_OGONE__ACTIONS' => 'Azione',
+    'MO_OGONE__IS_DEFAULT' => 'carta principale',
 # NCERROR
     'MO_OGONE__PAYMENT_0020001001' => 'Autorizzazione non riuscita. Tentare nuovamente',
     'MO_OGONE__PAYMENT_0020001002' => 'Autorizzazione non riuscita. Tentare nuovamente',

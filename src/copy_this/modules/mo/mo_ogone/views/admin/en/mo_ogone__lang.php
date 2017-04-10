@@ -54,6 +54,9 @@ $aLang = array(
         'Has no effect when hidden authorization is disabled<br />' .
         'true: the customer puts his card information in an iFrame of the psp (PCI konform)</br>' .
         'false: the customer puts his card information into a form on the shopsite that is sent to the psp (not PCI conform, PCI-Certificat necessary)',
+    'SHOP_MODULE_mo_ogone__use_alias_manager' => 'Use Alias Manager',
+    'HELP_SHOP_MODULE_mo_ogone__use_alias_manager' => '' .
+        'Stores customers credit card alias data for future payments',
     'SHOP_MODULE_mo_ogone__transid_param' => 'Which ID to store as OXTRANSID in OXORDER',
     'HELP_SHOP_MODULE_mo_ogone__transid_param' => '' .
         'Specifies which value should be stored as OXTRANSID in the table OXORDER:<br />' .

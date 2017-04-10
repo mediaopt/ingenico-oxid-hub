@@ -75,6 +75,18 @@ $aLang = array(
     'MO_OGONE__BILLPAY_TERMS'     => 'Billpay Nutzungsbedingungen',
     'MO_OGONE__READ_AND_ACCEPTED' => 'gelesen und akzeptiere sie.',
     'MO_OGONE__BILLPAY_BIRTHDATE_HELP' => '(dd.mm.YYYY)',
+# ALIAS
+    'MO_OGONE__REGISTER_ALIAS_DESC' => "Hier können Sie Ihre Kreditkarten verwalten.",
+    'MO_OGONE__MANAGE_ALIAS_HEADER' => "Kreditkarte verwalten",
+    'MO_OGONE__MANAGE_ALIAS_LINK' => "Kreditkarte verwalten",
+    'MO_OGONE__NO_CARD' => "Keine Kreditkarte gespeichert",
+    'MO_OGONE__YOUR_CARD' => "Folgende Kreditkarte ist im System gespeichert",
+    'MO_OGONE__MASKED_NO' => "Kreditkarte",
+    'MO_OGONE__BRAND' => "Kartentyp",
+    'MO_OGONE__EXP_DATE' => "Gültig bis",
+    'MO_OGONE__HOLDER' => "Karteninhaber",
+    'MO_OGONE__ACTIONS' => 'Aktion',
+    'MO_OGONE__IS_DEFAULT' => 'Hauptkarte',
 # NCERROR
     'MO_OGONE__PAYMENT_STATUS_0020001001' => 'Genehmigung fehlgeschlagen, bitte probieren Sie es erneut.',
     'MO_OGONE__PAYMENT_STATUS_0020001002' => 'Genehmigung fehlgeschlagen, bitte probieren Sie es erneut.',

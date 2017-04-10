@@ -13,6 +13,23 @@
  */
 class mo_ogone__sql
 {
+    public static function getAliasTableCreateSql()
+    {
+        return "CREATE TABLE `mo_ogone__alias` (
+            `OXID` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+            `OXUSERID` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
+            `BRAND` varchar(25) NOT NULL default '',
+            `CARDNO` varchar(21) NOT NULL default '',
+            `ALIAS` varchar(50) NOT NULL default '',
+            `CN` varchar(35) NOT NULL default '',
+            `EXP_DATE` DATE NOT NULL,
+            `CREATED_AT` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `IS_DEFAULT` TINYINT( 1 ) NOT NULL DEFAULT '0',
+            PRIMARY KEY (OXID),
+            INDEX (OXUSERID)
+          )";
+    }
+
     public static function getLogTableCreateSql()
     {
         return "CREATE TABLE `mo_ogone__payment_logs` (

@@ -25,6 +25,7 @@ class mo_ogone__alias_param_builder extends mo_ogone__request_param_builder
             $params['BRAND'] = $brand;
             $params['PSPID'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
             $params['PARAMPLUS'] = http_build_query($this->getOxidSessionParamsForRemoteCalls()) . '&paymentid=' . $paymentId;
+            $params['ALIASPERSISTEDAFTERUSE'] = 'Y';
 
             $params = $this->handleUtf8Options($params);
             $params['SHASIGN'] = $this->getShaSignForParams($params);

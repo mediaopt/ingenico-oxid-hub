@@ -82,6 +82,7 @@ class mo_ogone__events
     private static function updateDatabase()
     {
         self::mo_ogone__installPaymentLogTable();
+        self::mo_ogone__installAliasTable();
         self::mo_ogone__addOgoneStatusColumnInOrderTable();
         self::mo_ogone__installOrderReservationTable();
         self::mo_ogone__addPaymentPageDynamicTitleSnippet();
@@ -89,6 +90,27 @@ class mo_ogone__events
         /** @var oxDbMetaDataHandler $oDbHandler */
         $oDbHandler = oxNew('oxDbMetaDataHandler');
         $oDbHandler->updateViews();
+    }
+
+    /**
+     * Install new tables, update fields and clear cache
+     * @throws \oxConnectionException
+     * @throws \Exception
+     */
+    private static function mo_ogone__installAliasTable()
+    {
+        $config = oxRegistry::getConfig();
+        $dbName = $config->getConfigParam('dbName');
+
+        if (!self::tableExists($dbName, 'mo_ogone__alias')) {
+            $charset = ' TYPE=MyISAM';
+            if ($config->isUtf()) {
+                $charset = ' ENGINE=MyISAM DEFAULT CHARSET=utf8';
+            }
+
+            $query = mo_ogone__sql::getAliasTableCreateSql() . $charset;
+            self::mo_ogone__executeSql($query);
+        }
     }
 
     /**
@@ -125,10 +147,8 @@ class mo_ogone__events
     {
         $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
 
-        $query = "SELECT DATA_TYPE FROM information_schema.columns WHERE table_schema = '"
-            . mysqli_real_escape_string($dbName) . '\' AND table_name = \'mo_ogone__payment_logs\' " 
-            . "AND column_name = \'PAYID\';';
-        $result = oxDb::getDb()->getOne($query);
+        $query = "SELECT DATA_TYPE FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?";
+        $result = oxDb::getDb()->getOne($query, array($dbName, 'mo_ogone__payment_logs', 'PAYID'));
         if ($result !== 'varchar') {
             self::mo_ogone__executeSql("ALTER TABLE  `mo_ogone__payment_logs` CHANGE"
                 . "  `PAYID`  `PAYID` VARCHAR( 255 ) NOT NULL DEFAULT  '0';");
@@ -145,7 +165,7 @@ class mo_ogone__events
     {
         $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
 
-        if (!self::tableExists('mo_ogone__order_number_reservations')) {
+        if (!self::tableExists($dbName,'mo_ogone__order_number_reservations')) {
             $installSql = 'CREATE TABLE `mo_ogone__order_number_reservations` (
         `OXID` CHAR( 32 ) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL ,
         UNIQUE (`OXID`)
@@ -194,11 +214,9 @@ class mo_ogone__events
      */
     private static function tableExists($dbName, $tableName)
     {
-        $sQuery = "SELECT * FROM information_schema.tables WHERE table_schema = '"
-            . mysqli_real_escape_string($dbName) . "' AND table_name = '"
-            . mysqli_real_escape_string($tableName) . "';";
-        $result = oxDb::getDb()->execute($sQuery);
-        return $result->RecordCount() === 0;
+        $sQuery = "SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ?";
+        $result = oxDb::getDb()->execute($sQuery, array($dbName, $tableName));
+        return $result->RecordCount() !== 0;
     }
 
     /**

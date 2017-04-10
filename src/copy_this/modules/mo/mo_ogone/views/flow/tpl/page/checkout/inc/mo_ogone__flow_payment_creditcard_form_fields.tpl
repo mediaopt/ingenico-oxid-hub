@@ -22,7 +22,12 @@
                   required="required">
             [{/if}]
             [{assign var="mo_ogone__currentPaymentConfig" value=$oView->mo_ogone__getCurrentPaymentConfig('ogone_credit_card')}]
-
+            [{if $oxConfig->getShopConfVar('mo_ogone__use_alias_manager')}]
+              [{assign var="aliases" value=$oxcmp_user->mo_ogone__getCards()}]
+              [{foreach from=$oxcmp_user->mo_ogone__getCards() item="alias"}]
+                  <option value="alias_[{$alias->mo_ogone__alias__alias->value}]">[{$alias->mo_ogone__alias__brand->value}]: [{$alias->mo_ogone__alias__cardno->value}]  [{oxmultilang ident="VALID_UNTIL"}] [{$alias->getExpirationData()}]</option>
+              [{/foreach}]
+            [{/if}]
             [{foreach from=$mo_ogone__currentPaymentConfig.brand item="brand"}]
             [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth') && $oxConfig->getShopConfVar('mo_ogone__use_iframe') && $brand == 'MasterCard'}]
             <option value="Eurocard">[{$brand}]</option>
@@ -54,6 +59,7 @@
 
 [{* Hidden Auth using form on shopsite (not via iFrame) *}]
 [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth') && !$oxConfig->getShopConfVar('mo_ogone__use_iframe')}]
+  <div id="mo_ogone__creditcard_fields">
   <div class="form-group">
     <label class="req control-label col-lg-3">[{oxmultilang ident="NUMBER"}]</label>
     <div class="col-lg-9">
@@ -106,5 +112,6 @@
              name="CVC" value="" required="required" autocomplete="off">
       <span class="help-block">[{oxmultilang ident="MO_OGONE__PAGE_CHECKOUT_PAYMENT_SECURITYCODEDESCRIPTION"}]</span>
     </div>
+  </div>
   </div>
   [{/if}]

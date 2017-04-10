@@ -72,6 +72,18 @@ $aLang = array(
     'MO_OGONE__BILLPAY_TERMS' => 'Billpay Terms and Conditions',
     'MO_OGONE__READ_AND_ACCEPTED' => 'and accept them.',
     'MO_OGONE__BILLPAY_BIRTHDATE_HELP' => '(dd.mm.YYYY)',
+# ALIAS
+    'MO_OGONE__REGISTER_ALIAS_DESC' => "Hier kunt u uw credit card gegevens te beheren.",
+    'MO_OGONE__MANAGE_ALIAS_HEADER' => "Beheer creditcards",
+    'MO_OGONE__MANAGE_ALIAS_LINK' => "Beheer creditcards",
+    'MO_OGONE__NO_CARD' => "Creditcards worden niet opgeslagen",
+    'MO_OGONE__YOUR_CARD' => "De volgende credit card wordt opgeslagen in het systeem",
+    'MO_OGONE__MASKED_NO' => "credit card",
+    'MO_OGONE__BRAND' => "credit card type",
+    'MO_OGONE__EXP_DATE' => "geldig tot",
+    'MO_OGONE__HOLDER' => "Houder",
+    'MO_OGONE__ACTIONS' => 'Actie',
+    'MO_OGONE__IS_DEFAULT' => 'Hoofd kaart',
 # NCERROR
     'MO_OGONE__PAYMENT_STATUS_0020001001' => 'Autorisatie geweigerd, gelieve opnieuw te proberen',
     'MO_OGONE__PAYMENT_STATUS_0020001002' => 'Authorization failed, please retry',

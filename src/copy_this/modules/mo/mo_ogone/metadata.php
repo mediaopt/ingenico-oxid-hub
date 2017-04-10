@@ -40,6 +40,7 @@ $aModule = array(
         'oxorder' => 'mo/mo_ogone/models/mo_ogone__oxorder',
         'oxoutput' => 'mo/mo_ogone/models/mo_ogone__oxoutput',
         'oxpayment' => 'mo/mo_ogone/models/mo_ogone__oxpayment',
+        'oxuser' => 'mo/mo_ogone/models/mo_ogone__oxuser',
         //core
     ),
     'files' => array(
@@ -52,9 +53,11 @@ $aModule = array(
         'mo_ogone__order_error' => 'mo/mo_ogone/controllers/mo_ogone__order_error.php',
         'mo_ogone__payment_form' => 'mo/mo_ogone/controllers/mo_ogone__payment_form.php',
         'mo_ogone__template' => 'mo/mo_ogone/controllers/mo_ogone__template.php',
+        'mo_ogone__manage_aliases' => 'mo/mo_ogone/controllers/mo_ogone__manage_aliases.php',
         //models
         'mo_ogone__order_number_reservation' => 'mo/mo_ogone/models/mo_ogone__order_number_reservation.php',
         'mo_ogone__payment_log' => 'mo/mo_ogone/models/mo_ogone__payment_log.php',
+        'mo_ogone__alias' => 'mo/mo_ogone/models/mo_ogone__alias.php',
         //adapter
         'mo_ogone__abstract_factory' => 'mo/mo_ogone/classes/adapter/mo_ogone__abstract_factory.php',
         'mo_ogone__sha_settings' => 'mo/mo_ogone/classes/adapter/mo_ogone__sha_settings.php',
@@ -71,6 +74,7 @@ $aModule = array(
         'mo_ogone__transaction_logger' => 'mo/mo_ogone/classes/mo_ogone__transaction_logger.php',
         //events
         'mo_ogone__events' => 'mo/mo_ogone/setup/mo_ogone__events.php',
+        'mo_ogone__sql' => 'mo/mo_ogone/setup/mo_ogone__sql.php',
     ),
     'blocks' => array(
         array(
@@ -88,6 +92,17 @@ $aModule = array(
             'block' => 'admin_order_overview_status',
             'file' => 'views/blocks/admin/admin_order_overview_status.tpl'
         ),
+        array(
+            'template' => 'page/account/dashboard.tpl',
+            'block'    => 'account_dashboard_col2',
+            'file'     => 'views/blocks/page/account/account_dashboard_col2.tpl'
+        ),
+        array(
+            'template'  => 'page/account/inc/account_menu.tpl',
+            'block'     => 'account_menu',
+            'file'      => 'views/blocks/page/account/inc/account_menu.tpl'
+        ),
+
     ),
     'templates' => array(
         //admin templates
@@ -100,6 +115,9 @@ $aModule = array(
         'mo_ogone__payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard_form_fields.tpl',
         'mo_ogone__payment_invoice.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_invoice.tpl',
         'mo_ogone__payment_one_page.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/mo_ogone__payment_one_page.tpl',
+        'mo_ogone__register_alias.tpl' => 'mo/mo_ogone/views/azure/tpl/page/account/mo_ogone__register_alias.tpl',
+        'mo_ogone__account_dashboard_field.tpl' => 'mo/mo_ogone/views/azure/tpl/page/account/mo_ogone__account_dashboard_field.tpl',
+        'mo_ogone__manage_aliases.tpl' => 'mo/mo_ogone/views/azure/tpl/page/account/mo_ogone__manage_aliases.tpl',
         'payment_form.tpl' => 'mo/mo_ogone/views/azure/tpl/page/mo_ogone/payment_form.tpl',
 
         //flow templates
@@ -107,6 +125,9 @@ $aModule = array(
         'mo_ogone__flow_payment_creditcard_form_fields.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_creditcard_form_fields.tpl',
         'mo_ogone__flow_payment_invoice.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/inc/mo_ogone__flow_payment_invoice.tpl',
         'mo_ogone__flow_payment_one_page.tpl' => 'mo/mo_ogone/views/flow/tpl/page/checkout/mo_ogone__flow_payment_one_page.tpl',
+        'mo_ogone__flow_register_alias.tpl' => 'mo/mo_ogone/views/flow/tpl/page/account/mo_ogone__flow_register_alias.tpl',
+        'mo_ogone__flow_account_dashboard_field.tpl' => 'mo/mo_ogone/views/flow/tpl/page/account/mo_ogone__flow_account_dashboard_field.tpl',
+        'mo_ogone__flow_manage_aliases.tpl' => 'mo/mo_ogone/views/flow/tpl/page/account/mo_ogone__flow_manage_aliases.tpl',
         'flow_payment_form.tpl' => 'mo/mo_ogone/views/flow/tpl/page/mo_ogone/flow_payment_form.tpl',
 
         //common templates
@@ -156,6 +177,12 @@ $aModule = array(
         array(
             'group' => 'moOgoneApiConfiguration',
             'name'  => 'mo_ogone__use_iframe',
+            'type'  => 'bool',
+            'value' => '1'
+        ),
+        array(
+            'group' => 'moOgoneApiConfiguration',
+            'name'  => 'mo_ogone__use_alias_manager',
             'type'  => 'bool',
             'value' => '1'
         ),

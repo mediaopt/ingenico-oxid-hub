@@ -16,4 +16,18 @@ class mo_ogone__helper
 
     }
 
+    /**
+     * return last day of month
+     * @param string $date
+     * @return string
+     */
+    public function formatExpDate($date)
+    {
+        $year = substr($date, 2, 2);
+        $month = substr($date, 0, 2);
+
+        $dateTime = new DateTime( '20' . $year . '-' . $month . '-01' );
+
+        return $dateTime->format('Y-m-t');
+    }
 }

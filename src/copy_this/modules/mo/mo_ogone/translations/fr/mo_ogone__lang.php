@@ -72,6 +72,18 @@ $aLang = array(
     'MO_OGONE__BILLPAY_TERMS' => 'Billpay Terms and Conditions',
     'MO_OGONE__READ_AND_ACCEPTED' => 'and accept them.',
     'MO_OGONE__BILLPAY_BIRTHDATE_HELP' => '(dd.mm.YYYY)',
+# ALIAS
+    'MO_OGONE__REGISTER_ALIAS_DESC' => "Ici, vous pouvez gérer les données de votre carte de crédit.",
+    'MO_OGONE__MANAGE_ALIAS_HEADER' => "Gérer les cartes de crédit",
+    'MO_OGONE__MANAGE_ALIAS_LINK' => "Gérer les cartes de crédit",
+    'MO_OGONE__NO_CARD' => "Aucune carte de crédit n'est stockée",
+    'MO_OGONE__YOUR_CARD' => "La carte de crédit suivante est stockée dans le système",
+    'MO_OGONE__MASKED_NO' => "carte de crédit",
+    'MO_OGONE__BRAND' => "type de carte de crédit",
+    'MO_OGONE__EXP_DATE' => "valable jusque",
+    'MO_OGONE__HOLDER' => "Titulaire",
+    'MO_OGONE__ACTIONS' => 'Action',
+    'MO_OGONE__IS_DEFAULT' => 'Carte principale',
 # NCERROR
     'MO_OGONE__PAYMENT_STATUS_0020001001' => 'Autorisation refusée, merci de réessayer',
     'MO_OGONE__PAYMENT_STATUS_0020001002' => 'Authorization failed, please retry',
