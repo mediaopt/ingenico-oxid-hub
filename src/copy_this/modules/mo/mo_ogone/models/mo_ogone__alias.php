@@ -5,8 +5,6 @@
  * @copyright 2017 derksen mediaopt GmbH
  */
 
-namespace models;
-
 /**
  * model to store credit card alias data
  *
