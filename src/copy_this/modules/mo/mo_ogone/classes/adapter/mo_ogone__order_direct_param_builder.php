@@ -58,11 +58,7 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
         /* @var $model RequestParameters */
         $model = new RequestParameters();
         $model->setParams($params);
-        $string = "";
-        foreach ($params as $key => $val) {
-            $string = $string . $key . ' => ' . $val . "\n";
-        }
-        $this->getLogger()->info('OrderdirectParams: ' . $string);
+        $this->getLogger()->info('OrderDirect params built', $params);
         return $model;
     }
 

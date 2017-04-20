@@ -18,7 +18,9 @@
 
 <div style="overflow:auto; display: block">
   <textarea rows="35" cols="200">
-    [{$logfile}]
+    [{foreach from=$logfile item=line}]
+[{$line}]
+    [{/foreach}]
   </textarea>
 </div> 
 [{if $pagenavi}]

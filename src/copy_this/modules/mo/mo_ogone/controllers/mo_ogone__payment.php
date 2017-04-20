@@ -31,7 +31,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function validatePayment()
     {
-        Main::getInstance()->getLogger()->logExecution($_REQUEST);
         /* @var $oxpayment oxpayment */
         $oxpayment = oxNew('oxpayment');
         $oxpayment->load(oxRegistry::getConfig()->getRequestParameter('paymentid'));
@@ -41,6 +40,7 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if (!$oxpayment->mo_ogone__isOgonePayment()) {
             return $parentResult;
         }
+        Main::getInstance()->getLogger()->info('Validating payment', $_REQUEST);
 
         $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
 

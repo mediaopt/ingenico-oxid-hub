@@ -72,6 +72,7 @@ $aModule = array(
         'mo_ogone__helper' => 'mo/mo_ogone/classes/mo_ogone__helper.php',
         'mo_ogone__logger' => 'mo/mo_ogone/classes/mo_ogone__logger.php',
         'mo_ogone__transaction_logger' => 'mo/mo_ogone/classes/mo_ogone__transaction_logger.php',
+        'mo_ogone__monolog_processor' => 'mo/mo_ogone/classes/mo_ogone__monolog_processor.php',
         //events
         'mo_ogone__events' => 'mo/mo_ogone/setup/mo_ogone__events.php',
         'mo_ogone__sql' => 'mo/mo_ogone/setup/mo_ogone__sql.php',

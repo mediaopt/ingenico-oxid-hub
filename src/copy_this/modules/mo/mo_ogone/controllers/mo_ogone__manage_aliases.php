@@ -60,6 +60,8 @@ class mo_ogone__manage_aliases extends Account
 
     if ($card = $oxUser->mo_ogone__getCard($oxConfig->getRequestParameter('id')))
     {
+      $logger = oxNew('mo_ogone__helper')->getLogger();
+      $logger->info('Alias deleted',['user'=> $oxUser->oxuser__oxusername->value, 'alias'=> $card->mo_ogone__alias__alias->value]);
       $card->delete();
       $oxUser->mo_ogone__resetCards();
     }
@@ -75,7 +77,9 @@ class mo_ogone__manage_aliases extends Account
 
     if ($card = $this->getUser()->mo_ogone__getCard($oxConfig->getRequestParameter('id')))
     {
-      $oxUser->mo_ogone__setDefaultCard($card->getId());
+        $logger = oxNew('mo_ogone__helper')->getLogger();
+        $logger->info('Alias set as default',['user'=> $oxUser->oxuser__oxusername->value, 'alias'=> $card->mo_ogone__alias__alias->value]);
+        $oxUser->mo_ogone__setDefaultCard($card->getId());
     }
   }
 }

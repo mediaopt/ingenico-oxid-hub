@@ -32,7 +32,7 @@ class OrderDirectGateway extends AbstractService
         }
         //convert to array
         $response = $this->getResponse($xml);
-        $this->getAdapter()->getLogger()->info('handleOrderDirectResponse: ' . var_export($response->getAllParams(), true));
+        $this->getAdapter()->getLogger()->info('Handling OrderDirect Response', $response->getAllParams());
         
         $statusDebugInfo = 'Ogone-Status: ' .
                 $response->getStatus()->getStatusTextForCode() . ' (' . $response->getStatus()->getStatusCode() . ')';
@@ -64,7 +64,6 @@ class OrderDirectGateway extends AbstractService
         foreach ($xml->attributes() as $key => $value) {
             $data[strtoupper($key)] = (string) $value;
         }
-        $this->getAdapter()->getLogger()->info('DirectGateway Parsed Response: ' . json_encode($data));
         return $this->getAdapter()->getFactory('OgoneResponse')->buildFromData($data);
     }
     

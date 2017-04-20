@@ -33,7 +33,7 @@ class mo_ogone__alias_param_builder extends mo_ogone__request_param_builder
             $gatewayParams[] = $params;
         }
         
-        $this->getLogger()->logExecution($gatewayParams);
+        $this->getLogger()->info('Alias params built', $gatewayParams);
         
         /* @var $model Mediaopt\Ogone\Sdk\Model\RequestParameters */
         $model = new \Mediaopt\Ogone\Sdk\Model\RequestParameters();
