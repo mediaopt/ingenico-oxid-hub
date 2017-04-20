@@ -120,7 +120,8 @@ class mo_ogone__oxorder extends mo_ogone__oxorder_parent
             $this->oxorder__mo_ogone__status = new oxField($ogoneStatus->getStatusCode());
 
             $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
-            if ($activeView === 'order' && $ogoneStatus->isThankyouStatus()) {
+            $activeViewFnc = oxRegistry::getConfig()->getActiveView()->getFncName();
+            if ($activeView === 'order' && $activeViewFnc !== 'mo_ogone__fncHandleDeferredFeedback' && $ogoneStatus->isThankyouStatus()) {
                 $this->mo_ogone__sendEmails();
             }
             if ($ogoneStatus->isStornoStatus()) {
