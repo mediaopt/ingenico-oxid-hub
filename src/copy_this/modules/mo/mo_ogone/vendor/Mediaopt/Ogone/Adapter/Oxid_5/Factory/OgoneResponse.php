@@ -84,7 +84,7 @@ class OgoneResponse extends AbstractFactory
             $model->setSessionChallenge(null);
         }
         if (!empty($params['AMOUNT'])) {
-            $model->setAmount((int)((string)(float)$params['AMOUNT']*100));
+            $model->setAmount((int)(string)((float)$params['AMOUNT']*100));
         } else {
             $model->setAmount(null);
         }
