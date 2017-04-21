@@ -163,7 +163,7 @@ class mo_ogone__order extends mo_ogone__order_parent
             /* @var $oxOrder oxOrder */
             $oxOrder = oxNew('oxOrder');
             $oxOrder->load($this->getBasket()->getOrderId());
-            if (!$oxOrder) {
+            if (!$oxOrder->isLoaded()) {
                 oxRegistry::get('oxUtilsView')->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ORDER_NOT_CREATED') . $response->getOrderId());
                 oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
                 Main::getInstance()->getLogger()->error('The order could not be created. TransId: '.$response->getOrderId());

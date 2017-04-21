@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.2]
+### Changed
+- check for order creation to prevent order with empty information and oxordernr = 0
+- resolved order amount rounding error (e.g. with amount is 16.90)
+
 ## [4.0.1]
 ### Changed
 - don't send order mails when handling deferred feedback

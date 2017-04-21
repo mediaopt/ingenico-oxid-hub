@@ -25,7 +25,7 @@ $aModule = array(
             . ' target="_blank">changelog</a></p>',
     ),
     'thumbnail' => 'logo.png',
-    'version' => '4.0.1',
+    'version' => '4.0.2',
     'author' => '<a href="https://www.mediaopt.de" target="_blank">mediaopt</a>',
     'url' => 'https://www.mediaopt.de',
     'email' => 'support@mediaopt.de',
