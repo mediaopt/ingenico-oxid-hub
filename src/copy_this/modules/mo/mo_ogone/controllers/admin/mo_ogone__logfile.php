@@ -32,6 +32,8 @@
 class mo_ogone__logfile extends oxAdminView
 {
 
+    protected $blfiltering = false;
+
     /**
      * Current class template.
      * @var string
@@ -53,15 +55,19 @@ class mo_ogone__logfile extends oxAdminView
         }
 
         $LogFile = oxNew('mo_ogone__helper')->getLogFilePath();
-
-        $fLog = fopen($LogFile, 'rb');
-        $aLog = [];
-        while (!feof($fLog)) {
-            $aLog[] .= trim(fgets($fLog, 4096));
+        $filters = [];
+        if ($this->blfiltering) {
+            $aFilter = $this->getConfig()->getRequestParameter('ogonelogfilter');
+            $this->_aViewData['ogonelogfilter'] = $aFilter;
+            if (is_array($aFilter)) {
+                $filters = array_filter($aFilter);
+            }
         }
-        fclose($fLog);
 
-        $this->_aViewData['logfile'] = $aLog;
+        $reader = oxNew('mo_ogone__log_parser');
+        $data = $reader->parseLogFile($LogFile, $filters);
+
+        $this->_aViewData['logfile'] = $data;
         $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
         oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
 
@@ -74,6 +80,14 @@ class mo_ogone__logfile extends oxAdminView
         $this->_aViewData['version'] = $this->_sVersion;
 
         return $this->_sThisTemplate;
+    }
+
+    /**
+     * enable filter
+     */
+    public function setFilter()
+    {
+        $this->blfiltering = true;
     }
 
 }
