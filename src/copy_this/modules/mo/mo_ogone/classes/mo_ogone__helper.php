@@ -1,9 +1,14 @@
 <?php
 
 use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
 
 class mo_ogone__helper
 {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     public function mo_ogone__isBrandActive($pm, $brand)
     {
@@ -61,7 +66,7 @@ class mo_ogone__helper
         }
         $logger = new Monolog\Logger('mo_ogone');
         $logFile = $this->getLogFilePath();
-        $formatter = new Monolog\Formatter\LineFormatter(null, null, false, true);
+        $formatter = new Monolog\Formatter\LineFormatter();
         $streamHandler = new StreamHandler($logFile, oxRegistry::get('oxConfig')->getShopConfVar('mo_ogone__logLevel'));
         $streamHandler->setFormatter($formatter);
         $streamHandler->pushProcessor(new Monolog\Processor\IntrospectionProcessor());
