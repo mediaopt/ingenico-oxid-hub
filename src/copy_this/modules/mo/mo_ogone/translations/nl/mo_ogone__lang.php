@@ -30,6 +30,7 @@ $sLangName = 'Dutch';
 $aLang = array(
     'charset'                 => 'UTF-8',
     'MO_OGONE__DIVERGENT_AMOUNT'   => 'Een technisch probleem opgetreden, neem dan contact op met de helpdesk. Het interne nummer van uw betaling ',
+    'MO_OGONE__ERROR_NO_BASKET'   => 'Een technisch probleem opgetreden, neem dan contact op met de helpdesk. Het interne nummer van uw betaling ',
     'MO_OGONE__ORDER_NOT_CREATED'  => 'Een technisch probleem opgetreden, neem dan contact op met de helpdesk. Het interne nummer van uw betaling ',
     'MO_OGONE_TEMPLATE_TITLE' => 'Ogone Payment Solutions',
     'MO_OGONE__PAYMENT_STATUS_000' => 'Ongeldig of onvolledig',

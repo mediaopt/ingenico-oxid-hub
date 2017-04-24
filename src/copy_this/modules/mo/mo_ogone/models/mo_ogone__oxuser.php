@@ -34,6 +34,8 @@ class mo_ogone__oxuser extends mo_ogone__oxuser_parent
          
   public function mo_ogone__registerAlias(array $requestParams)
   {
+      $logger = oxNew('mo_ogone__helper')->getLogger();
+      $logger->info('Register alias', $requestParams);
       $sanitizedParams = array();
       //lowercase keys
       foreach ($requestParams as $key => $value)
@@ -44,7 +46,8 @@ class mo_ogone__oxuser extends mo_ogone__oxuser_parent
     //check if ppan is already registered to user
     if($this->mo_ogone__getCardByAlias($sanitizedParams['alias']))
     {
-      return true;
+        $logger->info('Alias already stored',['user'=> $this->oxuser__oxusername->value, 'alias'=> $sanitizedParams['alias']]);
+        return true;
     }
     
     $expDate = oxNew('mo_ogone__helper')->formatExpDate($sanitizedParams['ed']);
@@ -74,7 +77,8 @@ class mo_ogone__oxuser extends mo_ogone__oxuser_parent
       $alias = oxNew('mo_ogone__alias');
       $alias->assign($assignVariables);
       $alias->save();
-    
+      $logger->info('Alias stored',['user'=> $this->oxuser__oxusername->value, 'alias'=> $assignVariables['alias']]);
+
     //reset stored cards
     $this->mo_ogone__resetCards();
 

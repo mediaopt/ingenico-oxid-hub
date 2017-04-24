@@ -39,7 +39,7 @@ class mo_ogone__hosted_tokenization_param_builder extends mo_ogone__request_para
             
         }
         
-        $this->getLogger()->logExecution($gatewayParams);
+        $this->getLogger()->info('HostedTokenization params built', $gatewayParams);
         
         $model = new \Mediaopt\Ogone\Sdk\Model\RequestParameters();
         $model->setParams($gatewayParams);

@@ -21,7 +21,7 @@ class AliasGateway extends AbstractService
     {
         /* @var $response OgoneResponse */
         $response = $this->getAdapter()->getFactory('OgoneResponse')->build();
-        $this->getAdapter()->getLogger()->info('handleAliasResponse: ' . var_export($response->getAllParams(), true));
+        $this->getAdapter()->getLogger()->info('handleAliasResponse', $response->getAllParams());
         
         if (!$authenticator->authenticateRequest('AliasGateway')) {
             // no authentication, kick back to payment methods
