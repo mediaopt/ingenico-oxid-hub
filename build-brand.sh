@@ -24,6 +24,33 @@ HELP="\n\n\e[1mThis is a script to create/update repository from existing\e[21m
 \e[0;32m -n, --no-interaction\e[0m
     Do not ask any interactive question
 
+\e[0;32m --create-config\e[0m
+    Do not clone the repository. Create/update a config file in a working directory only.
+
+\e[0;32m --working-dir\e[0m
+    Specify a working directory.
+
+\e[0;32m --brand\e[0m
+    Specify a brand name.
+
+\e[0;32m --tag\e[0m
+    Specify a tag name. All changes in a new cloned repository will be committed and tagged.
+
+\e[0;32m --branch\e[0m
+    Specify a branch name. All changes in a new cloned repository will be done on this branch only. Branch should exists!
+
+\e[0;32m --path-to-icon\e[0m
+    Specify a relative path to the plugin icon to be replaced [path/relative/to/repo/root/icon.png].
+
+\e[0;32m --config-filename\e[0m
+    Specify a relative path to a config file to be used/created for this script [path/relative/to/repo/root/build-brand.cfg].
+
+\e[0;32m --git-url-base\e[0m
+    Base url for a git repository [git@github.com:bubnov-mihail/].
+
+\e[0;32m --git-url\e[0m
+    Full url to a git repository [git@github.com:bubnov-mihail/build-brand.git].
+
 \e[0;32m -h\e[0m
     Show this help text
 "
@@ -56,7 +83,7 @@ CREATE_CONFIG=false
 # Git url base
 declare -gA CONFIG
 CONFIG['git-url-base']='git@bitbucket.org:mediaopt/'
-CONFIG['git-url']='git@bitbucket.org:mediaopt/'
+CONFIG['git-url']=''
 CONFIG['brand']=''
 CONFIG['working-dir']=$PWD
 CONFIG['tag']=''
@@ -204,7 +231,7 @@ fi
 ##########################################################
 # Git url for a brand repository
 ##########################################################
-if [ -n "${CONFIG['git-url']}" ] ; then
+if [ -z "${CONFIG['git-url']}" ] ; then
   CONFIG['git-url']="${CONFIG['git-url-base']}${CONFIG['brand']}.git"
 fi
 
