@@ -1,7 +1,5 @@
 <?php
 
-use Mediaopt\Ogone\Sdk\Main;
-
 /**
  * This file is part of Ogone Payment Solutions payment interface
  *
@@ -54,15 +52,16 @@ class mo_ogone__logfile extends oxAdminView
             }
         }
 
-        $LogFile = Main::getInstance()->getAdapter()->getLogFilePath();
+        $LogFile = oxNew('mo_ogone__helper')->getLogFilePath();
 
         $fLog = fopen($LogFile, 'rb');
+        $aLog = [];
         while (!feof($fLog)) {
-            $sLog .= trim(fgets($fLog, 4096)) . "\n";
+            $aLog[] .= trim(fgets($fLog, 4096));
         }
         fclose($fLog);
 
-        $this->_aViewData['logfile'] = $sLog;
+        $this->_aViewData['logfile'] = $aLog;
         $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
         oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
 

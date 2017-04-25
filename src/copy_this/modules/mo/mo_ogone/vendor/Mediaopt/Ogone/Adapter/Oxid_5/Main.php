@@ -4,7 +4,6 @@ namespace Mediaopt\Ogone\Adapter\Oxid_5;
 
 use Mediaopt\Ogone\Adapter\Oxid_5\Factory\AbstractFactory;
 use Mediaopt\Ogone\Sdk\Main as sdkMain;
-use Monolog\Handler\StreamHandler;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -137,10 +136,7 @@ class Main
             //update processors
             return $this->logger;
         }
-        $logger = new Logger('mo_ogone');
-        $logFile = $this->getLogFilePath();
-        $streamHandler = new StreamHandler($logFile, $this->getOxConfig()->getShopConfVar('mo_ogone__logLevel'));
-        $logger->pushHandler($streamHandler);
+        $logger = oxNew('mo_ogone__helper')->getLogger();
         return $this->logger = $logger;
     }
 

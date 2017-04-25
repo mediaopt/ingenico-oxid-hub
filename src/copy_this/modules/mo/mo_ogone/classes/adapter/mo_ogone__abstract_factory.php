@@ -1,7 +1,6 @@
 <?php
 
 use Mediaopt\Ogone\Sdk\Main as sdkMain;
-use Monolog\Handler\StreamHandler;
 
 /**
  * abstract factory
@@ -26,6 +25,12 @@ abstract class mo_ogone__abstract_factory
      * @var \oxSession
      */
     protected $oxSession;
+
+    /**
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * get oxconfig
@@ -108,19 +113,6 @@ abstract class mo_ogone__abstract_factory
             //update processors
             return $this->logger;
         }
-        $logger = oxNew('mo_ogone__logger', 'mo_ogone');
-        $logFile = $this->getLogFilePath();
-        $streamHandler = new StreamHandler($logFile, $this->getOxConfig()->getShopConfVar('mo_ogone__logLevel'));
-        $logger->pushHandler($streamHandler);
-        return $this->logger = $logger;
-    }
-
-    /**
-     * build log file path
-     * @return string
-     */
-    public function getLogFilePath()
-    {
-        return $this->getOxConfig()->getLogsDir() . 'mo_ogone-' . date('Y-m', time()) . '.log';
+        return $this->logger = oxNew('mo_ogone__helper')->getLogger();
     }
 }

@@ -73,7 +73,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         $params = $this->handleUtf8Options($params);
         // generates sha signature of request parameter before send
         $params['shasign'] = $this->getShaSignForParams($params);
-        $this->getLogger()->logExecution($params);
+        $this->getLogger()->info('OrderRedirect params built', $params);
 
         /* @var $model RequestParameters */
         $model = new RequestParameters();

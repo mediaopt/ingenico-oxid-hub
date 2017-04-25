@@ -30,6 +30,7 @@ $sLangName = 'English';
 $aLang = array(
     'charset'                 => 'ISO-8859-15',
     'MO_OGONE__DIVERGENT_AMOUNT'   => 'A technical problem occurred, please contact helpdesk. The internal number of your payment is ',
+    'MO_OGONE__ERROR_NO_BASKET'   => 'A technical problem occurred, please contact helpdesk. The internal number of your payment is ',
     'MO_OGONE__ORDER_NOT_CREATED'  => 'A technical problem occurred, please contact helpdesk. The internal number of your payment is ',
     'MO_OGONE_TEMPLATE_TITLE' => 'Ogone Payment Solutions',
     'MO_OGONE__PAYMENT_STATUS_000' => 'Incomplete or invalid',

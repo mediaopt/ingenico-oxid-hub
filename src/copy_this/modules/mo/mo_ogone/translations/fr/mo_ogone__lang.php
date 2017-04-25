@@ -31,6 +31,7 @@ $aLang = array(
     'charset'                 => 'UTF-8',
     'MO_OGONE_TEMPLATE_TITLE' => 'Ogone Solution de Paiement',
     'MO_OGONE__DIVERGENT_AMOUNT'   => 'Un problème technique est survenu, veuillez contacter le helpdesk. Le numéro interne de votre paiement est ',
+    'MO_OGONE__ERROR_NO_BASKET'   => 'Un problème technique est survenu, veuillez contacter le helpdesk. Le numéro interne de votre paiement est ',
     'MO_OGONE__ORDER_NOT_CREATED'  => 'Un problème technique est survenu, veuillez contacter le helpdesk. Le numéro interne de votre paiement est ',
     'MO_OGONE__PAYMENT_STATUS_000' => 'Incomplet invalide',
     'MO_OGONE__PAYMENT_STATUS_001' => 'Vous avez annulé le paiement : Merci de selectionner une autre méthode de paiement',

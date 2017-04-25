@@ -257,12 +257,12 @@ class mo_ogone__setup extends Shop_Config
                 $sQuery .= $queryLanguageColumnValues;
 
                 $sQuery .= ')';
-                $this->mo_ogone__logger->logExecution($sQuery);
+                $this->mo_ogone__logger->info('Installing payments with query: ' . $sQuery);
                 oxDb::getDb()->execute($sQuery);
 
             } // delete payment method from oxpayments
             elseif ($oResult->RecordCount() !== 0 && !in_array($oxidPaymentId, $enabledPaymentMethods, false)) {
-                $this->mo_ogone__logger->logExecution('Delete payment: ' . $oxidPaymentId);
+                $this->mo_ogone__logger->info('Deleting payment: ' . $oxidPaymentId);
 
                 // delete oxpayments entry
                 $payment = oxNew('oxpayment');
@@ -296,7 +296,7 @@ class mo_ogone__setup extends Shop_Config
         );
 
         foreach ($deleteQueries as $sql) {
-            $this->mo_ogone__logger->logExecution($sql);
+            $this->mo_ogone__logger->info('Uninstalling payments with query: ' . $sql);
             oxDb::getDb()->execute($sql);
         }
     }
