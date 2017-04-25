@@ -9,8 +9,8 @@ Copy this script to your /usr/local/bin/
 
 Copy more plugin icons to customIcons/ if required
 
-Run 
+Go to your plugin repository and run
 
-    ./build-brand.sh
+    build-brand
 
 And follow the wizard.
