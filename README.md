@@ -14,3 +14,5 @@ Go to your plugin repository and run
     build-brand
 
 And follow the wizard.
+
+[Manual](https://projects.mediaopt.de/projects/mediaopt/wiki/Build-brand_script)
