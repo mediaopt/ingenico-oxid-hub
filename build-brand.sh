@@ -192,7 +192,7 @@ exitWithError() {
 }
 
 configPath="${CONFIG['working-dir']}/${CONFIG['config-filename']}"
-if [[ $CREATE_CONFIG && -f $configPath ]]; then
+if [ -f "$configPath" ] ; then
     echo -e "\e[0;33m\nLoading config from $configPath...\e[0m"
     source $configPath
     echo -e "\e[0;32mOk.\e[0m"
