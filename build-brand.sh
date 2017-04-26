@@ -133,7 +133,7 @@ overrideConfig() {
     do
         local key="${BASH_ARGV[$n]}"
         local val_i=0
-        if [ $n > 1 ] ; then
+        if [ $n -gt 1 ] ; then
             ((val_i=n-1))
         fi
             
