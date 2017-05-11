@@ -93,4 +93,16 @@ class mo_ogone__helper
     {
         return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ogone-fingerscrossed-' . date('Y-m', time()) . '.log';
     }
+
+    /**
+     * Check if specified id is a payId or transactionId/orderId
+     * e.g. orderId: mo_ogone_591463d5161e45.44622883
+     * e.g. payId: 3019930758
+     * @param string $id
+     * @return bool
+     */
+    public function isPayId($id)
+    {
+        return strpos($id, 'mo_ogone_') === false;
+    }
 }

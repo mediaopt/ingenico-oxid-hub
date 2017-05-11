@@ -68,6 +68,9 @@ class OgoneResponse extends AbstractFactory
         } else {
             $model->setError(null);
         }
+        if (!empty($params['NCERRORPLUS'])) {
+            $model->setErrorPlus($params['NCERRORPLUS']);
+        }
         if (!empty($params['ALIAS'])) {
             $model->setAlias($params['ALIAS']);
         } else {

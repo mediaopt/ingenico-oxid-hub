@@ -48,6 +48,7 @@ $aModule = array(
         'mo_ogone__interface' => 'mo/mo_ogone/controllers/admin/mo_ogone__interface.php',
         'mo_ogone__logfile' => 'mo/mo_ogone/controllers/admin/mo_ogone__logfile.php',
         'mo_ogone__setup' => 'mo/mo_ogone/controllers/admin/mo_ogone__setup.php',
+        'mo_ogone__aftersales' => 'mo/mo_ogone/controllers/admin/mo_ogone__aftersales.php',
         //controllers (frontend)
         'mo_ogone__deferred_feedback' => 'mo/mo_ogone/controllers/mo_ogone__deferred_feedback.php',
         'mo_ogone__order_error' => 'mo/mo_ogone/controllers/mo_ogone__order_error.php',
@@ -66,6 +67,7 @@ $aModule = array(
         'mo_ogone__order_redirect_param_builder' => 'mo/mo_ogone/classes/adapter/mo_ogone__order_redirect_param_builder.php',
         'mo_ogone__order_direct_param_builder' => 'mo/mo_ogone/classes/adapter/mo_ogone__order_direct_param_builder.php',
         'mo_ogone__hosted_tokenization_param_builder' => 'mo/mo_ogone/classes/adapter/mo_ogone__hosted_tokenization_param_builder.php',
+        'mo_ogone__aftersale_param_builder' => 'mo/mo_ogone/classes/adapter/mo_ogone__aftersale_param_builder.php',
         //core
         'mo_ogone__config' => 'mo/mo_ogone/classes/mo_ogone__config.php',
         'mo_ogone__main' => 'mo/mo_ogone/classes/mo_ogone__main.php',
@@ -110,6 +112,7 @@ $aModule = array(
         'mo_ogone__interface.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__interface.tpl',
         'mo_ogone__logfile.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__logfile.tpl',
         'mo_ogone__setup.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__setup.tpl',
+        'mo_ogone__aftersales.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__aftersales.tpl',
 
         //azure templates
         'mo_ogone__payment_creditcard.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard.tpl',
