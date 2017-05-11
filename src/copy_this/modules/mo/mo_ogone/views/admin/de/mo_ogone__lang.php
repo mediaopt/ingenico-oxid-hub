@@ -122,6 +122,10 @@ $aLang = array(
         . 'verschieden (Benutzer und deferred Feedback). Um die Übersicht zu verbessern,'
         . ' können die doppelten Einträge ausgeblendet werden.',
 
+//aftersales
+    'MO_OGONE__INCLUDE_SHIPMENT' => 'Versandkosten auch Einziehen',
+    'MO_OGONE__INCLUDE_GIFTCARD' => 'Grußkarte auch Einziehen',
+
 // Admin Menu
     'mo_ogone' => 'Ogone',
     'mo_ogone__setup' => 'Einstellungen',

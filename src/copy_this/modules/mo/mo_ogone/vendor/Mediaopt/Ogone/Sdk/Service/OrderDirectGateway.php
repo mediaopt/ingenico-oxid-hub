@@ -2,40 +2,19 @@
 
 namespace Mediaopt\Ogone\Sdk\Service;
 
-use Mediaopt\Ogone\Sdk\Main;
-use Mediaopt\Ogone\Sdk\Model\RequestParameters;
-use Mediaopt\Ogone\Sdk\Model\StatusType;
+use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
+
 
 /**
  * $Id: $
  */
-class OrderDirectGateway extends AbstractService
+class OrderDirectGateway extends DirectGateway
 {
 
-    public function call($url, RequestParameters $params)
+    protected function logResponse(OgoneResponse $response)
     {
-
-        return $this->getClient()->call($url, $params->getParams());
-    }
-
-    // contains no sha-return because of server-to-server communication
-    public function handleResponse($xml)
-    {
-        /* @var $response \Mediaopt\Ogone\Sdk\Model\OgoneResponse */
-        $response = Main::getInstance()->getModel('OgoneResponse');
-        if (empty($xml)) {
-            $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
-            $status = Main::getInstance()->getService('Status')
-                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            $response->setStatus($status);
-            return $response;
-        }
-        //convert to array
-        $response = $this->getResponse($xml);
-        $this->getAdapter()->getLogger()->info('Handling OrderDirect Response', $response->getAllParams());
-        
         $statusDebugInfo = 'Ogone-Status: ' .
-                $response->getStatus()->getStatusTextForCode() . ' (' . $response->getStatus()->getStatusCode() . ')';
+            $response->getStatus()->getStatusTextForCode() . ' (' . $response->getStatus()->getStatusCode() . ')';
 
         if ($response->getStatus()->isThankyouStatus()) {
             $this->getAdapter()->getLogger()->info('Ogone Transaction Success - ' . $statusDebugInfo);
@@ -49,22 +28,6 @@ class OrderDirectGateway extends AbstractService
         }
 
         $this->getAdapter()->getLogger()->info('Ogone Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
-
-        return $response;
     }
 
-    /**
-     *
-     * @param $xml
-     * @return \Mediaopt\Ogone\Sdk\Model\OgoneResponse
-     */
-    public function getResponse($xml)
-    {
-        $data = array();
-        foreach ($xml->attributes() as $key => $value) {
-            $data[strtoupper($key)] = (string) $value;
-        }
-        return $this->getAdapter()->getFactory('OgoneResponse')->buildFromData($data);
-    }
-    
 }

@@ -126,6 +126,10 @@ $aLang = array(
         . '(customer and deferred feedback). To improve the usability,'
         . ' identical entries are only displayed once.',
 
+//aftersales
+    'MO_OGONE__INCLUDE_SHIPMENT' => 'Capture shipping costs',
+    'MO_OGONE__INCLUDE_GIFTCARD' => 'Capture giftcard costs',
+
 // Admin Menu
     'mo_ogone'                                     => 'Ogone',
     'mo_ogone__setup'                              => 'Settings',

@@ -17,6 +17,7 @@ class OgoneResponse extends AbstractModel
     private $allParams;
     private $status;
     private $error;
+    private $errorPlus;
     private $alias;
     private $orderId;
     private $amount;
@@ -118,6 +119,16 @@ class OgoneResponse extends AbstractModel
     public function setError($error)
     {
         $this->error = $error;
+    }
+
+    public function getErrorPlus()
+    {
+        return $this->errorPlus;
+    }
+
+    public function setErrorPlus($errorPlus)
+    {
+        $this->errorPlus = $errorPlus;
     }
 
     public function hasError()
