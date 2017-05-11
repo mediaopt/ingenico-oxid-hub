@@ -146,6 +146,10 @@ $aLang = array(
     'OGONE_PAYID'                                  => 'Pay ID',
     'OGONE_NCERROR'                                => 'Error',
     'OGONE_TRXDATE'                                => 'Transaction date',
+// Admin -> Ogone -> Log
+    'MO_OGONE_MESSAGE' => 'Message',
+    'MO_OGONE_CONTEXT' => 'Context',
+    'MO_OGONE_EXTRA' => 'Extra Information',
 // Admin -> Ogone -> Einstellungen
     'MO_OGONE__ISLIVEMODE'                         => 'Live-Mode',
     'MO_OGONE_LOGLEVEL'                            => 'Log-Level',

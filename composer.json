@@ -4,6 +4,7 @@
     },
     
     "require": {
+        "bcremer/line-reader": "^0.2.0",
         "monolog/monolog": "1.12.*"
     },
     
