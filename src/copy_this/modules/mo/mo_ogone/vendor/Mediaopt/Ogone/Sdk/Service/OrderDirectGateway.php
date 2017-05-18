@@ -11,6 +11,8 @@ use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
 class OrderDirectGateway extends DirectGateway
 {
 
+    protected $service = 'OrderDirect';
+
     protected function logResponse(OgoneResponse $response)
     {
         $statusDebugInfo = 'Ogone-Status: ' .

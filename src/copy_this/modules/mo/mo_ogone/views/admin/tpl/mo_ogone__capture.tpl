@@ -38,12 +38,13 @@
     <p class="alert alert-danger">[{$error_message}]</p>
 [{/if}]
 
+    <p>[{ oxmultilang ident="MO_OGONE__CAPTURE_EXPLANATION"}]</p>
     <table cellspacing="0" cellpadding="0" border="0" width="98%">
     <form name="search" id="search" action="[{ $oViewConf->getSelfLink() }]" method="post">
         [{ $oViewConf->getHiddenSid() }]
-        <input type="hidden" name="cl" value="mo_ogone__aftersales">
+        <input type="hidden" name="cl" value="mo_ogone__capture">
         <input type="hidden" name="oxid" value="[{ $oxid }]">
-        <input type="hidden" name="fnc" value="refund">
+        <input type="hidden" name="fnc" value="capture">
     <tr>
         <td class="listheader first"></td>
         <td class="listheader">[{ oxmultilang ident="GENERAL_SUM" }]</td>
@@ -107,10 +108,10 @@
     </table>
     [{assign var="deliveryPrice" value=$edit->getOrderDeliveryPrice() }]
     [{if $deliveryPrice->getBruttoPrice() != 0 }]
-        <input type="checkbox" name="includeShipment" value="1" >[{ oxmultilang ident="MO_OGONE__INCLUDE_SHIPMENT"}]</br>
+        <input type="checkbox" name="includeShipment" value="1" >[{ oxmultilang ident="MO_OGONE__CAPTURE_INCLUDE_SHIPMENT"}]</br>
     [{/if}]
     [{if $edit->getGiftCard() }]
-        <input type="checkbox" name="includeGiftcard" value="1" >[{ oxmultilang ident="MO_OGONE__INCLUDE_GIFTCARD"}]</br>
+        <input type="checkbox" name="includeGiftcard" value="1" >[{ oxmultilang ident="MO_OGONE__CAPTURE_INCLUDE_GIFTCARD"}]</br>
     [{/if}]
     <input type="submit" value="[{ oxmultilang ident="ORDER_ARTICLE_UPDATE_STOCK" }]">
 

@@ -48,7 +48,8 @@ $aModule = array(
         'mo_ogone__interface' => 'mo/mo_ogone/controllers/admin/mo_ogone__interface.php',
         'mo_ogone__logfile' => 'mo/mo_ogone/controllers/admin/mo_ogone__logfile.php',
         'mo_ogone__setup' => 'mo/mo_ogone/controllers/admin/mo_ogone__setup.php',
-        'mo_ogone__aftersales' => 'mo/mo_ogone/controllers/admin/mo_ogone__aftersales.php',
+        'mo_ogone__capture' => 'mo/mo_ogone/controllers/admin/aftersales/mo_ogone__capture.php',
+        'mo_ogone__refund' => 'mo/mo_ogone/controllers/admin/aftersales/mo_ogone__refund.php',
         //controllers (frontend)
         'mo_ogone__deferred_feedback' => 'mo/mo_ogone/controllers/mo_ogone__deferred_feedback.php',
         'mo_ogone__order_error' => 'mo/mo_ogone/controllers/mo_ogone__order_error.php',
@@ -112,7 +113,8 @@ $aModule = array(
         'mo_ogone__interface.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__interface.tpl',
         'mo_ogone__logfile.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__logfile.tpl',
         'mo_ogone__setup.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__setup.tpl',
-        'mo_ogone__aftersales.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__aftersales.tpl',
+        'mo_ogone__capture.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__capture.tpl',
+        'mo_ogone__refund.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__refund.tpl',
 
         //azure templates
         'mo_ogone__payment_creditcard.tpl' => 'mo/mo_ogone/views/azure/tpl/page/checkout/inc/mo_ogone__payment_creditcard.tpl',

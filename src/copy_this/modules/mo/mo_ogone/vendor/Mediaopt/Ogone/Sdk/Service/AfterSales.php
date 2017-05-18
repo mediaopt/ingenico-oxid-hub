@@ -9,4 +9,6 @@ namespace Mediaopt\Ogone\Sdk\Service;
 class AfterSales extends DirectGateway
 {
 
+    protected $service = 'AfterSales';
+
 }
