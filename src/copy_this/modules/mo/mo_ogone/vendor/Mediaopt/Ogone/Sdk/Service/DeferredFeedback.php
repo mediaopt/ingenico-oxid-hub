@@ -20,7 +20,7 @@ class DeferredFeedback extends AbstractService
     {
         /* @var $response OgoneResponse */
         $response = $this->getAdapter()->getFactory('OgoneResponse')->build();
-        $this->getAdapter()->getLogger()->info('handleDeferredFeedback: ' . var_export($response->getAllParams(), true));
+        $this->getAdapter()->getLogger()->info('handleDeferredFeedback',$response->getAllParams());
 
         if (!$authenticator->authenticateRequest()) {
             $this->getAdapter()->getLogger()->error('Could not update order status, because of SHA-OUT mismatch!');
