@@ -3,6 +3,7 @@
 namespace Mediaopt\Ogone\Sdk\Service;
 
 use Mediaopt\Ogone\Sdk\Client;
+use Mediaopt\Ogone\Sdk\Model\RequestParameters;
 
 abstract class AbstractService
 {
@@ -39,6 +40,11 @@ abstract class AbstractService
     public function setClient(Client $client)
     {
         $this->client = $client;
+    }
+
+    public function call($url, RequestParameters $params)
+    {
+        return $this->getClient()->call($url, $params->getParams());
     }
 
 }

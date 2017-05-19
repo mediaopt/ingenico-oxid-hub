@@ -7,11 +7,6 @@
 define('MO_OGONE__PAYMENTTYPE_REDIRECT', 1);
 define('MO_OGONE__PAYMENTTYPE_ONE_PAGE', 2);
 
-// If set to true:
-//  - hidden form fields are displayed as text-fields
-//@todo move to module config
-$this->debug = false;
-
 /**
  * ogone application id (Branding Param)
  *
@@ -173,53 +168,3 @@ $this->oxidLangCodeToOgoneLanguageCountryCode = array(
     'el' => 'el_GR', // (Greek)
     'ja' => 'ja_JP', // (Japanese)
 );
-
-//From docs:
-//Zeitüberschreitung für die Transaktion (in Sekunden, Wert zwischen 30 und 90).
-//WICHTIG: Der hier angegebene Wert muss kleiner als der Zeitüberschreitungswert in Ihrem System sein!
-//@todo move to module config
-$this->rtimeout = 15;
-
-//@todo move to setup
-$this->logTableCreateSql =
-    "CREATE TABLE `mo_ogone__payment_logs` (
-    `OXID` varchar(32) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',
-    `id` int NOT NULL auto_increment,
-
-    `orderID` varchar(30) NOT NULL default '',
-    `transID` varchar(64) NOT NULL default '',
-    `amount` double NOT NULL default '0',
-    `currency` varchar(3) NOT NULL default '',
-    `language` varchar(5) NOT NULL default '',
-    `PM` varchar(25) NOT NULL default '',
-    `BRAND` varchar(25) NOT NULL default '',
-    `CARDNO` varchar(21) NOT NULL default '',
-    `Alias` varchar(50) NOT NULL default '',
-    `CN` varchar(35) NOT NULL default '',
-    `ED` varchar(7) NOT NULL default '',
-    `ACCEPTANCE` varchar(15) NOT NULL default '',
-    `STATUS` int(2) NOT NULL default '0',
-    `TRXDATE` varchar(32) NOT NULL default '',
-    `NCERROR` int(8) NOT NULL default '0',
-    `NCERRORPLUS` varchar(255) NOT NULL default '',
-    `NCSTATUS` varchar(4) NOT NULL default '',
-    `CVCCHECK` varchar(2) NOT NULL default '',
-    `AAVCHECK` varchar(2) NOT NULL default '',
-    `ECI` int(1) NOT NULL default '0',
-    `VC` varchar(3) NOT NULL default '',
-    `SCORING` varchar(4) NOT NULL default '',
-    `SCO_CATEGORY` varchar(1) NOT NULL default '',
-    `PAYID` varchar(255) NOT NULL default '0',
-    `PAYIDSUB` int(3) NOT NULL default '0',
-    `SHASIGN` varchar(40) NOT NULL default '',
-    `SESSION_ID` varchar(255) NOT NULL default '',
-    `IP` varchar(32) NOT NULL default '',
-    `IPCTY` varchar(2) NOT NULL default '',
-    `CCCTY` varchar(2) NOT NULL default '',
-
-    `BILLFNAME` VARCHAR(255) NOT NULL default '',
-    `BILLLNAME` VARCHAR(255) NOT NULL default '',
-    `date` timestamp NOT NULL,
-    
-    PRIMARY KEY (id)
-  )";

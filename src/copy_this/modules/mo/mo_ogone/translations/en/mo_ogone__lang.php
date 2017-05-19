@@ -30,6 +30,7 @@ $sLangName = 'English';
 $aLang = array(
     'charset'                 => 'ISO-8859-15',
     'MO_OGONE__DIVERGENT_AMOUNT'   => 'A technical problem occurred, please contact helpdesk. The internal number of your payment is ',
+    'MO_OGONE__ERROR_NO_BASKET'   => 'A technical problem occurred, please contact helpdesk. The internal number of your payment is ',
     'MO_OGONE__ORDER_NOT_CREATED'  => 'A technical problem occurred, please contact helpdesk. The internal number of your payment is ',
     'MO_OGONE_TEMPLATE_TITLE' => 'Ogone Payment Solutions',
     'MO_OGONE__PAYMENT_STATUS_000' => 'Incomplete or invalid',
@@ -73,6 +74,18 @@ $aLang = array(
     'MO_OGONE__BILLPAY_TERMS' => 'Billpay Terms and Conditions',
     'MO_OGONE__READ_AND_ACCEPTED' => 'and accept them.',
     'MO_OGONE__BILLPAY_BIRTHDATE_HELP' => '(dd.mm.YYYY)',
+# ALIAS
+    'MO_OGONE__REGISTER_ALIAS_DESC' => "Here you can manage your credit card data.",
+    'MO_OGONE__MANAGE_ALIAS_HEADER' => "Manage credit cards",
+    'MO_OGONE__MANAGE_ALIAS_LINK' => "Manage credit cards",
+    'MO_OGONE__NO_CARD' => "No credit cards stored",
+    'MO_OGONE__YOUR_CARD' => "The following credit card is stored in the system",
+    'MO_OGONE__MASKED_NO' => "credit card",
+    'MO_OGONE__BRAND' => "credit card type",
+    'MO_OGONE__EXP_DATE' => "valid until",
+    'MO_OGONE__HOLDER' => "Holder",
+    'MO_OGONE__ACTIONS' => 'Action',
+    'MO_OGONE__IS_DEFAULT' => 'Main card',
 # NCERROR
     'MO_OGONE__PAYMENT_STATUS_0020001001'                     => 'Authorization failed, please retry',
     'MO_OGONE__PAYMENT_STATUS_0020001002'                     => 'Authorization failed, please retry',

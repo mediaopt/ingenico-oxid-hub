@@ -14,11 +14,11 @@ class OrderRedirectGateway extends AbstractService
     public function handleResponse(Authenticator $authenticator)
     {
         $response = $this->getResponse();
-        $this->getAdapter()->getLogger()->info('handleOrderRedirectResponse: ' . var_export($response->getAllParams(), true));
+        $this->getAdapter()->getLogger()->info('handleOrderRedirectResponse',$response->getAllParams());
 
         if (!$authenticator->authenticateRequest()) {
             // no authentication, kick back to payment methods
-            $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch: ' . var_export($response->getAllParams(), true));
+            $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch', $response->getAllParams());
             $status = Main::getInstance()->getService('Status')
                     ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
             $response->setStatus($status);

@@ -1,7 +1,14 @@
 <?php
 
+use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
+
 class mo_ogone__helper
 {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     public function mo_ogone__isBrandActive($pm, $brand)
     {
@@ -16,4 +23,91 @@ class mo_ogone__helper
 
     }
 
+    /**
+     * return last day of month
+     * @param string $date
+     * @return string
+     */
+    public function formatExpDate($date)
+    {
+        $year = substr($date, 2, 2);
+        $month = substr($date, 0, 2);
+
+        $dateTime = new DateTime( '20' . $year . '-' . $month . '-01' );
+
+        return $dateTime->format('Y-m-t');
+    }
+
+    /**
+     * return order amount of basket
+     * @param oxBasket $oxBasket
+     * @return string
+     */
+    public function getFormattedOrderAmount(oxBasket $oxBasket)
+    {
+        $dAmount = $oxBasket->getPrice()->getBruttoPrice();
+        $dAmount = number_format($dAmount, 2, '.', '');
+        $dAmount *= 100;
+        $dAmount = round($dAmount, 0);
+        $dAmount = substr($dAmount, 0, 15);
+        return $dAmount;
+    }
+
+    /**
+     * get logger
+     * @return \Psr\Log\LoggerInterface;
+     * @throws \InvalidArgumentException
+     */
+    public function getLogger()
+    {
+        if ($this->logger !== null) {
+            //update processors
+            return $this->logger;
+        }
+        $logger = new Monolog\Logger('mo_ogone');
+        $logFile = $this->getLogFilePath();
+        $formatter = new Monolog\Formatter\LineFormatter();
+        $streamHandler = new StreamHandler($logFile, oxRegistry::get('oxConfig')->getShopConfVar('mo_ogone__logLevel'));
+        $streamHandler->setFormatter($formatter);
+        $streamHandler->pushProcessor(new Monolog\Processor\IntrospectionProcessor());
+        $streamHandler->pushProcessor(oxNew('mo_ogone__monolog_processor'));
+        $fingersCrossedStreamHandler = new StreamHandler($this->getFingersCrossedLogFilePath(), oxRegistry::get('oxConfig')->getShopConfVar('mo_ogone__logLevel'));
+        $fingersCrossedStreamHandler->setFormatter($formatter);
+        $fingersCrossedStreamHandler->pushProcessor(oxNew('mo_ogone__monolog_processor'));
+        $fingersCrossedHandler = new Monolog\Handler\FingersCrossedHandler($fingersCrossedStreamHandler);
+        $logger->pushHandler($streamHandler);
+        $logger->pushHandler($fingersCrossedHandler);
+        return $this->logger = $logger;
+    }
+
+    /**
+     * build log file path
+     * @return string
+     */
+    public function getLogFilePath()
+    {
+        return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ogone-' . date('Y-m', time()) . '.log';
+    }
+
+
+    /**
+     * build fingerscrossed log file path
+     * @return string
+     */
+    public function getFingersCrossedLogFilePath()
+    {
+        return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ogone-fingerscrossed-' . date('Y-m', time()) . '.log';
+    }
+
+    /**
+     * Check if specified id is a payId or transactionId/orderId
+     * e.g. orderId: mo_ogone_591463d5161e45.44622883
+     * e.g. payId: 3019930758
+     * @param string $id
+     * @return bool
+     */
+    public function isPayId($id)
+    {
+        return strpos($id, 'mo_ogone_') === false;
+    }
 }

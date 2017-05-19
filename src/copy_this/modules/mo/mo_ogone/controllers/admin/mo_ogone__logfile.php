@@ -1,7 +1,5 @@
 <?php
 
-use Mediaopt\Ogone\Sdk\Main;
-
 /**
  * This file is part of Ogone Payment Solutions payment interface
  *
@@ -34,6 +32,8 @@ use Mediaopt\Ogone\Sdk\Main;
 class mo_ogone__logfile extends oxAdminView
 {
 
+    protected $blfiltering = false;
+
     /**
      * Current class template.
      * @var string
@@ -54,15 +54,20 @@ class mo_ogone__logfile extends oxAdminView
             }
         }
 
-        $LogFile = Main::getInstance()->getAdapter()->getLogFilePath();
-
-        $fLog = fopen($LogFile, 'rb');
-        while (!feof($fLog)) {
-            $sLog .= trim(fgets($fLog, 4096)) . "\n";
+        $LogFile = oxNew('mo_ogone__helper')->getLogFilePath();
+        $filters = [];
+        if ($this->blfiltering) {
+            $aFilter = $this->getConfig()->getRequestParameter('ogonelogfilter');
+            $this->_aViewData['ogonelogfilter'] = $aFilter;
+            if (is_array($aFilter)) {
+                $filters = array_filter($aFilter);
+            }
         }
-        fclose($fLog);
 
-        $this->_aViewData['logfile'] = $sLog;
+        $reader = oxNew('mo_ogone__log_parser');
+        $data = $reader->parseLogFile($LogFile, $filters);
+
+        $this->_aViewData['logfile'] = $data;
         $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
         oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
 
@@ -75,6 +80,14 @@ class mo_ogone__logfile extends oxAdminView
         $this->_aViewData['version'] = $this->_sVersion;
 
         return $this->_sThisTemplate;
+    }
+
+    /**
+     * enable filter
+     */
+    public function setFilter()
+    {
+        $this->blfiltering = true;
     }
 
 }

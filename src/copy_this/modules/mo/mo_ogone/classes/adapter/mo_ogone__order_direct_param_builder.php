@@ -33,7 +33,8 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
         $sAliasUsage = '&nbsp;';
         $params['alias'] = $this->getOxSession()->getVariable('mo_ogone__order_alias');
         $params['aliasusage'] = $sAliasUsage;
-        $params['rtimeout'] = \mo_ogone__main::getInstance()->getOgoneConfig()->rtimeout;
+        $params['eci'] = '9';
+        $params['rtimeout'] = $this->getOxConfig()->getConfigParam('mo_ogone__timeout');
 
         //3D Secure
         $params['flag3d'] = 'Y';
@@ -57,11 +58,7 @@ class mo_ogone__order_direct_param_builder extends mo_ogone__request_param_build
         /* @var $model RequestParameters */
         $model = new RequestParameters();
         $model->setParams($params);
-        $string = "";
-        foreach ($params as $key => $val) {
-            $string = $string . $key . ' => ' . $val . "\n";
-        }
-        $this->getLogger()->info('OrderdirectParams: ' . $string);
+        $this->getLogger()->info('OrderDirect params built', $params);
         return $model;
     }
 

@@ -50,7 +50,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
 
             // static template
         } else {
-            $params['title'] = $this->getOxConfig()->getConfigParam('ogone_sTplTitle' . $this->getOxLang()->getBaseLanguage());
+            $params['title'] = $this->getStaticTitle();
             $params['bgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplBGColor');
             $params['txtcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplFontColor');
             $params['tblbgcolor'] = $this->getOxConfig()->getConfigParam('ogone_sTplTableBGColor');
@@ -73,10 +73,7 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
         $params = $this->handleUtf8Options($params);
         // generates sha signature of request parameter before send
         $params['shasign'] = $this->getShaSignForParams($params);
-        foreach ($params as $key => $value) {
-            $params[$key] =  htmlspecialchars($value, ENT_QUOTES);
-        }
-        $this->getLogger()->logExecution($params);
+        $this->getLogger()->info('OrderRedirect params built', $params);
 
         /* @var $model RequestParameters */
         $model = new RequestParameters();
@@ -247,6 +244,27 @@ class mo_ogone__order_redirect_param_builder extends mo_ogone__request_param_bui
             return $propertyDelivery;
         }
         return $propertyBill;
+    }
+
+    /**
+     * get titel from cms snippet
+     *
+     * @return string
+     */
+    private function getStaticTitle()
+    {
+        if (!$this->getOxConfig()->getConfigParam('ogone_blTplTitle')) {
+            return '';
+        }
+
+        $oxContent = oxNew('oxContent');
+        if ($oxContent->loadByIdent('mo_ogone_tplTitle') &&
+            $oxContent->oxcontents__oxactive->value
+        ) {
+            return getStr()->strip_tags($oxContent->oxcontents__oxcontent->value);
+        }
+
+        return '';
     }
 
 }

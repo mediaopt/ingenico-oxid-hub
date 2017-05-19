@@ -65,11 +65,11 @@ class mo_ogone__order extends mo_ogone__order_parent
             // server to server communication
             $paramBuilder = oxNew('mo_ogone__order_direct_param_builder');
             $params = $paramBuilder->build();
-            $response = Main::getInstance()->getService('OrderDirectGateway')->call($paramBuilder->getUrl(), $params);
+            $response = Main::getInstance()->getService('DirectGateway')->setType('OrderDirect')->call($paramBuilder->getUrl(), $params);
             $xml = simplexml_load_string($response);
 
             /* @var $response OgoneResponse */
-            $response = Main::getInstance()->getService('OrderDirectGateway')->handleResponse($xml);
+            $response = Main::getInstance()->getService('DirectGateway')->setType('OrderDirect')->handleResponse($xml);
 
             if ($response->getStatus()->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
                 return parent::_getNextStep($response->getStatus()->getTranslatedStatusMessage());
@@ -131,7 +131,7 @@ class mo_ogone__order extends mo_ogone__order_parent
         $dAmount = substr($dAmount, 0, 15);
         return $dAmount;
     }
-    
+
     /**
      * 
      * @param OgoneResponse $response the response of Ogone
@@ -140,7 +140,13 @@ class mo_ogone__order extends mo_ogone__order_parent
     protected function mo_ogone__createOrder($response)
     {
         if (!$response->hasError() && $response->getStatus()->isThankyouStatus()) {
-            $basketAmount = $this->mo_ogone__getFormatedOrderAmount();
+            if (!$basket = $this->getBasket()) {
+                oxRegistry::get('oxUtilsView')->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__ERROR_NO_BASKET'));
+                oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");
+                Main::getInstance()->getLogger()->error('No Basket in session. TransId: '.$response->getOrderId());
+                return 'payment';
+            }
+            $basketAmount = oxNew('mo_ogone__helper')->getFormattedOrderAmount($basket);
             if ((int)$basketAmount !== (int)$response->getAmount()) {
                 oxRegistry::get('oxUtilsView')->addErrorToDisplay(oxRegistry::getLang()->translateString('MO_OGONE__DIVERGENT_AMOUNT') . $response->getOrderId());
                 oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), "");

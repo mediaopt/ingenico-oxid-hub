@@ -31,7 +31,6 @@ class mo_ogone__payment extends mo_ogone__payment_parent
      */
     public function validatePayment()
     {
-        Main::getInstance()->getLogger()->logExecution($_REQUEST);
         /* @var $oxpayment oxpayment */
         $oxpayment = oxNew('oxpayment');
         $oxpayment->load(oxRegistry::getConfig()->getRequestParameter('paymentid'));
@@ -41,8 +40,16 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         if (!$oxpayment->mo_ogone__isOgonePayment()) {
             return $parentResult;
         }
+        Main::getInstance()->getLogger()->info('Validating payment', $_REQUEST);
 
         $paymentType = Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxpayment->getId(), 'paymenttype');
+
+        if (!$brand = oxRegistry::getConfig()->getRequestParameter('BRAND')) {
+            $brand = oxRegistry::getConfig()->getRequestParameter('CARD_BRAND');
+        }
+        if ($oxpayment->getId() === 'ogone_credit_card' && strpos($brand, 'alias_') === 0) {
+            return $this->mo_ogone__useSelectedAlias($brand);
+        }
 
         //standard procedure with redirect payments
         if ($paymentType === MO_OGONE__PAYMENTTYPE_REDIRECT || !oxRegistry::getConfig()->getShopConfVar('mo_ogone__use_hidden_auth')) {
@@ -88,6 +95,10 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         // check if we got the alias
         $alias = $response->getAlias();
         if ($alias !== null && !$response->hasError()) {
+            if ($this->getConfig()->getShopConfVar('mo_ogone__use_alias_manager')) {
+                // store alias for future use
+                $this->getUser()->mo_ogone__registerAlias($response->getAllParams());
+            }
             // store alias
             oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $alias);
             return 'order';
@@ -190,6 +201,10 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
     }
 
+    /**
+     * @param null|string $paymentId
+     * @return array
+     */
     public function mo_ogone__getCurrentPaymentConfig($paymentId = null)
     {
         if (!$this->mo_ogone__currentPaymentConfig === null) {
@@ -303,6 +318,17 @@ class mo_ogone__payment extends mo_ogone__payment_parent
         }
 
         return 'mo_ogone__flow_payment_one_page.tpl';
+    }
+
+    protected function mo_ogone__useSelectedAlias($brand)
+    {
+        $brand = str_replace('alias_', '', $brand);
+        if (!$alias = $this->getUser()->mo_ogone__getCardByAlias($brand)) {
+            oxRegistry::get('oxUtilsView')->addErrorToDisplay(oxNew('oxlang')->translateString('No valid alias'));
+            return 'payment';
+        }
+        oxRegistry::getSession()->setVariable('mo_ogone__order_alias', $brand);
+        return 'order';
     }
 
 

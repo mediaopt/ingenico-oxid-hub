@@ -100,16 +100,6 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
         return uniqid('mo_ogone_', true);
     }
 
-    protected function getFormatedOrderAmount()
-    {
-        $dAmount = $this->getOxSession()->getBasket()->getPrice()->getBruttoPrice();
-        $dAmount = number_format($dAmount, 2, '.', '');
-        $dAmount *= 100;
-        $dAmount = round($dAmount, 0);
-        $dAmount = substr($dAmount, 0, 15);
-        return $dAmount;
-    }
-
     protected function getBillProperty($param)
     {
         if ($param === 'email') {
@@ -117,7 +107,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
         } else {
             $field = 'oxuser__ox' . $param;
         }
-        return $this->getOxUser()->$field->value;
+        return htmlspecialchars($this->getOxUser()->$field->value, ENT_QUOTES);
     }
 
     protected function getDelProperty($param)
@@ -126,7 +116,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
         if ($user->getSelectedAddressId()) {
             $field = 'oxaddress__ox' . $param;
             $deliveryAddress = $user->getSelectedAddress();
-            return $deliveryAddress->$field->value;
+            return htmlspecialchars($deliveryAddress->$field->value, ENT_QUOTES);
         }
         return null;
     }
@@ -137,7 +127,7 @@ class mo_ogone__request_param_builder extends mo_ogone__abstract_factory
             'remote_addr' => $_SERVER['REMOTE_ADDR'],
             'pspid' => substr($this->getOxConfig()->getConfigParam('ogone_sPSPID'), 0, 30),
             'orderid' => $this->createTransID(),
-            'amount' => $this->getFormatedOrderAmount(),
+            'amount' => oxNew('mo_ogone__helper')->getFormattedOrderAmount($this->getOxSession()->getBasket()),
             'currency' => mo_ogone__main::getInstance()->getOgoneConfig()->getOgoneCurrencyCode($this->getOxConfig()->getActShopCurrencyObject()->name),
             'operation' => $this->getCreditCardOperation(),
             'language' => $this->getLanguageCountryCode(),

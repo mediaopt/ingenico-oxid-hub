@@ -40,7 +40,7 @@ class mo_ogone__payment_form extends oxUBase
 
         $this->_aViewData['mo_ogone__form_action'] = $this->getRedirectUrl();
         $this->_aViewData['mo_ogone__hidden_fields'] = oxNew('mo_ogone__order_redirect_param_builder')->build()->getParams();
-        $this->_aViewData['mo_ogone__debug'] = mo_ogone__main::getInstance()->getOgoneConfig()->debug;
+        $this->_aViewData['mo_ogone__debug'] = $this->getConfig()->getConfigParam('mo_ogone__debug_mode');
 
         if($this->getViewConfig()->getActiveTheme() === 'azure')
         {

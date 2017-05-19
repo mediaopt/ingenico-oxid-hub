@@ -85,12 +85,6 @@ class mo_ogone__setup extends Shop_Config
 
         Main::getInstance()->getLogger()->info('Shop Id: ' . $sCurrentAdminShop);
 
-        // pre-define payment server address for easy setup
-
-        // install new table and what this module need, before setup runs first time
-        $this->mo_ogone__install_payment_log_table();
-        $this->mo_ogone_installOrderReservationTable();
-
         // define the payment methods
         $aPaymentMethods = array();
         foreach ($this->mo_ogone__shop_payment_ids as $oxidPaymentId) {
@@ -132,8 +126,7 @@ class mo_ogone__setup extends Shop_Config
                         break; // German
                 }
             }
-            $aLanguages[$id]->aliasUsage = $myConfig->getConfigParam('ogone_sAliasUsage' . $id);
-            $aLanguages[$id]->tplTitle = $myConfig->getConfigParam('ogone_sTplTitle' . $id);
+//            $aLanguages[$id]->aliasUsage = $myConfig->getConfigParam('ogone_sAliasUsage' . $id);
         }
 
         $this->_aViewData['languages'] = $aLanguages;
@@ -205,85 +198,6 @@ class mo_ogone__setup extends Shop_Config
     }
 
     /**
-     * Update Payment Log Table
-     * @todo mysql_real_escape_string is deprecated and not working with php7
-     * @todo add try catch to db call
-     * @throws \oxConnectionException
-     */
-    protected function mo_ogone__update_payment_log_table()
-    {
-        $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
-
-        $sQuery = "select DATA_TYPE from information_schema.columns WHERE table_schema = '" . mysql_real_escape_string($dbName) . '\' AND table_name = \'mo_ogone__payment_logs\' AND column_name = \'PAYID\';';
-        $oResult = oxDb::getDb()->getOne($sQuery);
-        if ($oResult !== 'varchar') {
-            $this->mo_ogone__execute_sql("ALTER TABLE  `mo_ogone__payment_logs` CHANGE  `PAYID`  `PAYID` VARCHAR( 255 ) NOT NULL DEFAULT  '0';");
-        }
-    }
-
-    /**
-     * Install new tables, update fields and clear cache
-     * @todo mysql_real_escape_string is deprecated and not working with php7
-     * @todo add try catch to db call
-     * @throws \oxConnectionException
-     */
-    protected function mo_ogone__install_payment_log_table()
-    {
-        $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
-
-        $sQuery = "select * from information_schema.tables WHERE table_schema = '" . mysql_real_escape_string($dbName) . '\' AND table_name = \'mo_ogone__payment_logs\';';
-        $oResult = oxDb::getDb()->execute($sQuery);
-        if ($oResult->RecordCount() == 0) // table doesn't exists
-        {
-            $sCharset = ' TYPE=MyISAM';
-            if ($this->getConfig()->isUtf()) {
-                $sCharset = ' ENGINE=MyISAM DEFAULT CHARSET=utf8';
-            }
-
-            // install sql-table mo_ogone__payment_logs
-            $sQuery = mo_ogone__main::getInstance()->getOgoneConfig()->logTableCreateSql . $sCharset;
-            $this->mo_ogone__execute_sql($sQuery);
-        } else {
-            $this->mo_ogone__update_payment_log_table();
-        }
-
-        $this->mo_ogone__addOgoneStatusColumnInOrderTable();
-    }
-
-    /**
-     * @todo mysql_real_escape_string is deprecated and not working with php7
-     * @throws \oxConnectionException
-     */
-    protected function mo_ogone_installOrderReservationTable()
-    {
-        $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
-
-        $sQuery = "select * from information_schema.tables WHERE table_schema = '" . mysql_real_escape_string($dbName) . "' AND table_name = 'mo_ogone__order_number_reservations';";
-        $oResult = oxDb::getDb()->execute($sQuery);
-        if ($oResult->RecordCount() == 0) // table doesn't exists
-        {
-            $installSql = "CREATE TABLE `mo_ogone__order_number_reservations` (
-        `OXID` CHAR( 32 ) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL ,
-        UNIQUE (`OXID`)
-        ) ENGINE = MYISAM ;";
-            $this->mo_ogone__execute_sql($installSql);
-        }
-    }
-
-    protected function mo_ogone__addOgoneStatusColumnInOrderTable()
-    {
-        $result = oxDb::getDb()->execute("SHOW COLUMNS FROM `oxorder` LIKE '%mo_ogone__status%'");
-        // if column doesn't exists
-        if ($result->RecordCount() == 0) {
-            $sql = "ALTER TABLE `oxorder` ADD `mo_ogone__status` tinyint(3) NULL";
-            $this->mo_ogone__execute_sql($sql);
-
-            $oMetaData = oxNew('oxDbMetaDataHandler');
-            $oMetaData->updateViews();
-        }
-    }
-
-    /**
      * Install new tables, update fields and clear cache
      */
     protected function mo_ogone__update_payments()
@@ -343,95 +257,18 @@ class mo_ogone__setup extends Shop_Config
                 $sQuery .= $queryLanguageColumnValues;
 
                 $sQuery .= ')';
-                $this->mo_ogone__logger->logExecution($sQuery);
+                $this->mo_ogone__logger->info('Installing payments with query: ' . $sQuery);
                 oxDb::getDb()->execute($sQuery);
 
-                $this->mo_ogone__create_payment_associations($oxidPaymentId);
             } // delete payment method from oxpayments
-            elseif ($oResult->RecordCount() != 0 && !in_array($oxidPaymentId, $enabledPaymentMethods)) {
-                $this->mo_ogone__logger->logExecution('Delete payment: ' . $oxidPaymentId);
+            elseif ($oResult->RecordCount() !== 0 && !in_array($oxidPaymentId, $enabledPaymentMethods, false)) {
+                $this->mo_ogone__logger->info('Deleting payment: ' . $oxidPaymentId);
 
                 // delete oxpayments entry
                 $payment = oxNew('oxpayment');
                 $payment->load($oxidPaymentId);
                 $payment->delete();
-
-                $this->mo_ogone__delete_payment_associations($oxidPaymentId);
             }
-        }
-    }
-
-    /**
-     * @todo check if still needed
-     * @param string $oxidPaymentId
-     * @throws \oxConnectionException
-     */
-    protected function mo_ogone__delete_payment_associations($oxidPaymentId)
-    {
-        // not supported at the moment, user has to delete associations him self
-        return;
-
-        // delete oxobject2group entry
-        $sQuery = "DELETE FROM oxobject2group WHERE OXOBJECTID = '" . $oxidPaymentId . "'";
-        $this->mo_ogone__logger->logExecution($sQuery);
-        oxDb::getDb()->execute($sQuery);
-
-        // delete oxobject2payment oxdelset-entry
-        $sQuery = "DELETE FROM oxobject2payment WHERE OXPAYMENTID = '" . $oxidPaymentId . "' AND OXTYPE = 'oxdelset'";
-        $this->mo_ogone__logger->logExecution($sQuery);
-        oxDb::getDb()->execute($sQuery);
-
-        // delete oxobject2payment oxcountry-entry
-        $sQuery = "DELETE FROM oxobject2payment WHERE OXPAYMENTID = '" . $oxidPaymentId . "' AND OXTYPE = 'oxcountry'";
-        $this->mo_ogone__logger->logExecution($sQuery);
-        oxDb::getDb()->execute($sQuery);
-    }
-
-    /**
-     * @todo check if still needed
-     * @param string $oxidPaymentId
-     * @throws \oxConnectionException
-     */
-    protected function mo_ogone__create_payment_associations($oxidPaymentId)
-    {
-        // not supported at the moment, user has to create associations him self
-        return;
-
-        // get all usergroups
-        $oGroups = oxNew('oxlist', 'oxgroups');
-        $oGroups->selectString('SELECT OXID from oxgroups;');
-
-        // get all delset's
-        $oDelSet = oxNew('oxlist', 'oxdeliveryset');
-        $oDelSet->selectString("SELECT OXID from oxdeliveryset;");
-
-        // get all countries
-        $oCountries = oxNew('oxlist', 'oxcountry');
-        $oCountries->selectString("SELECT OXID from oxcountry WHERE OXACTIVE = 1;");
-
-
-        // add oxobject2group entry
-        foreach ($oGroups as $item) {
-            $group_id = $item->oxgroups__oxid->value;
-            $sQuery = "INSERT IGNORE INTO oxobject2group (OXID, OXSHOPID, OXOBJECTID, OXGROUPSID) VALUES ('" . md5(uniqid()) . "', '" . $this->getConfig()->getShopId() . "', '" . $oxidPaymentId . "', '" . $group_id . "');";
-            $this->mo_ogone__logger->logExecution($sQuery);
-            oxDb::getDb()->execute($sQuery);
-        }
-
-        // add oxobject2payment oxdelset-entry
-        foreach ($oDelSet as $item) {
-            $delset_id = $item->oxdeliveryset__oxid->value;
-            $sQuery = "INSERT IGNORE INTO oxobject2payment (OXID, OXPAYMENTID, OXOBJECTID, OXTYPE) VALUES ('" . md5(uniqid()) . "', '" . $oxidPaymentId . "', '" . $delset_id . "', 'oxdelset');";
-            $this->mo_ogone__logger->logExecution($sQuery);
-            oxDb::getDb()->execute($sQuery);
-        }
-
-        // add oxobject2payment oxcountry-entry
-        foreach ($oCountries as $item) {
-            $country_id = $item->oxcountry__oxid->value;
-            $sQuery = "INSERT IGNORE INTO oxobject2payment (OXID, OXPAYMENTID, OXOBJECTID, OXTYPE) VALUES ('" . md5(uniqid()) . "', '" . $oxidPaymentId . "', '" . $country_id . "', 'oxcountry');";
-            $this->mo_ogone__logger->logExecution($sQuery);
-            oxDb::getDb()->execute($sQuery);
         }
     }
 
@@ -459,7 +296,7 @@ class mo_ogone__setup extends Shop_Config
         );
 
         foreach ($deleteQueries as $sql) {
-            $this->mo_ogone__logger->logExecution($sql);
+            $this->mo_ogone__logger->info('Uninstalling payments with query: ' . $sql);
             oxDb::getDb()->execute($sql);
         }
     }
@@ -530,17 +367,8 @@ class mo_ogone__setup extends Shop_Config
     public function save()
     {
         $this->mo_ogone__update_payments();
-
         $this->mo_ogone__update_payment_options();
-
-        // saving config params
         $this->saveConfVars();
-
-//		$this->mo_ogone__install_modules();
-        // clear cache
-        // @todo check if cache really needs to be cleared and implment if neccessary
-        // oxRegistry::getUtils()->rebuildCache();
-        // rebuild config
     }
 
     public function mo_ogone__isBrandActive($pm, $brand)
@@ -551,17 +379,6 @@ class mo_ogone__setup extends Shop_Config
     public function mo_ogone__getBrands($oxidPaymentId)
     {
         return Main::getInstance()->getService('OgonePayments')->getPaymentMethodProperty($oxidPaymentId, 'brand');
-    }
-
-    protected function mo_ogone__execute_sql($sql)
-    {
-        $this->mo_ogone__logger->logExecution($sql);
-        $result = oxDb::getDb()->execute($sql);
-        if ($result === false) {
-            $this->mo_ogone__logger->error('Could not execute: ' . $sql);
-            // query could not executed
-            $this->_aViewData['mo_ogone__sqlExecutionErrors'] .= $sql . ";\n";
-        }
     }
 
 }

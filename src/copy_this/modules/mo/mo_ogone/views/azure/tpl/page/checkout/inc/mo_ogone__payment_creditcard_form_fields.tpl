@@ -5,7 +5,7 @@
   [{if !$mo_ogone__brand || !$oxConfig->getShopConfVar('mo_ogone__use_hidden_auth')}]
     <li>
       <label>[{oxmultilang ident="CREDITCARD" }]</label>
-      
+
       [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth')}]
         [{if $oxConfig->getShopConfVar('mo_ogone__use_iframe')}]
             <select name="CARD.BRAND" id="mo_ogone__brand">
@@ -15,7 +15,13 @@
       [{else}]
         <select name="dynvalue[mo_ogone][cc][brand]" id="mo_ogone__brand">
       [{/if}]
-        [{assign 
+        [{if $oxConfig->getShopConfVar('mo_ogone__use_alias_manager')}]
+          [{assign var="aliases" value=$oxcmp_user->mo_ogone__getCards()}]
+          [{foreach from=$oxcmp_user->mo_ogone__getCards() item="alias"}]
+            <option value="alias_[{$alias->mo_ogone__alias__alias->value}]">[{$alias->mo_ogone__alias__brand->value}]: [{$alias->mo_ogone__alias__cardno->value}]  [{oxmultilang ident="VALID_UNTIL"}] [{$alias->getExpirationData()}]</option>
+          [{/foreach}]
+        [{/if}]
+        [{assign
         var="mo_ogone__currentPaymentConfig" 
         value=$oView->mo_ogone__getCurrentPaymentConfig('ogone_credit_card')}]
         [{foreach from=$mo_ogone__currentPaymentConfig.brand item="brand"}]
@@ -44,6 +50,7 @@
   [{/if}]
   [{* Hidden Auth using form on shopsite (not via iFrame) *}]
   [{if $oxConfig->getShopConfVar('mo_ogone__use_hidden_auth') && !$oxConfig->getShopConfVar('mo_ogone__use_iframe')}]
+  <div id="mo_ogone__creditcard_fields">
     <li>
       <label>[{oxmultilang ident="NUMBER" }]</label>
       <input type="text" class="js-oxValidate js-oxValidate_notEmpty" size="20" maxlength="35" name="CardNo" value="" autocomplete="off" />
@@ -92,5 +99,6 @@
       <br>
       <div class="note">[{oxmultilang ident="MO_OGONE__PAGE_CHECKOUT_PAYMENT_SECURITYCODEDESCRIPTION" }]</div>
     </li>
+  </div>
   [{/if}]
 </ul>

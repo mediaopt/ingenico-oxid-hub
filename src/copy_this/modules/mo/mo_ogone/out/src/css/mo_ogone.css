@@ -113,3 +113,20 @@ table.ncoltable3 {
 #mo_ogone__form button {
   margin-top: 5px;
 }
+
+#mo_ogone__registered_cards
+{
+  width: 100%;
+  margin: 20px 0 0 0;
+}
+
+#mo_ogone__registered_cards td
+{
+  border: 1px solid #e0e0e0;
+}
+
+#mo_ogone__registered_cards th, #mo_ogone__registered_cards td
+{
+  padding: 2px 5px;
+  text-align: left;
+}

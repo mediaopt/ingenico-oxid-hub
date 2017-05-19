@@ -88,11 +88,11 @@ class OgonePayments extends AbstractService
   {
     if (!isset($this->ogonePaymentsByShopPaymentId[$shopPaymentId]))
     {
-      throw new Exception("No Payment with shopPaymentId: $shopPaymentId found!");
+      throw new \Exception("No Payment with shopPaymentId: $shopPaymentId found!");
     }
     if (!isset($this->ogonePaymentsByShopPaymentId[$shopPaymentId][$property]))
     {
-      throw new Exception("Property $property not found!");
+      throw new \Exception("Property $property not found!");
     }
     return $this->ogonePaymentsByShopPaymentId[$shopPaymentId][$property];
   }

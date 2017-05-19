@@ -6,5 +6,11 @@
 			<SUBMENU id="mo_ogone__interface" cl="mo_ogone__interface"></SUBMENU>
 			<SUBMENU id="mo_ogone__logfile" cl="mo_ogone__logfile"></SUBMENU>
 		</MAINMENU>
+		<MAINMENU id="mxorders">
+			<SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
+				<TAB id="mo_ogone__aftersales_capture" cl="mo_ogone__capture" />
+				<TAB id="mo_ogone__aftersales_refund" cl="mo_ogone__refund" />
+			</SUBMENU>
+		</MAINMENU>
 	</OXMENU>
 </OX>

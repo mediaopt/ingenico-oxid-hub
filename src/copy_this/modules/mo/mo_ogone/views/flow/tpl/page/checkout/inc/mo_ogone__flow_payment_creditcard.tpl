@@ -20,9 +20,21 @@
                 var mo_ogone__iframeUrls = [{$oView->mo_ogone_getIFrameURLsAsJson('ogone_credit_card')}];
 
                 document.getElementById('mo_ogone__brand').onchange = function () {
-                    document.getElementById('mo_ogone__iframe').src = mo_ogone__iframeUrls[this.value];
+                    if (this.value.startsWith('alias_')) {
+                        document.getElementById('mo_ogone__iframe').src = '';
+                        document.getElementById('mo_ogone__iframe').style.display = "none";
+                    } else {
+                        document.getElementById('mo_ogone__iframe').src = mo_ogone__iframeUrls[this.value];
+                        document.getElementById('mo_ogone__iframe').style.display = "initial";
+                    }
                 }
-                document.getElementById('mo_ogone__iframe').src = mo_ogone__iframeUrls[document.getElementById('mo_ogone__brand').value];
+                if (document.getElementById('mo_ogone__brand').value.startsWith('alias_')) {
+                    document.getElementById('mo_ogone__iframe').src = '';
+                    document.getElementById('mo_ogone__iframe').style.display = "none";
+                } else {
+                    document.getElementById('mo_ogone__iframe').src = mo_ogone__iframeUrls[document.getElementById('mo_ogone__brand').value];
+                    document.getElementById('mo_ogone__iframe').style.display = "initial";
+                }
                 document.getElementById('mo_ogone__paramvar').value = 'JS_ENABLED';
 
             })();
@@ -41,9 +53,15 @@
                 var mo_ogone__shaSignatures = [{$oView->getAliasGatewayShaSignaturesAsJson()}];
                 var mo_ogone__aliasGatewayUrl = '[{$oView->getAliasUrl()}]';
 
+                function mo_ogone__isAlias(brand) {
+                    return brand.value.startsWith('alias_');
+                }
+
                 function mo_ogone__setShaSignature() {
-                    var brand = document.getElementById('mo_ogone__brand').value;
-                    document.getElementById('mo_ogone__shasign').value = mo_ogone__shaSignatures[brand];
+                    var brand = document.getElementById('mo_ogone__brand');
+                    if (!mo_ogone__isAlias(brand)) {
+                        document.getElementById('mo_ogone__shasign').value = mo_ogone__shaSignatures[brand.value];
+                    }
                 }
 
                 var oldWindowOnload = function () {};
@@ -52,6 +70,18 @@
                 }
 
                 window.onload = function () {
+                    document.getElementById('mo_ogone__brand').onchange = function () {
+                        if (mo_ogone__isAlias(this)) {
+                            document.getElementById('mo_ogone__creditcard_fields').style.display = "none";
+                        } else {
+                            document.getElementById('mo_ogone__creditcard_fields').style.display = "initial";
+                        }
+                    }
+                    if (mo_ogone__isAlias(document.getElementById('mo_ogone__brand'))) {
+                        document.getElementById('mo_ogone__creditcard_fields').style.display = "none";
+                    } else {
+                        document.getElementById('mo_ogone__creditcard_fields').style.display = "initial";
+                    }
                     var form = document.getElementById('mo_ogone__shasign').form;
                     var radioButton = document.getElementById('payment_[{$sPaymentID}]');
 
@@ -65,7 +95,7 @@
                     }
 
                     form.onsubmit = function () {
-                        if (radioButton.checked) {
+                        if (radioButton.checked && !mo_ogone__isAlias(document.getElementById('mo_ogone__brand'))) {
                             mo_ogone__setShaSignature();
                             this.action = mo_ogone__aliasGatewayUrl;
                         }

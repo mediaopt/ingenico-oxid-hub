@@ -51,7 +51,7 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
     public function mo_ogone__isOgonePayment()
     {
         $paymentIds = Main::getInstance()->getService('OgonePayments')->getShopPaymentIds();
-        return in_array($this->getId(), $paymentIds);
+        return in_array($this->getId(), $paymentIds, false);
     }
 
     /**
@@ -113,7 +113,7 @@ class mo_ogone__oxpayment extends mo_ogone__oxpayment_parent
         $brand = $dynvalues['mo_ogone']['cc']['brand'];
         $options = oxRegistry::getConfig()->getConfigParam('mo_ogone__paymentOptions');
         $option = isset($options[$id]) ? $options[$id] : array();
-        return in_array($brand, $option);
+        return in_array($brand, $option, false);
 
     }
 
