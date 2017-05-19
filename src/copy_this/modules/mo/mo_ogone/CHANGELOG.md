@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0]
+### Added
+- aftersales functionality (capture, refund)
+- saving alias data for reuse
+
+###Changed
+- logging improvements
+    - show session id and user in all log entries
+    - logging entries in a filterable table
+    - no duplicate entries in status overview
+
 ## [4.0.2]
 ### Changed
 - check for order creation to prevent order with empty information and oxordernr = 0
