@@ -65,11 +65,11 @@ class mo_ogone__order extends mo_ogone__order_parent
             // server to server communication
             $paramBuilder = oxNew('mo_ogone__order_direct_param_builder');
             $params = $paramBuilder->build();
-            $response = Main::getInstance()->getService('OrderDirectGateway')->call($paramBuilder->getUrl(), $params);
+            $response = Main::getInstance()->getService('DirectGateway')->setType('OrderDirect')->call($paramBuilder->getUrl(), $params);
             $xml = simplexml_load_string($response);
 
             /* @var $response OgoneResponse */
-            $response = Main::getInstance()->getService('OrderDirectGateway')->handleResponse($xml);
+            $response = Main::getInstance()->getService('DirectGateway')->setType('OrderDirect')->handleResponse($xml);
 
             if ($response->getStatus()->getStatusCode() === StatusType::INCOMPLETE_OR_INVALID) {
                 return parent::_getNextStep($response->getStatus()->getTranslatedStatusMessage());

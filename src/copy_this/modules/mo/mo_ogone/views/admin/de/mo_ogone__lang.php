@@ -122,6 +122,23 @@ $aLang = array(
         . 'verschieden (Benutzer und deferred Feedback). Um die Übersicht zu verbessern,'
         . ' können die doppelten Einträge ausgeblendet werden.',
 
+//aftersales
+    'MO_OGONE__REFUND_INCLUDE_SHIPMENT'  => 'Versandkosten auch Gutschreiben',
+    'MO_OGONE__REFUND_INCLUDE_GIFTCARD'  => 'Grußkarte auch Gutschreiben',
+    'MO_OGONE__CAPTURE_INCLUDE_SHIPMENT' => 'Versandkosten auch Einziehen',
+    'MO_OGONE__CAPTURE_INCLUDE_GIFTCARD' => 'Grußkarte auch Einziehen',
+    'mo_ogone__aftersales_capture' => 'Ogone Zahlung einziehen',
+    'mo_ogone__aftersales_refund'  => 'Ogone Zahlung gutschreiben',
+    'MO_OGONE__REFUND_EXPLANATION' => 'Hier haben Sie die Möglichkeit schon eingezogene Beträge wider gutzuschreiben.' .
+        ' Bitte bedenken Sie, dass nur Beträge gutgeschrieben werden können, die auch schon eingezogen wurden' .
+        ' und nicht schon früher gutgeschrieben wurden. Der Betrag, der insgesamt über alle Anfragen einer Bestellung' .
+        ' gutgeschrieben wird, darf den Gesamtbetrag der Bestellung nicht überschreiten.',
+    'MO_OGONE__CAPTURE_EXPLANATION' => 'Hier haben Sie die Möglichkeit Beträge einzuziehen, die bisher nur reserviert wurden.' .
+        ' Bitte bedenken Sie, dass nur Beträge eingezogen werden können, die reserviert wurden' .
+        ' und nicht schon früher eingezogen wurden. Der Betrag, der insgesamt über alle Anfragen einer Bestellung' .
+        ' eingezogen wird, darf den Gesamtbetrag der Bestellung nicht überschreiten.',
+
+
 // Admin Menu
     'mo_ogone' => 'Ogone',
     'mo_ogone__setup' => 'Einstellungen',

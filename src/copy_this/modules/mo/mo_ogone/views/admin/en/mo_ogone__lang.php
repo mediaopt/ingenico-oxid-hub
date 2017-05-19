@@ -126,6 +126,20 @@ $aLang = array(
         . '(customer and deferred feedback). To improve the usability,'
         . ' identical entries are only displayed once.',
 
+//aftersales
+    'MO_OGONE__REFUND_INCLUDE_SHIPMENT'  => 'Refund shipping costs',
+    'MO_OGONE__REFUND_INCLUDE_GIFTCARD'  => 'Refund giftcard costs',
+    'MO_OGONE__CAPTURE_INCLUDE_SHIPMENT' => 'Capture shipping costs',
+    'MO_OGONE__CAPTURE_INCLUDE_GIFTCARD' => 'Capture giftcard costs',
+    'mo_ogone__aftersales_capture' => 'Ogone Payment capture',
+    'mo_ogone__aftersales_refund'  => 'Ogone Payment refund',
+    'MO_OGONE__REFUND_EXPLANATION' => 'Here you have the possibility to refund captured payments.' .
+        ' Please keep in mind, that payments can only be refunded if they were captured and not refunded yet.' .
+        ' The overall amount that is refunded can not exceed the total amount of the order.',
+    'MO_OGONE__CAPTURE_EXPLANATION' => 'Here you have the possibility to capture reserved payments.' .
+        ' Please keep in mind, that payments can only be captured if they were reserved and not captured yet.' .
+        ' The overall amount that is captured can not exceed the total amount of the order.',
+
 // Admin Menu
     'mo_ogone'                                     => 'Ogone',
     'mo_ogone__setup'                              => 'Settings',
