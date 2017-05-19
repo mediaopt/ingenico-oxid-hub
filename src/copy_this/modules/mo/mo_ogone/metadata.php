@@ -113,6 +113,7 @@ $aModule = array(
         'mo_ogone__interface.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__interface.tpl',
         'mo_ogone__logfile.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__logfile.tpl',
         'mo_ogone__setup.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__setup.tpl',
+        'mo_ogone__aftersales.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__aftersales.tpl',
         'mo_ogone__capture.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__capture.tpl',
         'mo_ogone__refund.tpl' => 'mo/mo_ogone/views/admin/tpl/mo_ogone__refund.tpl',
 

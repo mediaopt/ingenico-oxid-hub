@@ -12,15 +12,16 @@ use Mediaopt\Ogone\Sdk\Model\OgoneResponse;
 class mo_ogone__refund extends oxAdminDetails
 {
 
+    const MO_OGONE__REFUND_OPERATION = 'RFD';
+
     /**
      * @var oxOrder
      */
     protected $_oEditObject;
 
     /**
-     * Executes parent method parent::render(), creates oxorder and oxvoucherlist
-     * objects, appends voucherlist information to order object and passes data
-     * to Smarty engine, returns name of template file "order_article.tpl".
+     * Executes parent method parent::render() and passes data
+     * to Smarty engine, returns name of template file "mo_ogone__refund.tpl".
      *
      * @return string
      */
@@ -52,6 +53,11 @@ class mo_ogone__refund extends oxAdminDetails
         return $this->_oEditObject;
     }
 
+    /**
+     * controller function. Creates an aftersales operation to refund an amount depending on chosen
+     * order articles, shipping costs and giftcards. Handles the response and presents the success or error
+     * message to the user
+     */
     public function refund()
     {
         if (!$articles = oxRegistry::getConfig()->getRequestParameter('aOrderArticles')) {
@@ -61,12 +67,13 @@ class mo_ogone__refund extends oxAdminDetails
         $includeGiftcard = (bool)oxRegistry::getConfig()->getRequestParameter('includeGiftcard');
         $oxOrder = $this->getEditObject();
         $paramBuilder = oxNew('mo_ogone__aftersale_param_builder');
-        $params = $paramBuilder->build($oxOrder, $articles, 'RFD', $includeShipment, $includeGiftcard);
-        $response = Main::getInstance()->getService('AfterSales')->call($paramBuilder->getUrl(), $params);
+        $params = $paramBuilder->build($oxOrder, $articles, self::MO_OGONE__REFUND_OPERATION, $includeShipment, $includeGiftcard);
+        $aftersalesGateway = Main::getInstance()->getService('DirectGateway')->setType('AfterSales');
+        $response = $aftersalesGateway->call($paramBuilder->getUrl(), $params);
         $xml = simplexml_load_string($response);
 
         /* @var $response OgoneResponse */
-        $response = Main::getInstance()->getService('AfterSales')->handleResponse($xml);
+        $response = $aftersalesGateway->handleResponse($xml);
         oxNew('mo_ogone__transaction_logger')->storeTransaction($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
         if ($response->hasError()) {
             $this->_aViewData["error_message"] = $response->getError()->getTranslatedStatusMessage().($response->getErrorPlus()?' ('.$response->getErrorPlus().')':'');

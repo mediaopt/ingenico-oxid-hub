@@ -15,7 +15,24 @@ class DirectGateway extends AbstractService
 {
     protected $service = 'Direct';
 
-    // contains no sha-return because of server-to-server communication
+    /**
+     * set the type of service (e.g. Aftersales, OrderDirect) for logging
+     * @param string $type
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->service = $type;
+        return $this;
+    }
+
+    /**
+     * convert the xml response into an OgoneResponse object if data is present
+     * create an OgoneResponse with status incomplete or invalid otherwise
+     * contains no sha-return because of server-to-server communication
+     * @param $xml
+     * @return OgoneResponse
+     */
     public function handleResponse($xml)
     {
         /* @var $response \Mediaopt\Ogone\Sdk\Model\OgoneResponse */
@@ -50,6 +67,10 @@ class DirectGateway extends AbstractService
         return $this->getAdapter()->getFactory('OgoneResponse')->buildFromData($data);
     }
 
+    /**
+     * log the response as a success or failure
+     * @param OgoneResponse $response
+     */
     protected function logResponse(OgoneResponse $response)
     {
         $statusDebugInfo = 'Ogone-Status: ' .
@@ -57,7 +78,7 @@ class DirectGateway extends AbstractService
 
         if ($response->getStatus()->isThankyouStatus()) {
             $this->getAdapter()->getLogger()->info('Ogone Transaction Success - ' . $statusDebugInfo);
-            return $response;
+            return;
         }
 
         if ($response->hasError()) {

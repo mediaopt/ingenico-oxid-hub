@@ -8,21 +8,25 @@ class mo_ogone__aftersale_param_builder extends mo_ogone__request_param_builder
      */
     public function getUrl()
     {
-        $part1 = 'test';
-        if ($this->getOxConfig()->getShopConfVar('mo_ogone__isLiveMode')) {
-            $part1 = 'prod';
-        }
-
+        $part1 = $this->getOxConfig()->getShopConfVar('mo_ogone__isLiveMode')?'prod':'test';
         return 'https://secure.ogone.com/ncol/' . $part1 . '/maintenancedirect.asp';
     }
 
-    public function build(oxorder $order, $positionIds, $operation, $includeShipment = false, $includeGiftcard = false, $customAmount = false)
+    /**
+     * Build parameters for an aftersales operation. This can be capture or refund.
+     * The amount to handle depends on the positionIds of the order and whether to handle shipmentcosts and giftcards
+     * @param oxOrder $order
+     * @param array $positionIds
+     * @param string $operation
+     * @param bool $includeShipment
+     * @param bool $includeGiftcard
+     * @return \Mediaopt\Ogone\Sdk\Model\RequestParameters
+     */
+    public function build(oxorder $order, $positionIds, $operation, $includeShipment = false, $includeGiftcard = false)
     {
         $gatewayParams = array();
 
-        //calculateAmount
-        $amount = !empty($customAmount) ? $customAmount : $this->getCaptureAmount($order, $positionIds, $includeShipment, $includeGiftcard);
-        $gatewayParams['Amount'] = $amount;
+        $gatewayParams['Amount'] = $this->getCaptureAmount($order, $positionIds, $includeShipment, $includeGiftcard);
         $gatewayParams['Currency'] = $order->getOrderCurrency()->name;
         $gatewayParams['Operation'] = $operation;
         if (oxNew('mo_ogone__helper')->isPayId($order->oxorder__oxtransid->value)) {
@@ -30,7 +34,7 @@ class mo_ogone__aftersale_param_builder extends mo_ogone__request_param_builder
         } else {
             $gatewayParams['Orderid'] = $order->oxorder__oxtransid->value;
         }
-        $gatewayParams['Pspid'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');;
+        $gatewayParams['Pspid'] = $this->getOxConfig()->getConfigParam('ogone_sPSPID');
         $gatewayParams['userid'] = $this->getOxConfig()->getConfigParam('mo_ogone__api_userid');
         $gatewayParams['pswd'] = $this->getOxConfig()->getConfigParam('mo_ogone__api_userpass');
         $gatewayParams['SHASIGN'] = $this->getShaSignForParams($gatewayParams);
@@ -58,8 +62,6 @@ class mo_ogone__aftersale_param_builder extends mo_ogone__request_param_builder
             if (!in_array($position->getId(), $positionIds)) {
                 continue;
             }
-            // @TODO alreadyCaptured?
-            //add difference between total price and already captured amount
 
             $amount += $position->oxorderarticles__oxbprice->value * $position->oxorderarticles__oxamount->value;
             if ($wrapping = $position->getWrapping()) {
