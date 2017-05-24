@@ -90,4 +90,20 @@ class mo_ogone__logfile extends oxAdminView
         $this->blfiltering = true;
     }
 
+    /**
+     * create a download version of the logfile
+     */
+    public function downloadLogFile()
+    {
+        $LogFile = oxNew('mo_ogone__helper')->getLogFilePath();
+        header('Pragma: no-cache');
+        header('Cache-Control: no-cache');
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="'. basename($LogFile) . '";');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: ' . filesize($LogFile));
+        readfile($LogFile);
+        exit;
+    }
+
 }

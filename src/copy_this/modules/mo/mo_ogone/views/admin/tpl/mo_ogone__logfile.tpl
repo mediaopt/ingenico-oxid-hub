@@ -5,7 +5,12 @@
 [{else}]
   [{assign var="readonly" value=""}]
 [{/if}]
-
+<form name="ogonefilter" id="ogonefilter" action="[{$oViewConf->getSelfLink()}]" method="post">
+  [{$oViewConf->getHiddenSid()}]
+  <input type="hidden" name="cl" value="mo_ogone__logfile">
+  <input type="hidden" name="fnc" value="downloadLogFile">
+  <input type="submit" class="edittext" value="Download Logfile">
+</form>
 <div style="overflow:auto; display: block">
     <form name="ogonefilter" id="ogonefilter" action="[{$oViewConf->getSelfLink()}]" method="post">
       [{$oViewConf->getHiddenSid()}]
