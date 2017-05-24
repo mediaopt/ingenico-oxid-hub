@@ -1,0 +1,132 @@
+/**
+ * This file is part of Ingenico Payment Solutions payment interface
+ *
+ * Ingenico Payment Solutions payment interface is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Ingenico Payment Solutions payment interface is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Ingenico Payment Solutions payment interface.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * @link http://www.ingenico.com
+ * @package out
+ * @copyright (C) Ingenico 2009, 2010
+ * @version 1.3
+ *
+ * Further informations about dynamic template styling at
+ * Capitel 7.2.4 Advanced eCommerce Integreation Guide:
+ * 
+ * https://secure.ingenico.com/ncol/Ingenico_e-Com-ADV_EN.pdf
+*/
+
+/* Ingenico dynamic template css */
+td.ncolh1   ,
+td.ncoltxtl , 
+td.ncoltxtl2, 
+td.ncoltxtr , 
+td.ncoltxtc , 
+td.ncolinput, 
+td.ncolline1, 
+td.ncolline2 { 
+  vertical-align: middle;
+  font-weight: bold;
+}
+td.ncolh1 { }
+td.ncoltxtl  { text-align: right; }
+td.ncoltxtl2 { text-align: right;  }
+td.ncoltxtr  { text-align: left; padding-left: 5px; }
+td.ncoltxtc  { text-align: center; }
+td.ncolinput { }
+td.ncolline1 { }
+td.ncolline2 { }
+/* all button */
+input.ncol { 
+  height: 32px;
+  min-width: 200px;
+
+  border-width: 0;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  text-transform: uppercase;
+
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
+
+  background: #429db3 url(../bg/svg/grad_blue-dark.svg);
+  background: -moz-linear-gradient(top, #5fb7cc, #1a7990);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #5fb7cc), color-stop(100%, #1a7990));
+  -pie-background: linear-gradient(90deg, #1a7990, #5FB7CC);
+}
+input.ncol:hover {
+  text-shadow: 0 -1px 0 #AA6826;
+
+  background: #ec6105 url("../bg/svg/grad_orange.svg");
+  background: -moz-linear-gradient(top,  #ff8604, #ec6105);
+  background: -webkit-gradient(linear, left top, left bottom, from(#ff8604), to(#ec6105));
+  -pie-background: linear-gradient(90deg, #ec6105, #ff8604);
+}
+/* cancel button
+#ncol_cancel {
+  font-size: 10px;
+  height: auto;
+  background: none;
+  color: black;
+}
+#ncol_cancel:hover {
+  text-shadow: none;
+  background: none;
+} */
+td.ncollogoc { 
+  padding-top: 5px;
+}
+table.ncoltable1, 
+table.ncoltable2,  
+table.ncoltable3 {
+  width: 100%!important;
+}
+table.ncoltable1 {
+  margin-top: 20px;
+}
+table.ncoltable2 {
+  margin-top: 10px;
+}
+table.ncoltable3 {
+  margin-top: 25px;
+}
+
+
+/* javascript redirect styles */
+#mo_ingenico__form {
+  text-align: center;
+  padding: 70px;
+}
+
+#mo_ingenico__form button {
+  margin-top: 5px;
+}
+
+#mo_ingenico__registered_cards
+{
+  width: 100%;
+  margin: 20px 0 0 0;
+}
+
+#mo_ingenico__registered_cards td
+{
+  border: 1px solid #e0e0e0;
+}
+
+#mo_ingenico__registered_cards th, #mo_ingenico__registered_cards td
+{
+  padding: 2px 5px;
+  text-align: left;
+}

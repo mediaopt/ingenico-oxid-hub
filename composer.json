@@ -1,6 +1,6 @@
 {
     "config": {
-        "vendor-dir": "src/modules/mo/mo_ogone/vendor"
+        "vendor-dir": "src/modules/mo/mo_ingenico/vendor"
     },
     
     "require": {
@@ -9,6 +9,6 @@
     },
     
     "autoload": {
-        "psr-4": {"Mediaopt\\": "src/modules/mo/mo_ogone/vendor/Mediaopt/"}
+        "psr-4": {"Mediaopt\\": "src/modules/mo/mo_ingenico/vendor/Mediaopt/"}
     }
 }

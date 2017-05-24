@@ -2,8 +2,8 @@
 
 ## Dev
 
-Image bauen: docker build -t ogone .
-Container starten: docker run --name ogone1 -v $PWD/shops:/var/www/html/ -t -p 8087:80 ogone
+Image bauen: docker build -t ingenico .
+Container starten: docker run --name ingenico1 -v $PWD/shops:/var/www/html/ -t -p 8087:80 ingenico
 
 ## ToDo
 - functions php erweiterung über event wenn möglich

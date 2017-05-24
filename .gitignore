@@ -7,11 +7,11 @@ createModule.sh
 files/*
 moduleFiles/*
 composer.lock
-src/modules/mo/mo_ogone/vendor/composer/*
-src/modules/mo/mo_ogone/vendor/monolog/*
-src/modules/mo/mo_ogone/vendor/psr/*
-src/modules/mo/mo_ogone/vendor/bcremer/*
-src/modules/mo/mo_ogone/vendor/autoload.php
+src/modules/mo/mo_ingenico/vendor/composer/*
+src/modules/mo/mo_ingenico/vendor/monolog/*
+src/modules/mo/mo_ingenico/vendor/psr/*
+src/modules/mo/mo_ingenico/vendor/bcremer/*
+src/modules/mo/mo_ingenico/vendor/autoload.php
 /.phpstorm-oxid.meta.php
 /shops/
 /.idea

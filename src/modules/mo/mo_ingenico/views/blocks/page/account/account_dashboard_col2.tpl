@@ -1,0 +1,12 @@
+[{$smarty.block.parent}]
+[{* include additional templates according to payment method andactive theme *}]
+[{assign var="mo_ingenico__theme" value="flow_"}]
+
+[{* flow is the standard theme. if azure is active, include azure tpl  *}]
+[{if method_exists($oViewConf, 'getActiveTheme') && $oViewConf->getActiveTheme() === 'azure'}]
+    [{assign var="mo_ingenico__theme" value=''}]
+[{/if}]
+[{assign var="oxConfig" value=$oView->getConfig() }]
+[{if $oxConfig->getShopConfVar('mo_ingenico__use_alias_manager')}]
+    [{include file="mo_ingenico__`$mo_ingenico__theme`account_dashboard_field.tpl"}]
+[{/if}]

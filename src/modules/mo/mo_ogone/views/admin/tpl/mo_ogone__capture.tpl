@@ -1,1 +1,0 @@
-[{include file="mo_ogone__aftersales.tpl" mo_ogone__cl="mo_ogone__capture" mo_ogone__fnc="capture"}]

@@ -4,8 +4,8 @@
     "pluginFolder": "Needed for Shopware Plugins",
     "prefix": "mo_",
     "suffix": "",
-    "projectName": "ogone",
-    "pathToModule": "src/modules/mo/mo_ogone",
+    "projectName": "ingenico",
+    "pathToModule": "src/modules/mo/mo_ingenico",
     "compatibility": {
         "minimumVersion": "4.7/5.0",
         "maximumVersion": "4.10.3/5.3.3",
