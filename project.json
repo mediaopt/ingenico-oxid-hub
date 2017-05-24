@@ -5,7 +5,7 @@
     "prefix": "mo_",
     "suffix": "",
     "projectName": "ogone",
-    "pathToModule": "copy_this/modules/mo/mo_ogone",
+    "pathToModule": "src/modules/mo/mo_ogone",
     "compatibility": {
         "minimumVersion": "4.7/5.0",
         "maximumVersion": "4.10.3/5.3.3",
