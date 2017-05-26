@@ -558,8 +558,8 @@ fi
 echo -e "\e[44mPlugin ${CONFIG['brand']} will be pushed to the ${CONFIG['git-url']}, branch ${CONFIG['branch']}\e[m"
 git remote remove origin
 git remote add origin ${CONFIG['git-url']}
-git push -u origin master
-git push -u origin ${CONFIG['branch']}
+git push -f -u origin master
+git push -f -u origin ${CONFIG['branch']}
 git push --tags
 ##########################################################
 
