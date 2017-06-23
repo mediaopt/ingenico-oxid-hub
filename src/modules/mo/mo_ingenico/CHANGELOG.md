@@ -2,8 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.1]
+### Hotfix
+- branding method problems
+
+## [4.2.1]
+### Changed
+- branding method
+
 ## [4.2.0]
-### Changings in a file structure
+### Changed
+- file structure
 
 ## [4.1.0]
 ### Added
