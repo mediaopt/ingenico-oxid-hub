@@ -95,7 +95,9 @@ CONFIG['path-to-icon']=''
 
 declare -gA ICONS
 declare -gA REPLACE_IN_FILES
+declare -ga REPLACE_IN_FILES_DICT
 declare -gA RENAME_FILES
+declare -ga RENAME_FILES_DICT
 
 # Static paths
 THIS_FILE=$(realpath "$0")
@@ -305,10 +307,10 @@ fi
 ##########################################################
 
 showSearchAndReplacePairs() {
-    for i in "${!REPLACE_IN_FILES[@]}"
+    for i in "${!REPLACE_IN_FILES_DICT[@]}"
     do
-        key="$i"
-        value="${REPLACE_IN_FILES[$i]}"
+        key="${REPLACE_IN_FILES_DICT[$i]}"
+        value="${REPLACE_IN_FILES[$key]}"
         echo -e "\e[0;33mWill search for '\e[0m$key\e[0;33m' and replace with '\e[0m$value\e[0;33m'\e[0m"
     done
 }
@@ -326,6 +328,7 @@ else
         read replace_clear_i
         if [[ -n "$replace_clear_i" && "$replace_clear_i" -eq 'y' ]] ; then
             REPLACE_IN_FILES=()
+            REPLACE_IN_FILES_DICT=()
             echo -e "\e[0;32mCleared.\n\e[0m"
         fi
     fi
@@ -345,6 +348,7 @@ else
                 return
             else
                 REPLACE_IN_FILES["$search_i"]="$replace_i"
+                REPLACE_IN_FILES_DICT+=("$search_i")
                 addSearchAndReplacePair
             fi
         fi
@@ -362,10 +366,10 @@ fi
 ##########################################################
 
 showRenamePairs() {
-    for i in "${!RENAME_FILES[@]}"
+    for i in "${!RENAME_FILES_DICT[@]}"
     do
-        key="$i"
-        value="${RENAME_FILES[$i]}"
+        key="${RENAME_FILES_DICT[$i]}"
+        value="${RENAME_FILES[$key]}"
         echo -e "\e[0;33mWill rename '\e[0m$key\e[0;33m' to '\e[0m$value\e[0;33m'\e[0m"
     done
 }
@@ -383,6 +387,7 @@ else
         read rename_clear_i
         if [[ -n "$rename_clear_i" && "$rename_clear_i" -eq 'y' ]] ; then
             RENAME_FILES=()
+            RENAME_FILES_DICT=()
             echo -e "\e[0;32mCleared.\n\e[0m"
         fi
     fi
@@ -402,6 +407,7 @@ else
                 return
             else
                 RENAME_FILES["$origin_i"]="$rename_i"
+                RENAME_FILES_DICT+=("$origin_i")
                 addRenamePair
             fi
         fi
@@ -438,11 +444,24 @@ saveConfig() {
     saveConfigParam 'branch'
     saveConfigParam 'path-to-icon'
     
+    for i in "${!REPLACE_IN_FILES_DICT[@]}"
+    do
+        key="${REPLACE_IN_FILES_DICT[$i]}"
+        echo "REPLACE_IN_FILES_DICT+=('$key')">>$configPath
+    done
+
     for i in "${!REPLACE_IN_FILES[@]}"
     do
         key="$i"
         value="${REPLACE_IN_FILES[$i]}"
         echo "REPLACE_IN_FILES['$key']='$value'">>$configPath
+    done
+
+
+    for i in "${!RENAME_FILES_DICT[@]}"
+    do
+        key="${RENAME_FILES_DICT[$i]}"
+        echo "RENAME_FILES_DICT+=('$key')">>$configPath
     done
 
     for i in "${!RENAME_FILES[@]}"
@@ -497,10 +516,11 @@ fi
 # Replace string in files
 
 echo -e "\e[33mReplacing string in files...\e[0m"
-for i in "${!REPLACE_IN_FILES[@]}"
+for i in "${!REPLACE_IN_FILES_DICT[@]}"
 do
-    search="$i"
-    replace="${REPLACE_IN_FILES[$i]}"
+    search="${REPLACE_IN_FILES_DICT[$i]}"
+    replace="${REPLACE_IN_FILES[$search]}"
+    echo "Replace $search to $replace"
     find $TEMP_DIR -not -iwholename '*.git/*' -type f -print0 | xargs -0 -I file_name replace -s "$search" "$replace" -- file_name
 done
 echo -e "\e[0;32mOk.\n\e[0m"
@@ -529,13 +549,16 @@ visitDir() {
 }
 
 echo -e "\e[33mRenaming files/directories...\e[0m"
-for i in "${!RENAME_FILES[@]}"
+
+for i in "${!RENAME_FILES_DICT[@]}"
 do
-    origin_file="$i"
-    rename_to="${RENAME_FILES[$i]}"
+    origin_file="${RENAME_FILES_DICT[$i]}"
+    rename_to="${RENAME_FILES[$origin_file]}"
+    echo "Rename $origin_file to $rename_to"
     visitDir $TEMP_DIR $origin_file $rename_to
 done
 echo -e "\e[0;32mOk.\n\e[0m"
+
 ##########################################################
 
 
