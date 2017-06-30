@@ -48,10 +48,6 @@ class mo_ingenico__order extends mo_ingenico__order_parent
             $this->_blConfirmAGBError = 1;
             return;
         }
-        
-        /* if ($orderState === oxOrder::ORDER_STATE_MAILINGERROR) {
-          oxRegistry::getSession()->setVariable('mo_ingenico__mailError', true);
-          } */
 
         //check for one page checkout => call orderdirect-service
         $paymentId = $this->getPayment()->getId();
@@ -110,18 +106,6 @@ class mo_ingenico__order extends mo_ingenico__order_parent
         return $this->mo_ingenico__createOrder($response);
     }
 
-    protected function mo_ingenico__getOrderStateWithMailError($orderState)
-    {
-        if ($orderState === 'thankyou') {
-            // check for mail error in session
-            if (oxRegistry::getSession()->getVariable('mo_ingenico__mailError')) {
-                $orderState = $this->_getNextStep(oxOrder::ORDER_STATE_MAILINGERROR);
-                oxRegistry::getSession()->deleteVariable('mo_ingenico__mailError');
-            }
-        }
-        return $orderState;
-    }
-
         protected function mo_ingenico__getFormatedOrderAmount()
     {
         $dAmount = oxRegistry::getSession()->getBasket()->getPrice()->getBruttoPrice();
@@ -160,12 +144,8 @@ class mo_ingenico__order extends mo_ingenico__order_parent
             } else {
                 Main::getInstance()->getLogger()->info('ShopId is correct ('.oxRegistry::getConfig()->getShopId(). ') for Order Creation of TransId ' .$response->getOrderId());
             }
-            oxRegistry::getSession()->setVariable('mo_ingenico__mailError', true);
             $parentState = parent::execute();
-            // ignore parent Mail error
-            if ($parentState === oxOrder::ORDER_STATE_MAILINGERROR) {
-                $parentState = oxOrder::ORDER_STATE_OK;
-            }
+
             /* @var $oxOrder oxOrder */
             $oxOrder = oxNew('oxOrder');
             $oxOrder->load($this->getBasket()->getOrderId());
@@ -183,7 +163,6 @@ class mo_ingenico__order extends mo_ingenico__order_parent
             }
             $oxOrder->mo_ingenico__setTransID($id);
             oxNew('mo_ingenico__transaction_logger')->storeTransaction($response->getAllParams(), $oxOrder->oxorder__oxordernr->value);
-            $parentState = $this->mo_ingenico__getOrderStateWithMailError($parentState);
             Main::getInstance()->getLogger()->debug('IngenicoRedirect: Will now redirect to ' .$parentState. ' for TransId ' .$response->getOrderId());
             return $parentState;
         }

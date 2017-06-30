@@ -65,7 +65,7 @@ class mo_ingenico__payment_form extends oxUBase
         if (oxRegistry::getConfig()->getShopConfVar('mo_ingenico__use_utf8')) {
             $encoding = '_utf8';
         }
-        return 'https://secure.ingenico.com/ncol/' . $mode . '/orderstandard' . $encoding . '.asp';
+        return 'https://secure.ogone.com/ncol/' . $mode . '/orderstandard' . $encoding . '.asp';
     }
 
 }

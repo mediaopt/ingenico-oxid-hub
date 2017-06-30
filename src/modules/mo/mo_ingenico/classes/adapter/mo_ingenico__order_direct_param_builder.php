@@ -20,7 +20,7 @@ class mo_ingenico__order_direct_param_builder extends mo_ingenico__request_param
             $part2 = '_utf8';
         }
 
-        return 'https://secure.ingenico.com/ncol/' . $part1 . '/orderdirect' . $part2 . '.asp';
+        return 'https://secure.ogone.com/ncol/' . $part1 . '/orderdirect' . $part2 . '.asp';
     }
 
     public function build()

@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [4.2.1]
+## [4.2.3]
+### Changed
+- use default oxid behaviour for order success mails
+
+## [4.2.2]
 ### Hotfix
 - branding method problems
 
@@ -45,4 +49,4 @@ All notable changes to this project will be documented in this file.
 - special handling of apostroph in redirect request
 
 ## [3.3.0]
-- see https://projects.mediaopt.de/projects/ingenico-puc/wiki/Changelog for older changes
+- see https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog for older changes

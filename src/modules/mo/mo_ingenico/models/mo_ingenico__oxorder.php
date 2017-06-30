@@ -119,11 +119,6 @@ class mo_ingenico__oxorder extends mo_ingenico__oxorder_parent
             $this->oxorder__oxtransstatus = new oxField($oxidStatus);
             $this->oxorder__mo_ingenico__status = new oxField($ingenicoStatus->getStatusCode());
 
-            $activeView = oxRegistry::getConfig()->getActiveView()->getClassName();
-            $activeViewFnc = oxRegistry::getConfig()->getActiveView()->getFncName();
-            if ($activeView === 'order' && $activeViewFnc !== 'mo_ingenico__fncHandleDeferredFeedback' && $ingenicoStatus->isThankyouStatus()) {
-                $this->mo_ingenico__sendEmails();
-            }
             if ($ingenicoStatus->isStornoStatus()) {
                 $this->cancelOrder();
             }
@@ -149,38 +144,6 @@ class mo_ingenico__oxorder extends mo_ingenico__oxorder_parent
             $reservationExists = $orderNumberReservation
                     ->load(mo_ingenico__order_number_reservation::getReservationKey($this->oxorder__oxordernr->value));
         } while ($reservationExists);
-    }
-
-    /**
-     * Send order to shop owner and user
-     *
-     * @param oxUser        $oUser    order user
-     * @param oxBasket      $oBasket  current order basket
-     * @param oxUserPayment $oPayment order payment
-     *
-     * @return bool
-     */
-    protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null)
-    {
-        // Mail will be sent using mo_ingenico__sendEmails and checked using variable mo_ingenico__mailError
-        if ($this->mo_ingenico__isIngenicoOrder()) {
-            return self::ORDER_STATE_OK;
-        }
-        return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
-    }
-
-    public function mo_ingenico__sendEmails()
-    {
-        if ($this->mo_ingenico__isIngenicoOrder() && $this->mo_ingenico__isPaymentDone()) {
-            $this->_oBasket = oxRegistry::getSession()->getBasket();
-            $this->_oUser = oxRegistry::getSession()->getUser();
-            $this->_oPayment = $this->getPaymentType();
-            $emailSent = parent::_sendOrderByEmail($this->_oUser, $this->_oBasket, $this->_oPayment);
-
-            if ($emailSent) {
-                oxRegistry::getSession()->deleteVariable('mo_ingenico__mailError');
-            }
-        }
     }
 
     public function mo_ingenico__getStatusText()
