@@ -131,12 +131,12 @@
             <td class="[{ $listclass}]" nowrap="" style="text-align:right">[{$oItem->mo_ingenico__payment_logs__amount->value|string_format:"%.2f"}] [{$oItem->mo_ingenico__payment_logs__currency->value}]</td>
             <!--<td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__pm->value}]&nbsp;</td>-->
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__acceptance->value}]&nbsp;</td>
-            <td class="[{ $listclass}]" nowrap=""><a href="https://secure.ingenico.com/ncol/paymentinfos5.asp?branding=Ingenico&CSRFSP=%2Fncol%2Ftest%2Fdownload_docs.asp" target="_blank">[{$oItem->mo_ingenico__payment_logs__status->value}]</a>&nbsp;</td>
+            <td class="[{ $listclass}]" nowrap=""><a href="https://secure.ogone.com/ncol/paymentinfos5.asp?branding=Ingenico&CSRFSP=%2Fncol%2Ftest%2Fdownload_docs.asp" target="_blank">[{$oItem->mo_ingenico__payment_logs__status->value}]</a>&nbsp;</td>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__cardno->value}]&nbsp;</td>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__brand->value}]&nbsp;</td>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__ed->value}]&nbsp;</td>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__payid->value}]&nbsp;</td>
-            <td class="[{ $listclass}]" nowrap=""><a href="https://secure.ingenico.com/ncol/paymentinfos5.asp?branding=Ingenico&CSRFSP=%2Fncol%2Ftest%2Fdownload_docs.asp" target="_blank">[{$oItem->mo_ingenico__payment_logs__ncerror->value}]</a>&nbsp;</td>
+            <td class="[{ $listclass}]" nowrap=""><a href="https://secure.ogone.com/ncol/paymentinfos5.asp?branding=Ingenico&CSRFSP=%2Fncol%2Ftest%2Fdownload_docs.asp" target="_blank">[{$oItem->mo_ingenico__payment_logs__ncerror->value}]</a>&nbsp;</td>
             <td class="[{ $listclass}]" nowrap="">[{$oItem->mo_ingenico__payment_logs__trxdate->value}]&nbsp;</td>
             <td class="[{ $listclass}]">&nbsp;</td>
           </tr>

@@ -9,7 +9,7 @@ class mo_ingenico__aftersale_param_builder extends mo_ingenico__request_param_bu
     public function getUrl()
     {
         $part1 = $this->getOxConfig()->getShopConfVar('mo_ingenico__isLiveMode')?'prod':'test';
-        return 'https://secure.ingenico.com/ncol/' . $part1 . '/maintenancedirect.asp';
+        return 'https://secure.ogone.com/ncol/' . $part1 . '/maintenancedirect.asp';
     }
 
     /**

@@ -45,4 +45,4 @@ All notable changes to this project will be documented in this file.
 - special handling of apostroph in redirect request
 
 ## [3.3.0]
-- see https://projects.mediaopt.de/projects/ingenico-puc/wiki/Changelog for older changes
+- see https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog for older changes

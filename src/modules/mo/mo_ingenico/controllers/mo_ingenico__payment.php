@@ -292,16 +292,16 @@ class mo_ingenico__payment extends mo_ingenico__payment_parent
             $part2 = '_utf8';
         }
 
-        return 'https://secure.ingenico.com/ncol/' . $part1 . '/alias_gateway' . $part2 . '.asp';
+        return 'https://secure.ogone.com/ncol/' . $part1 . '/alias_gateway' . $part2 . '.asp';
     }
 
     protected function getHostedTokenUrl()
     {
         if (oxRegistry::getConfig()->getShopConfVar('mo_ingenico__isLiveMode')) {
-            return 'https://secure.ingenico.com/Tokenization/HostedPage';
+            return 'https://secure.ogone.com/Tokenization/HostedPage';
         }
 
-        return 'https://ingenico.test.v-psp.com/Tokenization/HostedPage';
+        return 'https://ogone.test.v-psp.com/Tokenization/HostedPage';
     }
 
     /**
