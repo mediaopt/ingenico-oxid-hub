@@ -91,6 +91,16 @@ class mo_ingenico__logfile extends oxAdminView
     }
 
     /**
+     * get filter
+     *
+     * @return bool
+     */
+    public function getFilter()
+    {
+        return $this->blfiltering;
+    }
+
+    /**
      * create a download version of the logfile
      */
     public function downloadLogFile()
@@ -103,6 +113,37 @@ class mo_ingenico__logfile extends oxAdminView
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($LogFile));
         readfile($LogFile);
+        exit;
+    }
+
+
+    /**
+     * create a download version of the filtered logfile
+     */
+    public function downloadFilteredLogFile()
+    {
+        $this->blfiltering = true;
+
+        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath();
+        $filters = [];
+        if ($this->blfiltering) {
+            $aFilter = $this->getConfig()->getRequestParameter('ingenicologfilter');
+            $this->_aViewData['ingenicologfilter'] = $aFilter;
+            if (is_array($aFilter)) {
+                $filters = array_filter($aFilter);
+            }
+        }
+
+        $reader = oxNew('mo_ingenico__log_parser');
+        $data = $reader->filterLogFileForDownload($LogFile, $filters);
+
+        header('Pragma: no-cache');
+        header('Cache-Control: no-cache');
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment; filename="'. basename($LogFile) . '";');
+        header('Content-Transfer-Encoding: binary');
+        //header('Content-Length: ' . filesize($LogFile));
+        array_walk($data,function ($line) {echo $line.PHP_EOL;});
         exit;
     }
 

@@ -24,6 +24,23 @@ class mo_ingenico__log_parser
     }
 
     /**
+     * @param  string  $file
+     * @param  array   $filters
+     * @return array
+     */
+    public function filterLogFileForDownload($file, array $filters = [])
+    {
+        $result = [];
+        foreach (LineReader::readLines($file) as $line) {
+            $entry = $this->parseLine($line);
+            if ($this->accept($entry, $filters)) {
+                $result[] = $line;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * parse a log entry that uses the default monolog line formatter format
      * [%datetime%] %channel%.%level_name%: %message% %context% %extra%\n
      * @param string $line
