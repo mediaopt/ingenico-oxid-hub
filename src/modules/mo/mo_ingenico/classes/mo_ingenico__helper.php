@@ -84,9 +84,14 @@ class mo_ingenico__helper
      * build log file path
      * @return string
      */
-    public function getLogFilePath()
+    public function getLogFilePath($getFirstExisting = false)
     {
-        return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico-' . date('Y-m', time()) . '.log';
+        if (!$getFirstExisting) {
+            return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico-' . date('Y-m', time()) . '.log';
+        }
+        $files = glob(oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico-*');
+        sort($files, SORT_STRING);
+        return end($files);
     }
 
 

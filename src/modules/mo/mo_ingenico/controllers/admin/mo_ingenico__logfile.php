@@ -45,6 +45,13 @@ class mo_ingenico__logfile extends oxAdminView
         parent::render();
 
         $sCurrentAdminShop = oxRegistry::getSession()->getVariable('currentadminshop');
+        $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
+        if ($this->getConfig()->getConfigParam('mo_ingenico__isLiveMode')) {
+            $this->_aViewData['bottom_buttons'] = 'prod';
+        } else {
+            $this->_aViewData['bottom_buttons'] = 'test';
+        }
+        $this->_aViewData['version'] = $this->_sVersion;
 
         if (!$sCurrentAdminShop) {
             if (oxRegistry::getSession()->getVariable('malladmin')) {
@@ -54,7 +61,10 @@ class mo_ingenico__logfile extends oxAdminView
             }
         }
 
-        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath();
+        if (!$LogFile = oxNew('mo_ingenico__helper')->getLogFilePath(true)) {
+            $this->_aViewData['logfile'] = [];
+            return $this->_sThisTemplate;
+        }
         $filters = [];
         if ($this->blfiltering) {
             $aFilter = $this->getConfig()->getRequestParameter('ingenicologfilter');
@@ -70,14 +80,6 @@ class mo_ingenico__logfile extends oxAdminView
         $this->_aViewData['logfile'] = $data;
         $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
         oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
-
-        if ($this->getConfig()->getConfigParam('mo_ingenico__isLiveMode')) {
-            $this->_aViewData['bottom_buttons'] = 'prod';
-        } else {
-            $this->_aViewData['bottom_buttons'] = 'test';
-        }
-
-        $this->_aViewData['version'] = $this->_sVersion;
 
         return $this->_sThisTemplate;
     }
@@ -105,7 +107,7 @@ class mo_ingenico__logfile extends oxAdminView
      */
     public function downloadLogFile()
     {
-        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath();
+        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath(true);
         header('Pragma: no-cache');
         header('Cache-Control: no-cache');
         header('Content-Type: text/plain');

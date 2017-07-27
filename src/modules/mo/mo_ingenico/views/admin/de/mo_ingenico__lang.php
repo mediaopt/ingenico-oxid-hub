@@ -164,6 +164,7 @@ $aLang = array(
     'MO_INGENICO_CONTEXT' => 'Parameter',
     'MO_INGENICO_EXTRA' => 'Zus. Infos',
 // Admin -> Ingenico -> Einstellungen
+    'MO_INGENICO_NOTHINGINTHELOGS' => 'Aktuell keine Logeinträge vorhanden',
     'MO_INGENICO__ISLIVEMODE' => 'Live-Modus',
     'MO_INGENICO_LOGLEVEL' => 'Log-Level',
     'MO_INGENICO_LOGLEVEL_DEBUG' => 'Debug',
