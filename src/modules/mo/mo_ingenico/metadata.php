@@ -16,16 +16,16 @@ $aModule = array(
     ),
     'description' => array(
         'de' => 'Ingenico Zahlungen<br /><br />Die Dokumentation finden Sie <a style="text-decoration: underline;" '
-            . 'target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">hier</a>'
-            . '<p>Übersicht der Änderungen: <a href="https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog" style="text-decoration: underline;"'
+            . 'target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/Dokumentation_DE">hier</a>'
+            . '<p>Übersicht der Änderungen: <a href="https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog_DE" style="text-decoration: underline;"'
             . ' target="_blank">Changelog</a></p>',
         'en' => 'Ingenico Payment<br /><br />The documentation is available <a style="text-decoration: underline;" '
-            . 'target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/">here</a>'
-            . '<p>Recent changes: <a href="https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog" style="text-decoration: underline;"'
+            . 'target="_blank" href="https://projects.mediaopt.de/projects/ogone-puc/wiki/Dokumentation_EN">here</a>'
+            . '<p>Recent changes: <a href="https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog_EN" style="text-decoration: underline;"'
             . ' target="_blank">changelog</a></p>',
     ),
     'thumbnail' => 'logo.png',
-    'version' => '4.2.3',
+    'version' => '4.2.4',
     'author' => '<a href="https://www.mediaopt.de" target="_blank">mediaopt</a>',
     'url' => 'https://www.mediaopt.de',
     'email' => 'support@mediaopt.de',

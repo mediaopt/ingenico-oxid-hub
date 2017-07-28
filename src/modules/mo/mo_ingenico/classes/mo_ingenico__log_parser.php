@@ -9,7 +9,7 @@ class mo_ingenico__log_parser
     /**
      * @param  string  $file
      * @param  array   $filters
-     * @return array
+     * @return array[]
      */
     public function parseLogFile($file, array $filters = [])
     {
@@ -21,6 +21,17 @@ class mo_ingenico__log_parser
             }
         }
         return $result;
+    }
+
+    /**
+     * @param  string  $file
+     * @param  array   $filters
+     * @return string[]
+     */
+    public function filterLogFileForDownload($file, array $filters = [])
+    {
+        $result = $this->parseLogFile($file, $filters);
+        return array_map(function($el){return $el['raw'];}, $result);
     }
 
     /**
@@ -39,6 +50,7 @@ class mo_ingenico__log_parser
             ];
         }
         return [
+            'raw'  => $line,
             'date' => $data[1],
             'level' => $data[2],
             'message' => $data[3],
