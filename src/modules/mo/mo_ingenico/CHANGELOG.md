@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.4]
+### Changed
+- link to german or english documentation and changelog respectively
+- split logs per date
+
+### Added
+- download link for filtered log
+
 ## [4.2.3]
 ### Changed
 - use default oxid behaviour for order success mails
