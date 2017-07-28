@@ -44,42 +44,17 @@ class mo_ingenico__logfile extends oxAdminView
     {
         parent::render();
 
-        $sCurrentAdminShop = oxRegistry::getSession()->getVariable('currentadminshop');
-        $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
-        if ($this->getConfig()->getConfigParam('mo_ingenico__isLiveMode')) {
-            $this->_aViewData['bottom_buttons'] = 'prod';
-        } else {
-            $this->_aViewData['bottom_buttons'] = 'test';
-        }
-        $this->_aViewData['version'] = $this->_sVersion;
-
-        if (!$sCurrentAdminShop) {
-            if (oxRegistry::getSession()->getVariable('malladmin')) {
-                $sCurrentAdminShop = 'oxbaseshop';
-            } else {
-                $sCurrentAdminShop = oxRegistry::getSession()->getVariable('actshop');
-            }
-        }
-
         if (!$LogFile = oxNew('mo_ingenico__helper')->getLogFilePath(true)) {
             $this->_aViewData['logfile'] = [];
             return $this->_sThisTemplate;
         }
-        $filters = [];
-        if ($this->blfiltering) {
-            $aFilter = $this->getConfig()->getRequestParameter('ingenicologfilter');
-            $this->_aViewData['ingenicologfilter'] = $aFilter;
-            if (is_array($aFilter)) {
-                $filters = array_filter($aFilter);
-            }
-        }
+        $filters = $this->getFilter();
+        $this->_aViewData['ingenicologfilter'] = $filters;
 
         $reader = oxNew('mo_ingenico__log_parser');
         $data = $reader->parseLogFile($LogFile, $filters);
 
         $this->_aViewData['logfile'] = $data;
-        $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
-        oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
 
         return $this->_sThisTemplate;
     }
@@ -87,7 +62,7 @@ class mo_ingenico__logfile extends oxAdminView
     /**
      * enable filter
      */
-    public function setFilter()
+    public function setIsFiltering()
     {
         $this->blfiltering = true;
     }
@@ -97,9 +72,17 @@ class mo_ingenico__logfile extends oxAdminView
      *
      * @return bool
      */
-    public function getFilter()
+    public function isFiltering()
     {
         return $this->blfiltering;
+    }
+
+    protected function getFilter()
+    {
+        if (!$this->isFiltering()) {
+            return [];
+        }
+        return array_filter($this->getConfig()->getRequestParameter('ingenicologfilter'));
     }
 
     /**
@@ -107,15 +90,8 @@ class mo_ingenico__logfile extends oxAdminView
      */
     public function downloadLogFile()
     {
-        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath(true);
-        header('Pragma: no-cache');
-        header('Cache-Control: no-cache');
-        header('Content-Type: text/plain');
-        header('Content-Disposition: attachment; filename="'. basename($LogFile) . '";');
-        header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . filesize($LogFile));
-        readfile($LogFile);
-        exit;
+        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath(true);
+        $this->createDownload($logFile, $logFile, true);
     }
 
 
@@ -124,29 +100,35 @@ class mo_ingenico__logfile extends oxAdminView
      */
     public function downloadFilteredLogFile()
     {
-        $this->blfiltering = true;
-
-        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath();
-        $filters = [];
-        if ($this->blfiltering) {
-            $aFilter = $this->getConfig()->getRequestParameter('ingenicologfilter');
-            $this->_aViewData['ingenicologfilter'] = $aFilter;
-            if (is_array($aFilter)) {
-                $filters = array_filter($aFilter);
-            }
-        }
+        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath(true);
+        $this->setIsFiltering();
+        $filters = $this->getFilter();
 
         $reader = oxNew('mo_ingenico__log_parser');
-        $data = $reader->filterLogFileForDownload($LogFile, $filters);
+        $data = $reader->filterLogFileForDownload($logFile, $filters);
 
+        $content = implode(PHP_EOL, $data);
+        $this->createDownload($logFile, $content, false);
+    }
+
+    /**
+     * @param string  $fileName
+     * @param string  $data
+     * @param boolean $isFile
+     */
+    protected function createDownload($fileName, $data, $isFile)
+    {
         header('Pragma: no-cache');
         header('Cache-Control: no-cache');
         header('Content-Type: text/plain');
-        header('Content-Disposition: attachment; filename="'. basename($LogFile) . '";');
+        header('Content-Disposition: attachment; filename="'. basename($fileName) . '";');
         header('Content-Transfer-Encoding: binary');
-        //header('Content-Length: ' . filesize($LogFile));
-        array_walk($data,function ($line) {echo $line.PHP_EOL;});
-        exit;
+        if ($isFile) {
+            header('Content-Length: ' . filesize($data));
+            readfile($data);
+            exit;
+        }
+        header('Content-Length: ' . mb_strlen($data));
+        oxRegistry::get('oxUtils')->showMessageAndExit($data);
     }
-
 }

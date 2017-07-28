@@ -13,7 +13,7 @@
       <input type="hidden" name="fnc" value="downloadLogFile">
       <input type="submit" class="edittext" value="Download Logfile">
     </form>
-    [{if $oView->getFilter()}]
+    [{if $oView->isFiltering()}]
       <form name="ingenicofilter" id="ingenicofilter" action="[{$oViewConf->getSelfLink()}]" method="post">
         [{$oViewConf->getHiddenSid()}]
         <input type="hidden" name="cl" value="mo_ingenico__logfile">
@@ -29,7 +29,7 @@
         <form name="ingenicofilter" id="ingenicofilter" action="[{$oViewConf->getSelfLink()}]" method="post">
           [{$oViewConf->getHiddenSid()}]
           <input type="hidden" name="cl" value="mo_ingenico__logfile">
-          <input type="hidden" name="fnc" value="setFilter">
+          <input type="hidden" name="fnc" value="setIsFiltering">
 
           <table>
             <tr class="listitem">
