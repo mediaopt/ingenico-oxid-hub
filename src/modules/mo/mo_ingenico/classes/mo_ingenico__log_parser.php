@@ -30,7 +30,6 @@ class mo_ingenico__log_parser
      */
     public function filterLogFileForDownload($file, array $filters = [])
     {
-
         $result = $this->parseLogFile($file, $filters);
         return array_map(function($el){return $el['raw'];}, $result);
     }
