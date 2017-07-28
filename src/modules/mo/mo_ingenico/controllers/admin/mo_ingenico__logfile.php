@@ -44,7 +44,7 @@ class mo_ingenico__logfile extends oxAdminView
     {
         parent::render();
 
-        if (!$LogFile = oxNew('mo_ingenico__helper')->getLogFilePath(true)) {
+        if (!$LogFile = oxNew('mo_ingenico__helper')->getLogFilePath()) {
             $this->_aViewData['logfile'] = [];
             return $this->_sThisTemplate;
         }
@@ -90,7 +90,7 @@ class mo_ingenico__logfile extends oxAdminView
      */
     public function downloadLogFile()
     {
-        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath(true);
+        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath();
         $this->createDownload($logFile, $logFile, true);
     }
 
@@ -100,7 +100,7 @@ class mo_ingenico__logfile extends oxAdminView
      */
     public function downloadFilteredLogFile()
     {
-        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath(true);
+        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath();
         $this->setIsFiltering();
         $filters = $this->getFilter();
 

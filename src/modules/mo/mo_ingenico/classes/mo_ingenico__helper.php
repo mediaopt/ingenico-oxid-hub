@@ -1,6 +1,6 @@
 <?php
 
-use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Psr\Log\LoggerInterface;
 
 class mo_ingenico__helper
@@ -61,22 +61,17 @@ class mo_ingenico__helper
     public function getLogger()
     {
         if ($this->logger !== null) {
-            //update processors
             return $this->logger;
         }
         $logger = new Monolog\Logger('mo_ingenico');
-        $logFile = $this->getLogFilePath();
+        $path = oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico';
         $formatter = new Monolog\Formatter\LineFormatter();
-        $streamHandler = new StreamHandler($logFile, oxRegistry::get('oxConfig')->getShopConfVar('mo_ingenico__logLevel'));
+        $streamHandler = new RotatingFileHandler($path, 12, oxRegistry::get('oxConfig')->getShopConfVar('mo_ingenico__logLevel'));
+        $streamHandler->setFilenameFormat('{filename}-{date}.log', 'Y-m-d');
         $streamHandler->setFormatter($formatter);
         $streamHandler->pushProcessor(new Monolog\Processor\IntrospectionProcessor());
         $streamHandler->pushProcessor(oxNew('mo_ingenico__monolog_processor'));
-        $fingersCrossedStreamHandler = new StreamHandler($this->getFingersCrossedLogFilePath(), oxRegistry::get('oxConfig')->getShopConfVar('mo_ingenico__logLevel'));
-        $fingersCrossedStreamHandler->setFormatter($formatter);
-        $fingersCrossedStreamHandler->pushProcessor(oxNew('mo_ingenico__monolog_processor'));
-        $fingersCrossedHandler = new Monolog\Handler\FingersCrossedHandler($fingersCrossedStreamHandler);
         $logger->pushHandler($streamHandler);
-        $logger->pushHandler($fingersCrossedHandler);
         return $this->logger = $logger;
     }
 
@@ -84,24 +79,11 @@ class mo_ingenico__helper
      * build log file path
      * @return string
      */
-    public function getLogFilePath($getFirstExisting = false)
+    public function getLogFilePath()
     {
-        if (!$getFirstExisting) {
-            return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico-' . date('Y-m', time()) . '.log';
-        }
-        $files = glob(oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico-*');
+        $files = glob(oxRegistry::getConfig()->getLogsDir() . 'mo_ingenico-*');
         sort($files, SORT_STRING);
         return end($files);
-    }
-
-
-    /**
-     * build fingerscrossed log file path
-     * @return string
-     */
-    public function getFingersCrossedLogFilePath()
-    {
-        return oxRegistry::get('oxConfig')->getLogsDir() . 'mo_ingenico-fingerscrossed-' . date('Y-m', time()) . '.log';
     }
 
     /**
