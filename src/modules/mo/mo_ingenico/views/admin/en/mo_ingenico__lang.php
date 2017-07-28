@@ -166,6 +166,7 @@ $aLang = array(
     'MO_INGENICO_EXTRA' => 'Extra Information',
 // Admin -> Ingenico -> Einstellungen
     'MO_INGENICO__ISLIVEMODE'                         => 'Live-Mode',
+    'MO_INGENICO_NOTHINGINTHELOGS'                    => 'Currently there is nothing in the logs',
     'MO_INGENICO_LOGLEVEL'                            => 'Log-Level',
     'MO_INGENICO_LOGLEVEL_DEBUG'                      => 'Debug',
     'MO_INGENICO_LOGLEVEL_INFO'                       => 'Info',

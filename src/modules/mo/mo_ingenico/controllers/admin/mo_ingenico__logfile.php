@@ -44,40 +44,17 @@ class mo_ingenico__logfile extends oxAdminView
     {
         parent::render();
 
-        $sCurrentAdminShop = oxRegistry::getSession()->getVariable('currentadminshop');
-
-        if (!$sCurrentAdminShop) {
-            if (oxRegistry::getSession()->getVariable('malladmin')) {
-                $sCurrentAdminShop = 'oxbaseshop';
-            } else {
-                $sCurrentAdminShop = oxRegistry::getSession()->getVariable('actshop');
-            }
+        if (!$LogFile = oxNew('mo_ingenico__helper')->getLogFilePath()) {
+            $this->_aViewData['logfile'] = [];
+            return $this->_sThisTemplate;
         }
-
-        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath();
-        $filters = [];
-        if ($this->blfiltering) {
-            $aFilter = $this->getConfig()->getRequestParameter('ingenicologfilter');
-            $this->_aViewData['ingenicologfilter'] = $aFilter;
-            if (is_array($aFilter)) {
-                $filters = array_filter($aFilter);
-            }
-        }
+        $filters = $this->getFilter();
+        $this->_aViewData['ingenicologfilter'] = $filters;
 
         $reader = oxNew('mo_ingenico__log_parser');
         $data = $reader->parseLogFile($LogFile, $filters);
 
         $this->_aViewData['logfile'] = $data;
-        $this->_aViewData['currentadminshop'] = $sCurrentAdminShop;
-        oxRegistry::getSession()->setVariable('currentadminshop', $sCurrentAdminShop);
-
-        if ($this->getConfig()->getConfigParam('mo_ingenico__isLiveMode')) {
-            $this->_aViewData['bottom_buttons'] = 'prod';
-        } else {
-            $this->_aViewData['bottom_buttons'] = 'test';
-        }
-
-        $this->_aViewData['version'] = $this->_sVersion;
 
         return $this->_sThisTemplate;
     }
@@ -85,9 +62,27 @@ class mo_ingenico__logfile extends oxAdminView
     /**
      * enable filter
      */
-    public function setFilter()
+    public function setIsFiltering()
     {
         $this->blfiltering = true;
+    }
+
+    /**
+     * get filter
+     *
+     * @return bool
+     */
+    public function isFiltering()
+    {
+        return $this->blfiltering;
+    }
+
+    protected function getFilter()
+    {
+        if (!$this->isFiltering()) {
+            return [];
+        }
+        return array_filter($this->getConfig()->getRequestParameter('ingenicologfilter'));
     }
 
     /**
@@ -95,15 +90,45 @@ class mo_ingenico__logfile extends oxAdminView
      */
     public function downloadLogFile()
     {
-        $LogFile = oxNew('mo_ingenico__helper')->getLogFilePath();
+        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath();
+        $this->createDownload($logFile, $logFile, true);
+    }
+
+
+    /**
+     * create a download version of the filtered logfile
+     */
+    public function downloadFilteredLogFile()
+    {
+        $logFile = oxNew('mo_ingenico__helper')->getLogFilePath();
+        $this->setIsFiltering();
+        $filters = $this->getFilter();
+
+        $reader = oxNew('mo_ingenico__log_parser');
+        $data = $reader->filterLogFileForDownload($logFile, $filters);
+
+        $content = implode(PHP_EOL, $data);
+        $this->createDownload($logFile, $content, false);
+    }
+
+    /**
+     * @param string  $fileName
+     * @param string  $data
+     * @param boolean $isFile
+     */
+    protected function createDownload($fileName, $data, $isFile)
+    {
         header('Pragma: no-cache');
         header('Cache-Control: no-cache');
         header('Content-Type: text/plain');
-        header('Content-Disposition: attachment; filename="'. basename($LogFile) . '";');
+        header('Content-Disposition: attachment; filename="'. basename($fileName) . '";');
         header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . filesize($LogFile));
-        readfile($LogFile);
-        exit;
+        if ($isFile) {
+            header('Content-Length: ' . filesize($data));
+            readfile($data);
+            exit;
+        }
+        header('Content-Length: ' . mb_strlen($data));
+        oxRegistry::get('oxUtils')->showMessageAndExit($data);
     }
-
 }
