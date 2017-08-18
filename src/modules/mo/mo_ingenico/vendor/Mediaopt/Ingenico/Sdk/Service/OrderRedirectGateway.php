@@ -3,6 +3,7 @@
 namespace Mediaopt\Ingenico\Sdk\Service;
 
 use Mediaopt\Ingenico\Sdk\Main;
+use Mediaopt\Ingenico\Sdk\Model\IngenicoResponse;
 use Mediaopt\Ingenico\Sdk\Model\StatusType;
 
 /**
@@ -16,6 +17,14 @@ class OrderRedirectGateway extends AbstractService
         $response = $this->getResponse();
         $this->getAdapter()->getLogger()->info('handleOrderRedirectResponse',$response->getAllParams());
 
+        if ($this->checkForMandatoryFields($response)) {
+            $this->getAdapter()->getLogger()->error('Mandatory fields missing!', $response->getAllParams());
+            $status = Main::getInstance()->getService('Status')
+                          ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+            $response->setStatus($status);
+            $response->setError($status);
+            return $response;
+        }
         if (!$authenticator->authenticateRequest()) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch', $response->getAllParams());
@@ -53,5 +62,16 @@ class OrderRedirectGateway extends AbstractService
     public function getResponse()
     {
         return $this->getAdapter()->getFactory('IngenicoResponse')->build();
+    }
+
+    protected function checkForMandatoryFields(IngenicoResponse $response)
+    {
+        return
+            null === $response->getAmount()
+            || null === $response->getStatus()
+            || null === $response->getSessionChallenge()
+            || null === $response->getPayId()
+            || null === $response->getOrderId()
+        ;
     }
 }

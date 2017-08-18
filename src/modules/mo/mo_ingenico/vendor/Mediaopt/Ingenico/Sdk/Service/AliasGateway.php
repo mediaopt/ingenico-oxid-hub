@@ -22,7 +22,14 @@ class AliasGateway extends AbstractService
         /* @var $response IngenicoResponse */
         $response = $this->getAdapter()->getFactory('IngenicoResponse')->build();
         $this->getAdapter()->getLogger()->info('handleAliasResponse', $response->getAllParams());
-        
+        if ($this->checkForMandatoryFields($response)) {
+            $this->getAdapter()->getLogger()->error('Mandatory fields missing!', $response->getAllParams());
+            $status = Main::getInstance()->getService('Status')
+                          ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+            $response->setStatus($status);
+            $response->setError($status);
+            return $response;
+        }
         if (!$authenticator->authenticateRequest('AliasGateway')) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch',$response->getAllParams());
@@ -40,4 +47,11 @@ class AliasGateway extends AbstractService
         return $response;     
     }
 
+    protected function checkForMandatoryFields(IngenicoResponse $response)
+    {
+        return
+            null === $response->getAlias()
+            || null === $response->getStatus()
+            ;
+    }
 }

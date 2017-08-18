@@ -76,11 +76,6 @@ class IngenicoResponse extends AbstractModel
         return $this->allParams;
     }
 
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
     public function getOrderId()
     {
         return $this->orderId;
@@ -89,11 +84,6 @@ class IngenicoResponse extends AbstractModel
     public function setAllParams($allParams)
     {
         $this->allParams = $allParams;
-    }
-
-    public function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
     }
 
     public function setOrderId($orderId)

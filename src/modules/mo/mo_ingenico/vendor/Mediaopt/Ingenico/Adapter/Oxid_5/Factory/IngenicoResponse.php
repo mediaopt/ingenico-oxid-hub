@@ -48,11 +48,10 @@ class IngenicoResponse extends AbstractFactory
             $model->setShopId(null);
         }
         if (isset($params['STATUS'])) {
-            $statusCode = $params['STATUS'];
+            $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($params['STATUS']));
         } else {
-            $statusCode = StatusType::INCOMPLETE_OR_INVALID;
+            $model->setStatus(null);
         }
-        $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($statusCode));
         $error = null;
         if (!empty($params['NCERRORCARDNO']) && $params['NCERRORCARDNO'] != '0') {
             $error = $params['NCERRORCARDNO'];
