@@ -110,7 +110,8 @@ class mo_ingenico__payment extends mo_ingenico__payment_parent
             //fetch necessary auth params and build sha-signature
             $this->mo_ingenico__loadRequestParams(oxRegistry::getConfig()->getRequestParameter('paymentid'));
             // javascript is not enabled so we need to display step 3.5
-            return $this->getNonJsTemplateName();
+            $this->setTemplateName($this->getNonJsTemplateName());
+            return;
         }
 
         // error will be displayed

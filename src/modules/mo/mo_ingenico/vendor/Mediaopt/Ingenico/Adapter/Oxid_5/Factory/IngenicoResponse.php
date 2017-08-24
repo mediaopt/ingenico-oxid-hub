@@ -73,6 +73,8 @@ class IngenicoResponse extends AbstractFactory
         }
         if (!empty($params['ALIAS'])) {
             $model->setAlias($params['ALIAS']);
+        } elseif (!empty($params['ALIAS_ALIASID'])) {
+            $model->setAlias($params['ALIAS_ALIASID']);
         } else {
             $model->setAlias(null);
         }
