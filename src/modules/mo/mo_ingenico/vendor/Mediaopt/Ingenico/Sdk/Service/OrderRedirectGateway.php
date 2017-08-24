@@ -2,9 +2,7 @@
 
 namespace Mediaopt\Ingenico\Sdk\Service;
 
-use Mediaopt\Ingenico\Sdk\Main;
 use Mediaopt\Ingenico\Sdk\Model\IngenicoResponse;
-use Mediaopt\Ingenico\Sdk\Model\StatusType;
 
 /**
  * $Id: $
@@ -17,25 +15,16 @@ class OrderRedirectGateway extends AbstractService
         $response = $this->getResponse();
         $this->getAdapter()->getLogger()->info('handleOrderRedirectResponse',$response->getAllParams());
 
-        if ($this->checkForMandatoryFields($response)) {
+        if (!$response->hasError() && $this->checkForMandatoryFields($response)) {
             $this->getAdapter()->getLogger()->error('Mandatory fields missing!', $response->getAllParams());
-            $status = Main::getInstance()->getService('Status')
-                          ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            $response->setStatus($status);
-            $response->setError($status);
-            return $response;
+            return $response->markAsIncomplete();
         }
         if (!$authenticator->authenticateRequest()) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch', $response->getAllParams());
-            $status = Main::getInstance()->getService('Status')
-                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            $response->setStatus($status);
-            $response->setError($status);
-            return $response;
+            return $response->markAsIncomplete();
         }
 
-        
         $statusDebugInfo = 'Ingenico-Status: ' .
                 $response->getStatus()->getStatusTextForCode() . ' (' . $response->getStatus()->getStatusCode() . ')';
 
@@ -66,12 +55,10 @@ class OrderRedirectGateway extends AbstractService
 
     protected function checkForMandatoryFields(IngenicoResponse $response)
     {
-        return
-            null === $response->getAmount()
+        return null === $response->getAmount()
             || null === $response->getStatus()
             || null === $response->getSessionChallenge()
             || null === $response->getPayId()
-            || null === $response->getOrderId()
-        ;
+            || null === $response->getOrderId();
     }
 }

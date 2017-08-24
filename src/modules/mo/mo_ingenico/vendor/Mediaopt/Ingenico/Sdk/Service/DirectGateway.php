@@ -9,7 +9,6 @@ namespace Mediaopt\Ingenico\Sdk\Service;
 
 use Mediaopt\Ingenico\Sdk\Main;
 use Mediaopt\Ingenico\Sdk\Model\IngenicoResponse;
-use Mediaopt\Ingenico\Sdk\Model\StatusType;
 
 class DirectGateway extends AbstractService
 {
@@ -35,18 +34,19 @@ class DirectGateway extends AbstractService
      */
     public function handleResponse($xml)
     {
-        /* @var $response \Mediaopt\Ingenico\Sdk\Model\IngenicoResponse */
-        $response = Main::getInstance()->getModel('IngenicoResponse');
         if (empty($xml)) {
             $this->getAdapter()->getLogger()->error('Curl error detected, no direct link feedback! (we assume an uncertain status, redirect to error view)');
-            $status = Main::getInstance()->getService('Status')
-                ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            $response->setStatus($status);
-            return $response;
+            /* @var $response \Mediaopt\Ingenico\Sdk\Model\IngenicoResponse */
+            $response = Main::getInstance()->getModel('IngenicoResponse');
+            return $response->markAsIncomplete();
         }
         //convert to array
         $response = $this->getResponse($xml);
         $this->getAdapter()->getLogger()->info('Handling ' . $this->service . ' Response', $response->getAllParams());
+        if (!$response->hasError() && $this->checkForMandatoryFields($response)) {
+            $this->getAdapter()->getLogger()->error('Mandatory fields missing!', $response->getAllParams());
+            return $response->markAsIncomplete();
+        }
 
         $this->logResponse($response);
 
@@ -90,4 +90,11 @@ class DirectGateway extends AbstractService
         $this->getAdapter()->getLogger()->info('Ingenico Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
     }
 
+    protected function checkForMandatoryFields(IngenicoResponse $response)
+    {
+        return null === $response->getAmount()
+            || null === $response->getStatus()
+            || null === $response->getPayId()
+            || null === $response->getOrderId();
+    }
 }
