@@ -70,7 +70,7 @@ class mo_ingenico__events
      */
     private static function getFunctionFileNameWithPath()
     {
-        return __DIR__ . '/../../../functions.php';
+        return oxRegistry::getConfig()->getModulesDir() . '/functions.php';
     }
 
     /**
