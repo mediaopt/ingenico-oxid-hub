@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.5]
+### Hotfix
+- correct template name when javascript is disabled and alias payment is used
+- correct path to functions.php if module is included via symlink
+
+### Changed
+- use ALIAS_ALIASID parameter in iframe response if ALIAS is not present
+
 ## [4.2.4]
 ### Changed
 - link to german or english documentation and changelog respectively
