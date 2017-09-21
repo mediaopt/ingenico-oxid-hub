@@ -17,6 +17,7 @@ https://www.mediaopt.de
 support@mediaopt.de
 
 == Documentation ==
+https://projects.mediaopt.de/projects/ogone-puc/wiki/Dokumentation_EN
 https://projects.mediaopt.de/projects/ogone-puc/wiki/Dokumentation_DE
 
 == Extend ==
