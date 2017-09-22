@@ -20,6 +20,10 @@ support@mediaopt.de
 https://projects.mediaopt.de/projects/ogone-puc/wiki/Dokumentation_EN
 https://projects.mediaopt.de/projects/ogone-puc/wiki/Dokumentation_DE
 
+== Changelog ==
+https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog_DE
+https://projects.mediaopt.de/projects/ogone-puc/wiki/Changelog_EN
+
 == Extend ==
 *order
 *payment
