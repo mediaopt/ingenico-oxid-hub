@@ -37,6 +37,13 @@ class AliasGateway extends AbstractService
         return $response;     
     }
 
+    /**
+     * check if the mandatory fields alias and status are set
+     *
+     * @param IngenicoResponse $response
+     *
+     * @return bool
+     */
     protected function checkForMandatoryFields(IngenicoResponse $response)
     {
         return null === $response->getAlias()

@@ -90,6 +90,13 @@ class DirectGateway extends AbstractService
         $this->getAdapter()->getLogger()->info('Ingenico Transaction Failure: ' . $errorMessage . ' - ' . $statusDebugInfo);
     }
 
+    /**
+     * check if the mandatory fields amount, status, payId and orderId are set
+     *
+     * @param IngenicoResponse $response
+     *
+     * @return bool
+     */
     protected function checkForMandatoryFields(IngenicoResponse $response)
     {
         return null === $response->getAmount()

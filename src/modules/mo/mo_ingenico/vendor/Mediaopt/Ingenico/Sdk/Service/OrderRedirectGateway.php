@@ -53,6 +53,13 @@ class OrderRedirectGateway extends AbstractService
         return $this->getAdapter()->getFactory('IngenicoResponse')->build();
     }
 
+    /**
+     * check if the mandatory fields amount, status, sessionChallenge, payId and orderId are set
+     *
+     * @param IngenicoResponse $response
+     *
+     * @return bool
+     */
     protected function checkForMandatoryFields(IngenicoResponse $response)
     {
         return null === $response->getAmount()
