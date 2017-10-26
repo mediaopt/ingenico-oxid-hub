@@ -2,9 +2,7 @@
 
 namespace Mediaopt\Ingenico\Sdk\Service;
 
-use Mediaopt\Ingenico\Sdk\Main;
 use Mediaopt\Ingenico\Sdk\Model\IngenicoResponse;
-use Mediaopt\Ingenico\Sdk\Model\StatusType;
 
 /**
  * $Id: $
@@ -21,15 +19,14 @@ class HostedTokenizationGateway extends AbstractService
         /* @var $response IngenicoResponse */
         $response = $this->getAdapter()->getFactory('IngenicoResponse')->build();
         $this->getAdapter()->getLogger()->info('handleHostedTokenizationResponse',$response->getAllParams());
-        
+        if (!$response->hasError() && $this->checkForMandatoryFields($response)) {
+            $this->getAdapter()->getLogger()->error('Mandatory fields missing!', $response->getAllParams());
+            return $response->markAsIncomplete();
+        }
         if (!$authenticator->authenticateRequest('HostedTokenizationPage')) {
             // no authentication, kick back to payment methods
             $this->getAdapter()->getLogger()->error('SHA-OUT-Mismatch,', $response->getAllParams());
-            $status = Main::getInstance()->getService('Status')
-                    ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
-            $response->setStatus($status);
-            $response->setError($status);
-            return $response;
+            return $response->markAsIncomplete();
         }
         
         if ($response->hasError()) {
@@ -39,4 +36,16 @@ class HostedTokenizationGateway extends AbstractService
         return $response;     
     }
 
+    /**
+     * check if the mandatory fields alias and status are set
+     *
+     * @param IngenicoResponse $response
+     *
+     * @return bool
+     */
+    protected function checkForMandatoryFields(IngenicoResponse $response)
+    {
+        return null === $response->getAlias()
+            || null === $response->getStatus();
+    }
 }
