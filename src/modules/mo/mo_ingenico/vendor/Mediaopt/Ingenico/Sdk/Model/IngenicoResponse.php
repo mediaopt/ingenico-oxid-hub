@@ -2,6 +2,7 @@
 
 namespace Mediaopt\Ingenico\Sdk\Model;
 
+use Mediaopt\Ingenico\Sdk\Main;
 use Mediaopt\Ingenico\Sdk\Service\Status;
 
 /**
@@ -30,7 +31,7 @@ class IngenicoResponse extends AbstractModel
      */
     public function getSessionChallenge()
     {
-        return $this->sessionChellange;
+        return $this->sessionChallenge;
     }
 
     /**
@@ -76,11 +77,6 @@ class IngenicoResponse extends AbstractModel
         return $this->allParams;
     }
 
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
     public function getOrderId()
     {
         return $this->orderId;
@@ -89,11 +85,6 @@ class IngenicoResponse extends AbstractModel
     public function setAllParams($allParams)
     {
         $this->allParams = $allParams;
-    }
-
-    public function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
     }
 
     public function setOrderId($orderId)
@@ -146,4 +137,12 @@ class IngenicoResponse extends AbstractModel
         $this->alias = $alias;
     }
 
+    public function markAsIncomplete()
+    {
+        $status = Main::getInstance()->getService('Status')
+            ->usingStatusCode((int) StatusType::INCOMPLETE_OR_INVALID);
+        $this->setStatus($status);
+        $this->setError($status);
+        return $this;
+    }
 }

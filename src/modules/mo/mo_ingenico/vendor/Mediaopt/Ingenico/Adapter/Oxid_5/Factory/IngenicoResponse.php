@@ -3,7 +3,6 @@
 namespace Mediaopt\Ingenico\Adapter\Oxid_5\Factory;
 
 use Mediaopt\Ingenico\Sdk\Main;
-use Mediaopt\Ingenico\Sdk\Model\StatusType;
 
 /**
  * $Id: $
@@ -39,20 +38,13 @@ class IngenicoResponse extends AbstractFactory
         $model->setAllParams($params);
         if (isset($params['ORDERID'])) {
             $model->setOrderId($params['ORDERID']);
-        } else {
-            $model->setOrderId(null);
         }
         if (isset($params['SHOPID'])) {
             $model->setShopId((int)$params['SHOPID']);
-        } else {
-            $model->setShopId(null);
         }
         if (isset($params['STATUS'])) {
-            $statusCode = $params['STATUS'];
-        } else {
-            $statusCode = StatusType::INCOMPLETE_OR_INVALID;
+            $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($params['STATUS']));
         }
-        $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($statusCode));
         $error = null;
         if (!empty($params['NCERRORCARDNO']) && $params['NCERRORCARDNO'] != '0') {
             $error = $params['NCERRORCARDNO'];
