@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.6]
+### Added
+- check for mandatory fields in psp feedback
+- write to log if mandatory fields where not present
+- documentation in module files
+
 ## [4.2.5]
 ### Hotfix
 - correct template name when javascript is disabled and alias payment is used
