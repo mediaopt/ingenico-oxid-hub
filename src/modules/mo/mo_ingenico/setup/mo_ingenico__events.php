@@ -153,6 +153,15 @@ class mo_ingenico__events
             self::mo_ingenico__executeSql("ALTER TABLE  `mo_ingenico__payment_logs` CHANGE"
                 . "  `PAYID`  `PAYID` VARCHAR( 255 ) NOT NULL DEFAULT  '0';");
         }
+
+        $query = "SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?";
+        $result = oxDb::getDb()->getOne($query, array($dbName, 'mo_ingenico__payment_logs', 'SHOPID'));
+        if (!$result) {
+            $queries = mo_ingenico__sql::getLogTableUpdateSql();
+            foreach ($queries as $query) {
+                self::mo_ingenico__executeSql($query);
+            }
+        }
     }
 
     /**

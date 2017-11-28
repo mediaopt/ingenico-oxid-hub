@@ -71,40 +71,34 @@ class mo_ingenico__interface extends oxAdminList
         $this->oList = oxNew('oxlist');
         $this->oList->init('oxbase', 'mo_ingenico__payment_logs');
 
-        $sSelect = "select *, concat(billlname, ', ', billfname) as customer_name from mo_ingenico__payment_logs ";
+        $select = "select *, concat(billfname, ' ', billlname) as customer_name from mo_ingenico__payment_logs ";
 
-        $sCountSelect = 'select count(*) from mo_ingenico__payment_logs ';
+        $countSelect = 'select count(*) from mo_ingenico__payment_logs ';
 
         $groupByStatement = '';
         if($oxConfig->getConfigParam('mo_ingenico__useGroupBy')) {
             $groupByStatement = ' GROUP BY CONCAT(transID, "-", STATUS) ';
         }
 
-        $sWhere = '';
+        $conditions = [];
 
         if ($this->blfiltering) {
             $aFilter = $oxConfig->getRequestParameter('ingenicologfilter');
             if (is_array($aFilter)) {
                 foreach ($aFilter as $sKey => $sValue) {
                     if ($sValue !== '') {
-                        if ($sWhere) {
-                            $sWhere .= ' and ';
-                        } else {
-                            $sWhere .= ' where ';
-                        }
+
 
                         if ($sKey === 'customer_name') {
-                            $sWhere .= '(';
-                            $sWhere .= "mo_ingenico__payment_logs.billfname like '%" . $sValue . "%' ";
-                            $sWhere .= ' or ';
-                            $sWhere .= "mo_ingenico__payment_logs.billlname like '%" . $sValue . "%' ";
-                            $sWhere .= ')';
+                            $conditions[] = "(
+                                mo_ingenico__payment_logs.billfname like '%" . $sValue . "%'
+                                OR mo_ingenico__payment_logs.billlname like '%" . $sValue . "%')";
                         } elseif (in_array($sKey, ['acceptance', 'cn', 'transid','payid','ncerror'])) {
-                            $sWhere .= "mo_ingenico__payment_logs.$sKey like '%" . $sValue . "%' ";
+                            $conditions[] = "mo_ingenico__payment_logs.$sKey like '%" . $sValue . "%' ";
                         } elseif ($sKey === 'orderid') {
-                            $sWhere .= "mo_ingenico__payment_logs.$sKey like '" . $sValue . "%' ";
+                            $conditions[] = "mo_ingenico__payment_logs.$sKey like '" . $sValue . "%' ";
                         } else {
-                            $sWhere .= "mo_ingenico__payment_logs.$sKey = '" . $sValue . '\' ';
+                            $conditions[] = "mo_ingenico__payment_logs.$sKey = '" . $sValue . '\' ';
                         }
 
                         $this->_aViewData['ingenicologfilter'][$sKey] = $sValue;
@@ -113,10 +107,17 @@ class mo_ingenico__interface extends oxAdminList
             }
         }
 
-        $sSelect .= $sWhere . $groupByStatement;
-        $sCountSelect .= $sWhere;
+        if (oxRegistry::getConfig()->getShopId() !== 'oxbaseshop') {
+            $conditions[] = 'SHOPID = "'.oxRegistry::getConfig()->getShopId().'"';
+        }
+        if ($conditions) {
+            $whereStatement = ' where '.implode(' and ', $conditions);
+            $select .= $whereStatement;
+            $countSelect .= $whereStatement;
+        }
+        $select .= $groupByStatement;
 
-        $this->iListSize = oxDb::getDb()->getOne($sCountSelect);
+        $this->iListSize = oxDb::getDb()->getOne($countSelect);
         if (!$this->iCurrListPos) {
             $this->iCurrListPos = 1;
         }
@@ -124,7 +125,7 @@ class mo_ingenico__interface extends oxAdminList
         $iAdminListSize = $oxConfig->getConfigParam('iAdminListSize');
 
         $this->_setCurrentListPosition(oxRegistry::getConfig()->getRequestParameter('jumppage'));
-        $sSelect .= 'order by mo_ingenico__payment_logs.date desc';
+        $select .= 'order by mo_ingenico__payment_logs.date desc';
         $this->oList->iSQLRecords = $oxConfig->getConfigParam('iAdminListSize');
         $this->oList->iSQLStart = $this->iCurrListPos;
 
@@ -134,7 +135,7 @@ class mo_ingenico__interface extends oxAdminList
             $this->oList->iSQLStart = 0;
         }
 
-        $this->oList->selectString($sSelect);
+        $this->oList->selectString($select);
 
         $this->_aViewData['aLogList'] = $this->oList->aList;
         $this->_aViewData['iCount'] = $this->oList->iSQLStart;
