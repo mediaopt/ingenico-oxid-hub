@@ -71,7 +71,7 @@ class mo_ingenico__interface extends oxAdminList
         $this->oList = oxNew('oxlist');
         $this->oList->init('oxbase', 'mo_ingenico__payment_logs');
 
-        $select = "select *, concat(billfname, billlname) as customer_name from mo_ingenico__payment_logs ";
+        $select = "select *, concat(billfname, ' ', billlname) as customer_name from mo_ingenico__payment_logs ";
 
         $countSelect = 'select count(*) from mo_ingenico__payment_logs ';
 
