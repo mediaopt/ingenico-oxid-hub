@@ -86,4 +86,20 @@ class mo_ingenico__sql
           )";
     }
 
+    /**
+     * get sql statements to update log table
+     *
+     * @return array
+     */
+    public static function getLogTableUpdateSql()
+    {
+        return array(
+            "ALTER TABLE `mo_ingenico__payment_logs`
+                ADD SHOPID CHAR(32) NOT NULL;",
+            "UPDATE `mo_ingenico__payment_logs` JOIN oxorder
+                ON mo_ingenico__payment_logs.orderID = oxorder.OXORDERNR
+                SET mo_ingenico__payment_logs.SHOPID = oxorder.OXSHOPID
+                WHERE mo_ingenico__payment_logs.orderID <> \"\";"
+    );
+    }
 }

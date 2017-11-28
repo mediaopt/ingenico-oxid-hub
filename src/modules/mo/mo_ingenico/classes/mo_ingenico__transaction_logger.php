@@ -44,6 +44,7 @@ class mo_ingenico__transaction_logger
             'ip',
             'ipcty',
             'cccty',
+            'shopid',
         );
 
         $assignVariables = array(
