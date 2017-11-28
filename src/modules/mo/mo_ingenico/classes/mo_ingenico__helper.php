@@ -14,7 +14,7 @@ class mo_ingenico__helper
     {
         $options = oxRegistry::getConfig()->getConfigParam('mo_ingenico__paymentOptions');
 
-        if (null === $options) {
+        if (empty($options)) {
             return false;
         }
 
