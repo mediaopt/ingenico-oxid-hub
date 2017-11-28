@@ -8,7 +8,7 @@ derksen mediaopt GmbH
 mo
 
 == Version ==
-4.2.6
+4.2.7
 
 == Link ==
 https://www.mediaopt.de
