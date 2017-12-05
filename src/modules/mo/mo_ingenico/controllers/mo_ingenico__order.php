@@ -41,7 +41,7 @@ class mo_ingenico__order extends mo_ingenico__order_parent
             return parent::execute();
         }
 
-        if (!$this->_validateTermsAndConditions() && method_exists(oxNew('oxorder'), '_validateTermsAndConditions')) {
+        if (!$this->_validateTermsAndConditions() && method_exists(oxNew('order'), '_validateTermsAndConditions')) {
                 $this->_blConfirmAGBError = 1;
                 return;
         } elseif (method_exists('oxConfig', 'getParameter') && !oxConfig::getParameter( 'ord_agb' ) && $this->getConfig()->getConfigParam( 'blConfirmAGB' )) {
