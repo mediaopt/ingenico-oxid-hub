@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.8]
+### Hotfix
+- corrected bug for terms and conditions check on order submit
+
 ## [4.2.7]
 ### Changed
 - the ingenico payments log only shows entries for the subshop if a subshop is selected
