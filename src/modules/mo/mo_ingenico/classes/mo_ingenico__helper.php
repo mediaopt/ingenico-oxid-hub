@@ -10,6 +10,14 @@ class mo_ingenico__helper
      */
     protected $logger;
 
+    /**
+     * check if given brand for given payment id is active
+     *
+     * @param string $pm
+     * @param string $brand
+     *
+     * @return bool
+     */
     public function mo_ingenico__isBrandActive($pm, $brand)
     {
         $options = oxRegistry::getConfig()->getConfigParam('mo_ingenico__paymentOptions');

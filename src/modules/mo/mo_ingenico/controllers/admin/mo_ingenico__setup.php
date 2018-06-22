@@ -58,99 +58,50 @@ class mo_ingenico__setup extends Shop_Config
 
     public function init()
     {
-        $this->_aViewData['mo_ingenico__sqlExecutionErrors'] = '';
-
         $this->mo_ingenico__logger = Main::getInstance()->getLogger();
-        $this->mo_ingenico__shop_payment_ids =
-            Main::getInstance()->getService('IngenicoPayments')->getShopPaymentIds();
-
+        $this->mo_ingenico__shop_payment_ids = Main::getInstance()->getService('IngenicoPayments')->getShopPaymentIds();
         return parent::init();
     }
 
     /**
-     * Executes parent method parent::render() and returns name of template
-     * file "ingenico.tpl".
-     * @todo add try catch to db call
+     * set list of installed payments
      *
      * @return string
      * @throws \oxConnectionException
      */
     public function render()
     {
-        $myConfig = $this->getConfig();
-
         parent::render();
-
-        $sCurrentAdminShop = $myConfig->getShopId();
-
-        Main::getInstance()->getLogger()->info('Shop Id: ' . $sCurrentAdminShop);
-
         // define the payment methods
-        $aPaymentMethods = array();
-        foreach ($this->mo_ingenico__shop_payment_ids as $oxidPaymentId) {
-            $checked = (bool)oxDb::getDb()->getOne(
-                'SELECT 1  
-         FROM ' . getViewName('oxpayments') . '
-         WHERE oxid = "' . $oxidPaymentId . '"');
-
-            $langKey = $this->mo_ingenico__getLanguageKeyForOxidPaymentId($oxidPaymentId);
-            $aPaymentMethods[] = array('id' => $oxidPaymentId,
-                'name' => $langKey,
-                'checked' => $checked);
-        }
-
-        $this->_aViewData['aPaymentMethods'] = $aPaymentMethods;
-
-        $oLang = oxRegistry::getLang();
-        $iLanguage = $oLang->getBaseLanguage();
-        $aLanguages = $oLang->getLanguageArray($iLanguage);
-
-        // multi-lingual preparations
-        foreach ($aLanguages as $id => $data) {
-            if ($aLanguages[$iLanguage]->selected === 1) {
-                switch (true) {
-                    case stristr($aLanguages[$iLanguage]->abbr, 'EN'):
-                        $this->_aViewData['buttons_languages'] = '1';
-                        break; // English
-                    case stristr($aLanguages[$iLanguage]->abbr, 'FR'):
-                        $this->_aViewData['buttons_languages'] = '2';
-                        break; // French
-                    case stristr($aLanguages[$iLanguage]->abbr, 'NL'):
-                        $this->_aViewData['buttons_languages'] = '3';
-                        break; // Netherlands
-                    case stristr($aLanguages[$iLanguage]->abbr, 'IT'):
-                        $this->_aViewData['buttons_languages'] = '4';
-                        break; // Italian
-                    default:
-                        $this->_aViewData['buttons_languages'] = '5';
-                        break; // German
-                }
-            }
-//            $aLanguages[$id]->aliasUsage = $myConfig->getConfigParam('ingenico_sAliasUsage' . $id);
-        }
-
-        $this->_aViewData['languages'] = $aLanguages;
-        $this->_aViewData['bottom_buttons'] = 'test';
-
-        // module isn't installed
-        if (!$this->mo_ingenico__isModuleInstalled()) {
-            $this->_aViewData['start_setup'] = true;
-            // if module running in producitve mode -> linking to prod account
-        } elseif ($this->getConfig()->getConfigParam('mo_ingenico__isLiveMode')) {
-            $this->_aViewData['bottom_buttons'] = 'prod';
-        }
-
-        $this->mo_ingenico__populateViewDataWithConfigVars($sCurrentAdminShop);
-
-        $this->_aViewData['version'] = $this->_sVersion;
-
-        // hidden default bottom custom navi
-        $this->_aViewData['sHelpURL'] = false;
-        $this->_aViewData['oxid'] = $sCurrentAdminShop;
-
+        $installedPayments = $this->mo_ingenico__get_payment_methods_from_db();
+        $this->_aViewData['aPaymentMethods'] = array_map(function ($oxidPaymentId) use ($installedPayments) {
+            return [
+                'id'      => $oxidPaymentId,
+                'name'    => $this->mo_ingenico__getLanguageKeyForOxidPaymentId($oxidPaymentId),
+                'checked' => in_array($oxidPaymentId, $installedPayments, true)
+            ];
+        }, $this->mo_ingenico__shop_payment_ids);
         return $this->_sThisTemplate;
     }
 
+    /**
+     * get list of installed payments
+     *
+     * @return string[]
+     */
+    protected function mo_ingenico__get_payment_methods_from_db()
+    {
+        $storedPaymentsQuery = 'SELECT OXID FROM oxpayments WHERE OXID IN ("' . implode('", "', $this->mo_ingenico__shop_payment_ids) . '")';
+        $storedPayments = \oxdb::getDb()->getCol($storedPaymentsQuery);
+
+        return $storedPayments;
+    }
+
+    /**
+     * check if the payment module is installed
+     *
+     * @return bool
+     */
     protected function mo_ingenico__isModuleInstalled()
     {
         if ($this->mo_ingenico__is_module_installed !== null) {
@@ -160,18 +111,18 @@ class mo_ingenico__setup extends Shop_Config
         $shopId = $this->getConfig()->getShopId();
         $oxDb = oxDb::getDb();
 
-        $sql = "SELECT OXID
-            FROM oxconfig 
-            WHERE 
-            OXVARNAME LIKE  '%ingenico%'
-            AND OXSHOPID = " . $oxDb->quote($shopId) . '
-            LIMIT 1';
-
-        $result = (bool)$oxDb->getOne($sql);
+        $result = (bool) $oxDb->getOne('SELECT 1 FROM oxconfig WHERE OXVARNAME LIKE  "%ingenico%" AND OXSHOPID = ? LIMIT 1', [$shopId]);
         $this->mo_ingenico__is_module_installed = $result;
         return $result;
     }
 
+    /**
+     * get language key to translate the payment method (e.g. 'MO_INGENICO__PAYMENT_METHODS_CREDIT_CARD')
+     *
+     * @param string $oxidPaymentId
+     *
+     * @return string
+     */
     protected function mo_ingenico__getLanguageKeyForOxidPaymentId($oxidPaymentId)
     {
         $languageKey = explode('_', $oxidPaymentId, 2);
@@ -180,202 +131,112 @@ class mo_ingenico__setup extends Shop_Config
         return $languageKey;
     }
 
-    protected function mo_ingenico__populateViewDataWithConfigVars($shopId)
-    {
-        // load configuration variables, $moduleName needs to be emtpy (only supported for custom themes, at time
-        // of oxid 4.5.0, see: http://wiki.oxidforge.org/Dev_changes_in_4.5.0)
-        if (!method_exists($this, '_loadConfVars')) {
-            $aDbVariables = $this->loadConfVars($shopId, $moduleName = '');
-        } else {
-            $aDbVariables = $this->_loadConfVars($shopId, $moduleName = '');
-        }
-
-        $aConfVars = $aDbVariables['vars'];
-
-        foreach ($this->_aConfParams as $sType => $sParam) {
-            $this->_aViewData[$sParam] = $aConfVars[$sType];
-        }
-    }
-
     /**
-     * Install new tables, update fields and clear cache
+     * activate new payments and delete old ones
      */
     protected function mo_ingenico__update_payments()
     {
-        // get request params
+        $db = \oxdb::getDb();
         $enabledPaymentMethods = $this->mo_ingenico__get_payment_methods_from_request_params();
-
-        if (!is_array($enabledPaymentMethods)) {
-            // if no checkbox is checked all payments are removed from db
-            $this->mo_ingenico__uninstall_payments();
-        } else {
-            $this->mo_ingenico__install_payments();
-        }
-    }
-
-    protected function mo_ingenico__install_payments()
-    {
-
-        $enabledPaymentMethods = $this->mo_ingenico__get_payment_methods_from_request_params();
+        $storedPayments = $this->mo_ingenico__get_payment_methods_from_db();
 
         $aLanguageParams = array_values($this->getConfig()->getConfigParam('aLanguageParams'));
+        foreach (array_diff($enabledPaymentMethods, $storedPayments) as $oxidPaymentId) {
+            // add oxpayment entry
+            $sQuery = "INSERT INTO `oxpayments` (`OXID`, `OXACTIVE`, `OXTOAMOUNT`, ";
 
-        foreach ($this->mo_ingenico__shop_payment_ids as $oxidPaymentId) {
-
-            $oResult = oxDb::getDb()->execute("SELECT * FROM oxpayments WHERE OXID = '" . $oxidPaymentId . "'");
-            // add payment method to oxpayments
-            if ($oResult->RecordCount() == 0 && in_array($oxidPaymentId, $enabledPaymentMethods)) {
-                // add oxpayment entry
-                $sQuery = "INSERT INTO `oxpayments` (`OXID`, `OXACTIVE`, `OXTOAMOUNT`, ";
-
-                $queryLanguageColumnNames = '';
-                foreach ($aLanguageParams as $aLanguageParam) {
-                    if (!empty($queryLanguageColumnNames)) {
-                        $queryLanguageColumnNames .= ', ';
-                    }
-                    if ($aLanguageParam['baseId'] > 0) {
-                        $queryLanguageColumnNames .= '`OXDESC_' . $aLanguageParam['baseId'] . '` ';
-                    } else {
-                        $queryLanguageColumnNames .= '`OXDESC` ';
-                    }
+            $queryLanguageColumnNames = '';
+            foreach ($aLanguageParams as $aLanguageParam) {
+                if (!empty($queryLanguageColumnNames)) {
+                    $queryLanguageColumnNames .= ', ';
                 }
-                $sQuery .= $queryLanguageColumnNames;
-
-                $sQuery .= ") VALUES ('" . $oxidPaymentId . '\', 1, 1000000, ';
-
-                $langKey = $this->mo_ingenico__getLanguageKeyForOxidPaymentId($oxidPaymentId);
-                $oxLang = oxRegistry::getLang();
-
-                $queryLanguageColumnValues = '';
-                foreach ($aLanguageParams as $aLanguageParam) {
-                    if (!empty($queryLanguageColumnValues)) {
-                        $queryLanguageColumnValues .= ', ';
-                    }
-                    $queryLanguageColumnValues .=
-                        oxDb::getDb()->quote($oxLang->translateString($langKey, $aLanguageParam['baseId']));
+                if ($aLanguageParam['baseId'] > 0) {
+                    $queryLanguageColumnNames .= '`OXDESC_' . $aLanguageParam['baseId'] . '` ';
+                } else {
+                    $queryLanguageColumnNames .= '`OXDESC` ';
                 }
-                $sQuery .= $queryLanguageColumnValues;
-
-                $sQuery .= ')';
-                $this->mo_ingenico__logger->info('Installing payments with query: ' . $sQuery);
-                oxDb::getDb()->execute($sQuery);
-
-            } // delete payment method from oxpayments
-            elseif ($oResult->RecordCount() !== 0 && !in_array($oxidPaymentId, $enabledPaymentMethods, false)) {
-                $this->mo_ingenico__logger->info('Deleting payment: ' . $oxidPaymentId);
-
-                // delete oxpayments entry
-                $payment = oxNew('oxpayment');
-                $payment->load($oxidPaymentId);
-                $payment->delete();
             }
+            $sQuery .= $queryLanguageColumnNames;
+
+            $sQuery .= ") VALUES ('" . $oxidPaymentId . '\', 1, 1000000, ';
+
+            $langKey = $this->mo_ingenico__getLanguageKeyForOxidPaymentId($oxidPaymentId);
+            $oxLang = oxRegistry::getLang();
+
+            $queryLanguageColumnValues = '';
+            foreach ($aLanguageParams as $aLanguageParam) {
+                if (!empty($queryLanguageColumnValues)) {
+                    $queryLanguageColumnValues .= ', ';
+                }
+                $queryLanguageColumnValues .=
+                    $db->quote($oxLang->translateString($langKey, $aLanguageParam['baseId']));
+            }
+            $sQuery .= $queryLanguageColumnValues;
+
+            $sQuery .= ')';
+            $this->mo_ingenico__logger->info(sprintf('Installing payment %s with query: %s', $oxidPaymentId, $sQuery));
+            $db->execute($sQuery);
         }
-    }
+        foreach (array_diff($storedPayments, $enabledPaymentMethods) as $oxidPaymentId) {
+            // delete oxpayment entry
+            $this->mo_ingenico__logger->info('Deleting payment: ' . $oxidPaymentId);
 
-    protected function mo_ingenico__get_payment_methods_from_request_params()
-    {
-        $methods = oxRegistry::getConfig()->getRequestParameter('ingenico_aPaymentMethods');
-        if (is_array($methods)) {
-            array_unique($methods);
-        }
-        return $methods;
-    }
-
-    // TODO: HK: delete only payments from current shop -> check shop id and related tables
-    protected function mo_ingenico__uninstall_payments()
-    {
-        $deleteQueries = array(
-            // delete all oxpayments entries wich starts with ingenico
-            "DELETE FROM oxpayments WHERE OXID LIKE 'ingenico_%'",
-            // delete all oxobject2group entries wich starts with ingenico
-            "DELETE FROM oxobject2group WHERE OXOBJECTID LIKE 'ingenico%'",
-            // delete all oxobject2payment oxdelset-entries wich starts with ingenico
-            "DELETE FROM oxobject2payment WHERE OXPAYMENTID LIKE 'ingenico%' AND OXTYPE = 'oxdelset'",
-            // delete all oxobject2payment oxcountry-entries wich starts with ingenico
-            "DELETE FROM oxobject2payment WHERE OXPAYMENTID LIKE 'ingenico%' AND OXTYPE = 'oxcountry'"
-        );
-
-        foreach ($deleteQueries as $sql) {
-            $this->mo_ingenico__logger->info('Uninstalling payments with query: ' . $sql);
-            oxDb::getDb()->execute($sql);
+            $payment = oxNew('oxpayment');
+            $payment->load($oxidPaymentId);
+            $payment->delete();
         }
     }
 
     /**
-     * Saves shop configuration variables
+     * get list of payments that where chosen by the admin user
      *
-     * @return null
+     * @return array
      */
-    public function saveConfVars()
+    protected function mo_ingenico__get_payment_methods_from_request_params()
     {
-        $myConfig = $this->getConfig();
-
-        $aConfBools = oxRegistry::getConfig()->getRequestParameter('confbools');
-        $aConfStrs = oxRegistry::getConfig()->getRequestParameter('confstrs');
-        $aConfArrs = oxRegistry::getConfig()->getRequestParameter('confarrs');
-        $aConfAarrs = oxRegistry::getConfig()->getRequestParameter('confaarrs');
-
-        // special case for min order price value
-        if ($aConfStrs['iMinOrderPrice']) {
-            $aConfStrs['iMinOrderPrice'] = str_replace(',', '.', $aConfStrs['iMinOrderPrice']);
-        }
-
-        if (is_array($aConfBools)) {
-            foreach ($aConfBools as $sVarName => $sVarVal) {
-                $myConfig->saveShopConfVar('bool', $sVarName, $sVarVal);
-            }
-        }
-
-        if (is_array($aConfStrs)) {
-            foreach ($aConfStrs as $sVarName => $sVarVal) {
-                $myConfig->saveShopConfVar('str', $sVarName, $sVarVal);
-            }
-        }
-
-        if (is_array($aConfArrs)) {
-            foreach ($aConfArrs as $sVarName => $aVarVal) {
-                // home country multiple selectlist feature
-                if (!is_array($aVarVal)) {
-                    $aVarVal = $this->_multilineToArray($aVarVal);
-                }
-                $myConfig->saveShopConfVar('arr', $sVarName, $aVarVal);
-            }
-        }
-
-        if (is_array($aConfAarrs)) {
-            foreach ($aConfAarrs as $sVarName => $aVarVal) {
-                $myConfig->saveShopConfVar('aarr', $sVarName, $this->_multilineToAarray($aVarVal));
-            }
-        }
+        $methods = oxRegistry::getConfig()->getRequestParameter('ingenico_aPaymentMethods');
+        return is_array($methods) ? array_unique($methods) : [];
     }
 
+    /**
+     * write changes in payment options into config
+     */
     protected function mo_ingenico__update_payment_options()
     {
         $oxConfig = $this->getConfig();
-        $paymentOptionParameters =
-            $oxConfig->getRequestParameter('mo_ingenico__paymentOptions') ?
-                $oxConfig->getRequestParameter('mo_ingenico__paymentOptions') :
-                array();
+        $paymentOptionParameters = $oxConfig->getRequestParameter('mo_ingenico__paymentOptions') ?: [];
         $oxConfig->saveShopConfVar('arr', 'mo_ingenico__paymentOptions', $paymentOptionParameters);
     }
 
     /**
      * Saves main user parameters.
-     *
-     * @return mixed
      */
     public function save()
     {
         $this->mo_ingenico__update_payments();
         $this->mo_ingenico__update_payment_options();
-        $this->saveConfVars();
     }
 
+    /**
+     * check if given brand for given payment id is active
+     *
+     * @param string $pm
+     * @param string $brand
+     *
+     * @return bool
+     */
     public function mo_ingenico__isBrandActive($pm, $brand)
     {
         return oxNew('mo_ingenico__helper')->mo_ingenico__isBrandActive($pm, $brand);
     }
 
+    /**
+     * get brand or list of brands for a given payment id
+     *
+     * @param $oxidPaymentId
+     *
+     * @return string|string[]
+     */
     public function mo_ingenico__getBrands($oxidPaymentId)
     {
         return Main::getInstance()->getService('IngenicoPayments')->getPaymentMethodProperty($oxidPaymentId, 'brand');
