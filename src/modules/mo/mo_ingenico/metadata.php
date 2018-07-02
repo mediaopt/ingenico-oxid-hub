@@ -88,11 +88,6 @@ $aModule = array(
         ),
         array(
             'template' => 'order_overview.tpl',
-            'block' => 'admin_order_overview_export',
-            'file' => 'views/blocks/admin/admin_order_overview_export.tpl'
-        ),
-        array(
-            'template' => 'order_overview.tpl',
             'block' => 'admin_order_overview_status',
             'file' => 'views/blocks/admin/admin_order_overview_status.tpl'
         ),

@@ -107,7 +107,7 @@ class mo_ingenico__interface extends oxAdminList
             }
         }
 
-        if (oxRegistry::getConfig()->getShopId() !== 'oxbaseshop') {
+        if (oxRegistry::getConfig()->getShopId() !== oxRegistry::getConfig()->getBaseShopId()) {
             $conditions[] = 'SHOPID = "'.oxRegistry::getConfig()->getShopId().'"';
         }
         if ($conditions) {
@@ -225,8 +225,6 @@ class mo_ingenico__interface extends oxAdminList
      * Set current list position
      *
      * @param string $sPage jump page string
-     *
-     * @return null
      */
     protected function _setCurrentListPosition($sPage = null)
     {
