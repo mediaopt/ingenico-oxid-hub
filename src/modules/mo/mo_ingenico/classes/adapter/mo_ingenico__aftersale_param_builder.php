@@ -75,7 +75,7 @@ class mo_ingenico__aftersale_param_builder extends mo_ingenico__request_param_bu
             $amount += $order->getOrderDeliveryPrice()->getBruttoPrice();
         }
         //sending amount * 100 to ingenico
-        return bcmul($amount , 100);
+        return (int)(string)((float)$amount*100);
     }
 
 }
