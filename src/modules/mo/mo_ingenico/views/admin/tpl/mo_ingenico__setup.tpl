@@ -10,12 +10,6 @@
 [{cycle assign="_clear_" values=",2" }]
 
 <div id=liste>
-
-    [{if $mo_ingenico__sqlExecutionErrors}]
-    <strong style="color: red">[{oxmultilang ident="MO_INGENICO__SQL_INSTALL_ERROR_HEADER"}]</strong>
-    <pre style="border: 2px solid red;">[{$mo_ingenico__sqlExecutionErrors}]</pre>
-    [{/if}]
-
     <form name="myedit" id="myedit" action="[{$oViewConf->getSelfLink()}]" method="post">
         [{$oViewConf->getHiddenSid()}]
         <input type="hidden" name="cl" value="[{$oViewConf->getActiveClassName()}]">

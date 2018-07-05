@@ -99,12 +99,9 @@ class mo_ingenico__events
      */
     private static function mo_ingenico__installAliasTable()
     {
-        $config = oxRegistry::getConfig();
-        $dbName = $config->getConfigParam('dbName');
-
-        if (!self::tableExists($dbName, 'mo_ingenico__alias')) {
+        if (!self::tableExists('mo_ingenico__alias')) {
             $charset = ' TYPE=MyISAM';
-            if ($config->isUtf()) {
+            if (oxRegistry::getConfig()->isUtf()) {
                 $charset = ' ENGINE=MyISAM DEFAULT CHARSET=utf8';
             }
 
@@ -121,12 +118,9 @@ class mo_ingenico__events
      */
     private static function mo_ingenico__installPaymentLogTable()
     {
-        $config = oxRegistry::getConfig();
-        $dbName = $config->getConfigParam('dbName');
-
-        if (!self::tableExists($dbName, 'mo_ingenico__payment_logs')) {
+        if (!self::tableExists('mo_ingenico__payment_logs')) {
             $charset = ' TYPE=MyISAM';
-            if ($config->isUtf()) {
+            if (oxRegistry::getConfig()->isUtf()) {
                 $charset = ' ENGINE=MyISAM DEFAULT CHARSET=utf8';
             }
 
@@ -153,10 +147,7 @@ class mo_ingenico__events
             self::mo_ingenico__executeSql("ALTER TABLE  `mo_ingenico__payment_logs` CHANGE"
                 . "  `PAYID`  `PAYID` VARCHAR( 255 ) NOT NULL DEFAULT  '0';");
         }
-
-        $query = "SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?";
-        $result = oxDb::getDb()->getOne($query, array($dbName, 'mo_ingenico__payment_logs', 'SHOPID'));
-        if (!$result) {
+        if (!self::columnExists('mo_ingenico__payment_logs', 'SHOPID')) {
             $queries = mo_ingenico__sql::getLogTableUpdateSql();
             foreach ($queries as $query) {
                 self::mo_ingenico__executeSql($query);
@@ -172,9 +163,7 @@ class mo_ingenico__events
      */
     private static function mo_ingenico__installOrderReservationTable()
     {
-        $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
-
-        if (!self::tableExists($dbName,'mo_ingenico__order_number_reservations')) {
+        if (!self::tableExists('mo_ingenico__order_number_reservations')) {
             $installSql = 'CREATE TABLE `mo_ingenico__order_number_reservations` (
         `OXID` CHAR( 32 ) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL ,
         UNIQUE (`OXID`)
@@ -191,8 +180,7 @@ class mo_ingenico__events
      */
     private static function mo_ingenico__addIngenicoStatusColumnInOrderTable()
     {
-        $result = oxDb::getDb()->execute("SHOW COLUMNS FROM `oxorder` LIKE '%mo_ingenico__status%'");
-        if ($result->RecordCount() === 0) {
+        if (!self::columnExists('oxorder', 'mo_ingenico__status')) {
             $sql = 'ALTER TABLE `oxorder` ADD `mo_ingenico__status` TINYINT(3) NULL';
             self::mo_ingenico__executeSql($sql);
         }
@@ -216,16 +204,30 @@ class mo_ingenico__events
     /**
      * check if table already exists
      *
-     * @param string $dbName
      * @param string $tableName
      * @return bool
      * @throws \oxConnectionException
      */
-    private static function tableExists($dbName, $tableName)
+    private static function tableExists($tableName)
     {
-        $sQuery = "SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ?";
-        $result = oxDb::getDb()->execute($sQuery, array($dbName, $tableName));
-        return $result->RecordCount() !== 0;
+        $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
+        $sQuery = 'SELECT 1 FROM information_schema.tables WHERE table_schema = ? AND table_name = ?';
+        return (bool) oxDb::getDb()->getOne($sQuery, [$dbName, $tableName]);
+    }
+
+    /**
+     * check if column in table already exists
+     *
+     * @param string $tableName
+     * @param string $columnName
+     * @return bool
+     * @throws \oxConnectionException
+     */
+    private static function columnExists($tableName, $columnName)
+    {
+        $dbName = oxRegistry::getConfig()->getConfigParam('dbName');
+        $sQuery = 'SELECT 1 FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?';
+        return (bool) oxDb::getDb()->getOne($sQuery, [$dbName, $tableName, $columnName]);
     }
 
     /**

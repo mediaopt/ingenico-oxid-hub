@@ -33,7 +33,9 @@ class mo_ingenico__order_direct_param_builder extends mo_ingenico__request_param
         $sAliasUsage = '&nbsp;';
         $params['alias'] = $this->getOxSession()->getVariable('mo_ingenico__order_alias');
         $params['aliasusage'] = $sAliasUsage;
-        $params['eci'] = '9';
+        if ($this->getOxConfig()->getConfigParam('mo_ingenico__use_alias_manager')) {
+            $params['eci'] = '9';
+        }
         $params['rtimeout'] = $this->getOxConfig()->getConfigParam('mo_ingenico__timeout');
 
         //3D Secure

@@ -8,7 +8,7 @@
     "pathToModule": "src/modules/mo/mo_ingenico",
     "compatibility": {
         "minimumVersion": "4.7/5.0",
-        "maximumVersion": "4.10.3/5.3.3",
+        "maximumVersion": null,
         "blacklist": [
         ]
     }
