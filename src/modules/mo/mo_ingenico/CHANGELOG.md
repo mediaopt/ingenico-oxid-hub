@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0]
+### Changed
+- compatibility to Oxid 6
+
 ## [4.2.8]
 ### Hotfix
 - corrected bug for terms and conditions check on order submit
