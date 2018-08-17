@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [develop]
+### Changed
+- create warning log entry if old deferred feedback controller is still used
+
 ## [5.0.0]
 ### Changed
 - compatibility to Oxid 6
