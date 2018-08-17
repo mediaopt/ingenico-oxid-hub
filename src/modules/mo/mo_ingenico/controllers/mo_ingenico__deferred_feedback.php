@@ -13,6 +13,10 @@ class mo_ingenico__deferred_feedback extends oxUBase
      */
     public function render()
     {
+        $link = $this->getViewConfig()->getSslSelfLink();
+        Main::getInstance()->getLogger()->warning("The use of {$link}cl=mo_ingenico__deferred_feedback as the URL for deferred Feedback is deprecated.
+            Use {$link}cl=order&fnc=mo_ingenico__fncHandleDeferredFeedback instead.
+            Please change the URL in the PSP Backend.");
         // process deferred feedback
         $authenticator = Main::getInstance()->getService('Authenticator');
         $authenticator->setShaSettings(oxNew('mo_ingenico__sha_settings')->build());
