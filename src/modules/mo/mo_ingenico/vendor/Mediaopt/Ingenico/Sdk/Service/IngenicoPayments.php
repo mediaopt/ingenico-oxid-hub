@@ -138,5 +138,4 @@ class IngenicoPayments extends AbstractService
   {
     return isset($this->ingenicoPaymentsByShopPaymentId[$paymentId]) ? $this->ingenicoPaymentsByShopPaymentId[$paymentId] : array();
   }
-
 }
