@@ -34,6 +34,38 @@ class IngenicoPayments extends AbstractService
         'pm'              => 'DirectEbanking',
         'brand'           => 'Sofort Uberweisung',
         'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungAT' => array(
+        'pm'              => 'DirectEbankingAT',
+        'brand'           => 'DirectEbankingAT',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungBE' => array(
+        'pm'              => 'DirectEbankingBE',
+        'brand'           => 'DirectEbankingBE',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungCH' => array(
+        'pm'              => 'DirectEbankingCH',
+        'brand'           => 'DirectEbankingCH',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungDE' => array(
+        'pm'              => 'DirectEbankingDE',
+        'brand'           => 'DirectEbankingDE',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungFR' => array(
+        'pm'              => 'DirectEbankingFR',
+        'brand'           => 'DirectEbankingFR',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungGB' => array(
+        'pm'              => 'DirectEbankingGB',
+        'brand'           => 'DirectEbankingGB',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungIT' => array(
+        'pm'              => 'DirectEbankingIT',
+        'brand'           => 'DirectEbankingIT',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
+        'ingenico_sofortueberweisungNL' => array(
+        'pm'              => 'DirectEbankingNL',
+        'brand'           => 'DirectEbankingNL',
+        'paymenttype'     => MO_INGENICO__PAYMENTTYPE_REDIRECT),
         'ingenico_ideal' => array(
         'pm'              => 'iDEAL',
         'brand'           => 'iDEAL',
@@ -106,5 +138,4 @@ class IngenicoPayments extends AbstractService
   {
     return isset($this->ingenicoPaymentsByShopPaymentId[$paymentId]) ? $this->ingenicoPaymentsByShopPaymentId[$paymentId] : array();
   }
-
 }
