@@ -4,7 +4,7 @@
  * holds supported currencies and languages
  * maps oxid values to ingenico values
  *
- * @author derksen mediaopt GmbH
+ * @author Mediaopt GmbH
  */
 class mo_ingenico__config
 {

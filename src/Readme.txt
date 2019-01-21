@@ -2,7 +2,7 @@
 Ingenico
 
 == Author ==
-derksen mediaopt GmbH
+Mediaopt GmbH
 
 == Prefix ==
 mo

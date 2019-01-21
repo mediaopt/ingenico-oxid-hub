@@ -2,13 +2,13 @@
 /**
  * For the full copyright and license information, refer to the accompanying LICENSE file.
  *
- * @copyright 2017 derksen mediaopt GmbH
+ * @copyright 2017 Mediaopt GmbH
  */
 
 /**
  * model to store credit card alias data
  *
- * @author derksen mediaopt GmbH
+ * @author Mediaopt GmbH
  * @package models
  */
 class mo_ingenico__alias extends oxBase
