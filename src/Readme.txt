@@ -2,13 +2,13 @@
 Ingenico
 
 == Author ==
-derksen mediaopt GmbH
+Mediaopt GmbH
 
 == Prefix ==
 mo
 
 == Version ==
-4.2.8
+5.0.1
 
 == Link ==
 https://www.mediaopt.de

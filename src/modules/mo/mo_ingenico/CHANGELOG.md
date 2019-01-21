@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [develop]
+## [5.0.1]
 ### Changed
 - create warning log entry if old deferred feedback controller is still used
+- support for payments DirectEbankingDE, DirectEbankingAT, ...
 
 ## [5.0.0]
 ### Changed
