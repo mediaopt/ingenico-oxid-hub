@@ -1,3 +1,15 @@
+<script type="text/javascript">
+    (function () {
+        if (!String.prototype.startsWith) {
+            Object.defineProperty(String.prototype, 'startsWith', {
+                value: function (search, pos) {
+                    pos = !pos || pos < 0 ? 0 : +pos;
+                    return this.substring(pos, pos + search.length) === search;
+                }
+            });
+        }
+    })();
+</script>
 <dl>
   <dt>
   <input id="payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]>
@@ -10,7 +22,7 @@
         <input type="hidden" id="mo_ingenico__paramvar" name="PARAMVAR" value="" />
         [{if $oxConfig->getShopConfVar('mo_ingenico__use_iframe')}]
             [{$oView->mo_ingenico__loadRequestParams('ingenico_credit_card')}]
-            
+
             <script type="text/javascript">
               (function () {
                 var mo_ingenico__iframeUrls = [{$oView->mo_ingenico_getIFrameURLsAsJson('ingenico_credit_card')}];
@@ -32,7 +44,7 @@
                   document.getElementById('mo_ingenico__iframe').style.display = "initial";
                 }
                 document.getElementById('mo_ingenico__paramvar').value = 'JS_ENABLED';
-                
+
               })();
             </script>
         [{else}]

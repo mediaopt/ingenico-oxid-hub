@@ -1,5 +1,16 @@
 [{assign var="oxConfig" value=$oView->getConfig()}]
-
+<script type="text/javascript">
+    (function () {
+        if (!String.prototype.startsWith) {
+            Object.defineProperty(String.prototype, 'startsWith', {
+                value: function (search, pos) {
+                    pos = !pos || pos < 0 ? 0 : +pos;
+                    return this.substring(pos, pos + search.length) === search;
+                }
+            });
+        }
+    })();
+</script>
 <dl>
     <dt>
         <input id="payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]"
