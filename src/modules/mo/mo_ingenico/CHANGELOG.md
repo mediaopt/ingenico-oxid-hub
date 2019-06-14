@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.2]  
+### Added
+- polyfill for string startsWith
+
 ## [5.0.1]
 ### Changed
 - create warning log entry if old deferred feedback controller is still used
