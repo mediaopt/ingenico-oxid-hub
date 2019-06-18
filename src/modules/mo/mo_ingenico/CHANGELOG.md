@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [5.0.2]  
 ### Added
-- polyfill for string startsWith
+- polyfill for string method: `startsWith`  
+### Changed
+- changed inline style setting from `initial` to `block`
+
 
 ## [5.0.1]
 ### Changed
