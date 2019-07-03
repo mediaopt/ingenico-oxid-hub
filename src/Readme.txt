@@ -8,7 +8,7 @@ Mediaopt GmbH
 mo
 
 == Version ==
-5.0.1
+5.0.2
 
 == Link ==
 https://www.mediaopt.de
