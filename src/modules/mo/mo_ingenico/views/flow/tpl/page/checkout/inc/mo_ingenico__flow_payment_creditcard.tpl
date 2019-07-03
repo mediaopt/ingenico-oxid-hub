@@ -1,5 +1,16 @@
 [{assign var="oxConfig" value=$oView->getConfig()}]
-
+<script type="text/javascript">
+    (function () {
+        if (!String.prototype.startsWith) {
+            Object.defineProperty(String.prototype, 'startsWith', {
+                value: function (search, pos) {
+                    pos = !pos || pos < 0 ? 0 : +pos;
+                    return this.substring(pos, pos + search.length) === search;
+                }
+            });
+        }
+    })();
+</script>
 <dl>
     <dt>
         <input id="payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]"
@@ -25,7 +36,7 @@
                         document.getElementById('mo_ingenico__iframe').style.display = "none";
                     } else {
                         document.getElementById('mo_ingenico__iframe').src = mo_ingenico__iframeUrls[this.value];
-                        document.getElementById('mo_ingenico__iframe').style.display = "initial";
+                        document.getElementById('mo_ingenico__iframe').style.display = "block";
                     }
                 }
                 if (document.getElementById('mo_ingenico__brand').value.startsWith('alias_')) {
@@ -33,7 +44,7 @@
                     document.getElementById('mo_ingenico__iframe').style.display = "none";
                 } else {
                     document.getElementById('mo_ingenico__iframe').src = mo_ingenico__iframeUrls[document.getElementById('mo_ingenico__brand').value];
-                    document.getElementById('mo_ingenico__iframe').style.display = "initial";
+                    document.getElementById('mo_ingenico__iframe').style.display = "block";
                 }
                 document.getElementById('mo_ingenico__paramvar').value = 'JS_ENABLED';
 
@@ -74,13 +85,13 @@
                         if (mo_ingenico__isAlias(this)) {
                             document.getElementById('mo_ingenico__creditcard_fields').style.display = "none";
                         } else {
-                            document.getElementById('mo_ingenico__creditcard_fields').style.display = "initial";
+                            document.getElementById('mo_ingenico__creditcard_fields').style.display = "block";
                         }
                     }
                     if (mo_ingenico__isAlias(document.getElementById('mo_ingenico__brand'))) {
                         document.getElementById('mo_ingenico__creditcard_fields').style.display = "none";
                     } else {
-                        document.getElementById('mo_ingenico__creditcard_fields').style.display = "initial";
+                        document.getElementById('mo_ingenico__creditcard_fields').style.display = "block";
                     }
                     var form = document.getElementById('mo_ingenico__shasign').form;
                     var radioButton = document.getElementById('payment_[{$sPaymentID}]');
