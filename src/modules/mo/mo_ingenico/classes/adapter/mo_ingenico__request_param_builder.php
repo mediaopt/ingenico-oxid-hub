@@ -6,18 +6,33 @@ use Mediaopt\Ingenico\Sdk\Service\SignatureBuilder;
 class mo_ingenico__request_param_builder extends mo_ingenico__abstract_factory
 {
 
-    // mbe: @TODO direkten Zugriff auf oxDB entfernen
+    /**
+     * @var bool specify, if call will be direct so hash does not have to handle params specially
+     */
+    protected $isDirectCall = true;
 
     protected $oxidSessionParamsForRemoteCalls;
 
     protected function getShaSignForParams($params)
     {
+        if (!$this->isDirectCall) {
+            $params = array_map([$this, 'decodeSpecialQuoteChars'], $params);
+        }
         /** @var SignatureBuilder $signatureBuilder */
         $signatureBuilder = Main::getInstance()->getService('SignatureBuilder');
         $signatureBuilder->setShaSettings(oxNew('mo_ingenico__sha_settings')->build());
         return $signatureBuilder->hash(
             $signatureBuilder->build(
                 $params, SignatureBuilder::MODE_IN));
+    }
+
+    /**
+     * @param  string $text
+     * @return string
+     */
+    protected function decodeSpecialQuoteChars($text)
+    {
+        return htmlspecialchars_decode($text, ENT_QUOTES);
     }
 
     protected function getOxidSessionParamsForRemoteCalls()
@@ -135,7 +150,7 @@ class mo_ingenico__request_param_builder extends mo_ingenico__abstract_factory
             'email' => substr($this->getBillProperty('email'), 0, 50),
             'ownerzip' => substr($this->getBillProperty('zip'), 0, 10),
             'owneraddress' => substr($this->getBillProperty('street') . ' ' . $this->getBillProperty('streetnr'), 0, 35),
-            'ownercty' => oxDb::getDb()->getOne("select oxisoalpha2 from oxcountry where oxid = '" . $this->getBillProperty('countryid') . '\''),
+            'ownercty' => $this->getCountryCode($this->getBillProperty('countryid')),
             'ownertown' => substr($this->getBillProperty('city'), 0, 25),
             'orig' => mo_ingenico__main::getInstance()->getIngenicoConfig()->applicationId,
             'paramplus' => substr(http_build_query($this->getOxidSessionParamsForRemoteCalls()), 0, 1000)

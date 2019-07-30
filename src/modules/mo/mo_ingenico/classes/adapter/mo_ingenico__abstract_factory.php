@@ -97,7 +97,7 @@ abstract class mo_ingenico__abstract_factory
     {
         $country = oxNew('oxcountry');
         if ($country->load($oxCountryId)) {
-            return $country->oxcountry__oxisoalpha3->value;
+            return $country->oxcountry__oxisoalpha2->value;
         }
         return null;
     }
