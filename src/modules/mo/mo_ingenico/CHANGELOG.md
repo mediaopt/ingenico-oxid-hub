@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## develop
+### Added
+- 3d Secure Version 2.1 support 
+
 ## [5.0.2]  
 ### Added
 - polyfill for string method: `startsWith`  
