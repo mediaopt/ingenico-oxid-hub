@@ -10,8 +10,8 @@
 
 [{if $sPaymentID == 'ingenico_credit_card'}]
     [{include file="mo_ingenico__`$mo_ingenico__theme`payment_creditcard.tpl"}]
-    [{elseif $sPaymentID == 'ingenico_open_invoice_de'}]
+[{elseif $sPaymentID == 'ingenico_open_invoice_de'}]
     [{include file="mo_ingenico__`$mo_ingenico__theme`payment_invoice.tpl"}]
-    [{else}]
+[{else}]
     [{$smarty.block.parent}]
-    [{/if}]
+[{/if}]
