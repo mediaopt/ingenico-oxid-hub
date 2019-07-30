@@ -43,6 +43,15 @@ class mo_ingenico__order_direct_param_builder extends mo_ingenico__request_param
         $params['http_accept'] = $_SERVER['HTTP_ACCEPT'];
         $params['http_user_agent'] = $_SERVER['HTTP_USER_AGENT'];
         $params['win3ds'] = 'MAINW';
+        $browserInfo = oxRegistry::get('mo_ingenico__browserinfo');
+        $params['browserAcceptHeader'] = $browserInfo->getBrowserAcceptHeader();
+        $params['browserColorDepth'] = $browserInfo->getBrowserColorDepth();
+        $params['browserJavaEnabled'] = $browserInfo->getBrowserJavaEnabled();
+        $params['browserLanguage'] = $browserInfo->getBrowserLanguage();
+        $params['browserScreenHeight'] = $browserInfo->getBrowserScreenHeight();
+        $params['browserScreenWidth'] = $browserInfo->getBrowserScreenWidth();
+        $params['browserTimeZone'] = $browserInfo->getBrowserTimeZone();
+        $params['browserUserAgent'] = $browserInfo->getBrowserUserAgent();
 
         // redirect urls
         $params['accepturl'] = $this->checkUrlLength($this->getOxConfig()->getSslShopUrl() . 'index.php?cl=order' .
