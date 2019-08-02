@@ -6,6 +6,11 @@ use Mediaopt\Ingenico\Sdk\Model\RequestParameters;
 class mo_ingenico__order_redirect_param_builder extends mo_ingenico__request_param_builder
 {
 
+    /**
+     * @var bool specify, if call will be direct so hash does not have to handle params specially
+     */
+    protected $isDirectCall = false;
+
     protected $oxidSessionParamsForRemoteCalls;
     protected $billpay_itemNumber = 0;
 
@@ -152,7 +157,7 @@ class mo_ingenico__order_redirect_param_builder extends mo_ingenico__request_par
     protected function addPaypalParams($params)
     {
         // If the full name needs to be send to PayPal "firstname + lastname" needs to be sent in one of the fields (ECOM_SHIPTO_POSTAL_NAME_LAST or
-        // ECOM_SHIPTO_POSTAL_NAME_FIRST). 
+        // ECOM_SHIPTO_POSTAL_NAME_FIRST).
         // If both ECOM_SHIPTO_POSTAL_NAME_ parameters are sent then only the _LAST will be taken into account.
         $paypalFullName = substr($this->getShippingProperty('fname'), 0, 50) . ' ' . substr($this->getShippingProperty('lname'), 0, 50);
 

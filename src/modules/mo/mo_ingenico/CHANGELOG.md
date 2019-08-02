@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## develop
 ### Added
-- 3d Secure Version 2.1 support 
+- 3d Secure Version 2.1 support
+### Hotfix
+- corrected sha hash calculation for redirect calls with special chars
 
 ## [5.0.2]  
 ### Added
