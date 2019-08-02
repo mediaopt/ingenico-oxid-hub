@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## develop
+## [5.0.3]
 ### Added
 - 3d Secure Version 2.1 support
 ### Hotfix
