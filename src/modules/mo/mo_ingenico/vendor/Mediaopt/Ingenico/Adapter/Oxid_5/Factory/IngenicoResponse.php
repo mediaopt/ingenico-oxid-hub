@@ -44,6 +44,8 @@ class IngenicoResponse extends AbstractFactory
         }
         if (isset($params['STATUS'])) {
             $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($params['STATUS']));
+        } elseif (!empty($params['ALIAS_STATUS'])) {
+            $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($params['ALIAS_STATUS']));
         }
         $error = null;
         if (!empty($params['NCERRORCARDNO']) && $params['NCERRORCARDNO'] != '0') {
