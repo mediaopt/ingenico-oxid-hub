@@ -71,6 +71,8 @@ $this->shaOutParameters = array(
     'ORDERID',
     'PAYID',
     'PAYIDSUB',
+    'PAYLIBIDREQUEST',
+    'PAYLIBTRANSID',
     'PAYMENT_REFERENCE',
     'PM',
     'SCORING',
@@ -80,8 +82,10 @@ $this->shaOutParameters = array(
     'STATUS',
     'SUBBRAND',
     'SUBSCRIPTION_ID',
+    'TICKET',
     'TRXDATE',
     'VC',
+    'WALLET',
 );
 
 
@@ -134,7 +138,9 @@ $this->shaOutParametersHostedTokenization = array(
     'NCERRORED',
     'ORDERID',
     'STATUS',
-    'STOREPERMANENTLY'
+    'STOREPERMANENTLY',
+    'TICKET',
+    'WALLET',
 );
 
 $this->supportedCurrencies = array('AED', 'ANG', 'ARS', 'AUD', 'AWG', 'BGN', 'BRL', 'BYR', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EEK', 'EGP', 'EUR', 'GBP', 'GEL', 'HKD', 'HRK', 'HUF', 'ILS', 'ISK', 'JPY', 'KRW', 'LTL', 'LVL', 'MAD', 'MXN', 'NOK', 'NZD', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'SKK', 'THB', 'TRY', 'UAH', 'USD', 'XAF', 'XOF', 'XPF', 'ZAR');
