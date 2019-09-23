@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [develop]
+## [5.0.4]
 ### Hotfix
 - added missing parameters to sha calculation
+- use ALIAS.STATUS parameter if STATUS is not available
 
 ## [5.0.3]
 ### Added
