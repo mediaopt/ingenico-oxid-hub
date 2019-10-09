@@ -24,7 +24,7 @@ class IngenicoResponse extends AbstractFactory
         }
         return $this->buildFromData($params);
     }
-    
+
     /**
      * populate IngenicoResponse model
      *
@@ -37,8 +37,8 @@ class IngenicoResponse extends AbstractFactory
         $model = $this->getSdkMain()->getModel('IngenicoResponse');
         $model->setAllParams($params);
         foreach ($params as $paramKey => $value) {
-            if (strpos($paramKey, 'ALIAS_') === 0 && !isset($params[substr($paramKey, 6)])) {
-                $params[substr($paramKey, 6)] = $value;
+            if (strpos($paramKey, 'ALIAS_') === 0 && !isset($params[substr($paramKey, strlen('ALIAS_'))])) {
+                $params[substr($paramKey, strlen('ALIAS_'))] = $value;
             }
         }
         if (isset($params['ORDERID'])) {
