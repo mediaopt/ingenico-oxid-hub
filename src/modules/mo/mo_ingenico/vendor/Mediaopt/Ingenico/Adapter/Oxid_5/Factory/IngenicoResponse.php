@@ -24,7 +24,7 @@ class IngenicoResponse extends AbstractFactory
         }
         return $this->buildFromData($params);
     }
-    
+
     /**
      * populate IngenicoResponse model
      *
@@ -36,6 +36,11 @@ class IngenicoResponse extends AbstractFactory
         /* @var $model \Mediaopt\Ingenico\Sdk\Model\IngenicoResponse */
         $model = $this->getSdkMain()->getModel('IngenicoResponse');
         $model->setAllParams($params);
+        foreach ($params as $paramKey => $value) {
+            if (strpos($paramKey, 'ALIAS_') === 0 && !isset($params[substr($paramKey, strlen('ALIAS_'))])) {
+                $params[substr($paramKey, strlen('ALIAS_'))] = $value;
+            }
+        }
         if (isset($params['ORDERID'])) {
             $model->setOrderId($params['ORDERID']);
         }
@@ -44,8 +49,6 @@ class IngenicoResponse extends AbstractFactory
         }
         if (isset($params['STATUS'])) {
             $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($params['STATUS']));
-        } elseif (!empty($params['ALIAS_STATUS'])) {
-            $model->setStatus(Main::getInstance()->getService('Status')->usingStatusCode($params['ALIAS_STATUS']));
         }
         $error = null;
         if (!empty($params['NCERRORCARDNO']) && $params['NCERRORCARDNO'] != '0') {
@@ -67,8 +70,8 @@ class IngenicoResponse extends AbstractFactory
         }
         if (!empty($params['ALIAS'])) {
             $model->setAlias($params['ALIAS']);
-        } elseif (!empty($params['ALIAS_ALIASID'])) {
-            $model->setAlias($params['ALIAS_ALIASID']);
+        } elseif (!empty($params['ALIASID'])) {
+            $model->setAlias($params['ALIASID']);
         } else {
             $model->setAlias(null);
         }
