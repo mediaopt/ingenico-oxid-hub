@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## develop
+## [5.0.5]
 ### Hotfix
 - use all parameters with the prefix 'ALIAS_'
 
