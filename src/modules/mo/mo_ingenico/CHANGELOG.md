@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## develop
+### Hotfix
+- use all parameters with the prefix 'ALIAS_'
+
 ## [5.0.4]
 ### Hotfix
 - added missing parameters to sha calculation
