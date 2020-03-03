@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.5]
+### Hotfix
+- use all parameters with the prefix 'ALIAS_'
+
+## [5.0.4]
+### Hotfix
+- added missing parameters to sha calculation
+- use ALIAS.STATUS parameter if STATUS is not available
+
+## [5.0.3]
+### Added
+- 3d Secure Version 2.1 support
+### Hotfix
+- corrected sha hash calculation for redirect calls with special chars
+
+## [5.0.2]  
+### Added
+- polyfill for string method: `startsWith`  
+### Changed
+- changed inline style setting from `initial` to `block`
+
+
+## [5.0.1]
+### Changed
+- create warning log entry if old deferred feedback controller is still used
+- support for payments DirectEbankingDE, DirectEbankingAT, ...
+
 ## [5.0.0]
 ### Changed
 - compatibility to Oxid 6

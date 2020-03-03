@@ -25,7 +25,7 @@ $aModule = array(
             . ' target="_blank">changelog</a></p>',
     ),
     'thumbnail' => 'logo.png',
-    'version' => '4.2.8',
+    'version' => '5.0.5',
     'author' => '<a href="https://www.mediaopt.de" target="_blank">mediaopt</a>',
     'url' => 'https://www.mediaopt.de',
     'email' => 'support@mediaopt.de',
@@ -76,6 +76,7 @@ $aModule = array(
         'mo_ingenico__transaction_logger' => 'mo/mo_ingenico/classes/mo_ingenico__transaction_logger.php',
         'mo_ingenico__monolog_processor' => 'mo/mo_ingenico/classes/mo_ingenico__monolog_processor.php',
         'mo_ingenico__log_parser' => 'mo/mo_ingenico/classes/mo_ingenico__log_parser.php',
+        'mo_ingenico__browserinfo' => 'mo/mo_ingenico/classes/mo_ingenico__browserinfo.php',
         //events
         'mo_ingenico__events' => 'mo/mo_ingenico/setup/mo_ingenico__events.php',
         'mo_ingenico__sql' => 'mo/mo_ingenico/setup/mo_ingenico__sql.php',
