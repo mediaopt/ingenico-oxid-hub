@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.6]
+### Hotfix
+- only store deferred feedback if the transaction is assigned to the order
+
 ## [5.0.5]
 ### Hotfix
 - use all parameters with the prefix 'ALIAS_'
