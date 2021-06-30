@@ -1,0 +1,11 @@
+default:
+  autoload:
+    - "%paths.base%/features/bootstrap"
+  suites:
+    ingenico:
+      paths: ["%paths.base%/features"]
+      contexts: [IngenicoContext]
+      filters:
+        tags: "@ActivatePayments, @GermanAccountPayment, @NonGermanAccountPayment, @PayPalPayment"
+  gherkin:
+    cache: ~
