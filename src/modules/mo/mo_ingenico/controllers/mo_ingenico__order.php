@@ -208,6 +208,10 @@ class mo_ingenico__order extends mo_ingenico__order_parent
             if ($order = $this->mo_ingenico__loadOrder($response)) {
                 Main::getInstance()->getLogger()->info('DeferredFeedback: Order already exists (' .$order->getId(). '). Updating status');
                 oxNew('mo_ingenico__transaction_logger')->storeTransaction($response->getAllParams(), $order->oxorder__oxordernr->value);
+                if (!$this->mo_ingenico__IsOrderAssignedToTransaction($order, $response)) {
+                    Main::getInstance()->getLogger()->info('DeferredFeedback: Order is not assigned to the payment (' .$order->getId(). ').');
+                    exit;
+                }
                 $order->mo_ingenico__updateOrderStatus($response->getStatus());
                 exit;
             }
@@ -258,5 +262,15 @@ class mo_ingenico__order extends mo_ingenico__order_parent
             }
         }
         return false;
+    }
+
+    /**
+     * @param mo_ingenico__order $order
+     * @param IngenicoResponse   $response
+     * @return bool
+     */
+    protected function mo_ingenico__IsOrderAssignedToTransaction($order, $response)
+    {
+        return $order->getFieldData('oxtransid') === $response->getPayId() || $order->getFieldData('oxtransid') === $response->getOrderId();
     }
 }
